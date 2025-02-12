@@ -1,5 +1,6 @@
 package classes.entities;
 
+import classes.asset.sprite.Sprite;
 import interfaces.EntityCollidable;
 import src.KeyHandler;
 
@@ -20,6 +21,7 @@ public class Player extends MapEntity implements EntityCollidable{
 		super.setX(screenWidth);
 		super.setY(screenHeight);
 		super.setDimensions(side,side + allowance);
+		buffer = Sprite.load("default");
 
 		this.x /= 2;
 		this.y /= 2;
@@ -28,7 +30,7 @@ public class Player extends MapEntity implements EntityCollidable{
 
 	public void move(){
 		//heheh - dymes
-
+		
 		if(inputs.up_pressed == inputs.down_pressed) {
 			deltaY = 0;
 		}
@@ -50,7 +52,7 @@ public class Player extends MapEntity implements EntityCollidable{
 		} else {
 			speed = 6;
 		}
-		checkEntitySprites();
+		//checkEntitySprites();
 
 	}
 

@@ -33,6 +33,8 @@ public class GamePanel extends JPanel implements Runnable {
         max_map_col = map.getMap_length();
         //System.out.println(max_map_col + " " + max_map_row);
 
+        d1 = new Player("Amogus", 69, 10 * TILE_SIZE, 13 * TILE_SIZE, 64, 0, key_input);
+
         this.setPreferredSize(dimensions);
         this.setBackground(Color.BLACK);
         this.setFocusable(true);
@@ -59,6 +61,7 @@ public class GamePanel extends JPanel implements Runnable {
             
             last_system_time = System.nanoTime() - (System.nanoTime() - last_system_time);
             repaint();
+            d1.move();
 
             dimensions.width = Utils.SCREEN_WIDTH;
             dimensions.height = Utils.SCREEN_HEIGHT;
@@ -79,10 +82,8 @@ public class GamePanel extends JPanel implements Runnable {
                 lastEntityCheck = System.nanoTime() + 1000000000;
                 
                 second++;
-                // System.out.println("SECOND: " + second + " ENEMY COUNT: " + enemy_count);
-                // System.out.println("KILLS: " + PlayerData.kill_count + " STATE: " + Dialogues.PHASE_STATE);
                 // System.out.println("POS TILE: " + d1.getTileXPosition() + " " + d1.getTileYPosition() + " " + PlayerData.offsets[PlayerData.check_pointer]);
-
+                //System.out.println("lol");
 
             }
 
@@ -112,7 +113,10 @@ public class GamePanel extends JPanel implements Runnable {
 
         super.paintComponent(g);
 
+        map.view(d1, Utils.camera);
         map.displayTiles(g, Utils.camera);
+        map.verifyEntityPosition(d1);
+        d1.display(g, Utils.camera);
 
         handleInteractions(d1, g);
 

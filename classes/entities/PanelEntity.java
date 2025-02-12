@@ -1,7 +1,6 @@
 package classes.entities;
 
 import classes.asset.sprite.Sprite;
-import classes.sprites.EntitySprite;
 import interfaces.EntityCollidable;
 import java.awt.*;
 import src.GamePanel;
@@ -263,17 +262,17 @@ public abstract class PanelEntity {
     }
 
     public void checkEntitySprites(){
-        EntitySprite sprite = (EntitySprite) buffer;
-        if (deltaY == 0 && deltaX == 0) {
-            sprite.setMoving(false);
-        } else {
-            sprite.setMoving(true);
-            if (deltaX > 0) {
-                sprite.toRight();
-            } else if (deltaX < 0) {
-                sprite.toLeft();
-            }
-        }
+        // EntitySprite sprite = (EntitySprite) buffer;
+        // if (deltaY == 0 && deltaX == 0) {
+        //     sprite.setMoving(false);
+        // } else {
+        //     sprite.setMoving(true);
+        //     if (deltaX > 0) {
+        //         sprite.toRight();
+        //     } else if (deltaX < 0) {
+        //         sprite.toLeft();
+        //     }
+        // }
     }
 
     public Point getTilePosition() {

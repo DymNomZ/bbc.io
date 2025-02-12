@@ -10,6 +10,7 @@ public class Main {
         Utils.main_window.addWindowStateListener(Utils.window_state_listener); // handle changing of SCREEN_WIDTH/HEIGHT in game panel
 
         GamePanel game = new GamePanel();
+        game.start_main_thread();
 
         Utils.main_window.add(game);
 

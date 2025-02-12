@@ -200,6 +200,8 @@ public class MapConstructor {
 
                 for (int i = loopN; i >= 1; i--) {
                         if (tiles[offYTile][offXTile].is_solid) {
+                            System.out.println("IS TOUCHING, IMPLEMENT SERVER COMMUNICATION HERE!!!");
+                            System.out.println("MapConstructor - Line 203-204 - getVerifiedPosition()");
                             if (offTile < 0) {
                                 position -= offTile;
                             } else {
