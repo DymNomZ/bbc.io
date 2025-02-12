@@ -1,4 +1,4 @@
-package classes.Asset.Audio;
+package classes.asset.audio;
 
 import javax.sound.sampled.*;
 

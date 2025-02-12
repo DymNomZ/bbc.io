@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         key_input = new KeyHandler();
         mouse_handler = new MouseHandler();
-        map = new MapConstructor("assets/maps/trial_map_1.zip");
+        map = new MapConstructor("assets/maps/square_test.zip");
 
         max_map_row = map.getMap_height();
         max_map_col = map.getMap_length();

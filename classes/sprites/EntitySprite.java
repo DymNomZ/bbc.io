@@ -1,8 +1,7 @@
 package classes.sprites;
 
-import classes.Asset.Sprite.AnimatedSprite;
-import classes.Asset.Sprite.Sprite;
-
+import classes.asset.sprite.AnimatedSprite;
+import classes.asset.sprite.Sprite;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

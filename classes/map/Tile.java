@@ -1,6 +1,5 @@
 package classes.map;
-import classes.Asset.Sprite.Sprite;
-
+import classes.asset.sprite.Sprite;
 import java.awt.image.BufferedImage;
 
 public class Tile {

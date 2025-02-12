@@ -1,6 +1,6 @@
 package src;
 
-import classes.Asset.Sprite.Sprite;
+import classes.asset.sprite.Sprite;
 import classes.map.Tile;
 import java.io.*;
 import java.util.ArrayList;

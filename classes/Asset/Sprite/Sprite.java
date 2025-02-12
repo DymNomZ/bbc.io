@@ -1,16 +1,13 @@
-package classes.Asset.Sprite;
+package classes.asset.sprite;
 
-import classes.Asset.Asset;
-
-import javax.imageio.ImageIO;
-
+import classes.asset.Asset;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
-
+import javax.imageio.ImageIO;
 import static src.Utils.showError;
 
 public abstract class Sprite extends Asset {

@@ -1,4 +1,4 @@
-package classes.Asset.Sprite;
+package classes.asset.sprite;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

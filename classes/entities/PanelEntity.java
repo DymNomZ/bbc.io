@@ -1,11 +1,9 @@
 package classes.entities;
 
-import classes.Asset.Sprite.Sprite;
+import classes.asset.sprite.Sprite;
 import classes.sprites.EntitySprite;
 import interfaces.EntityCollidable;
-
 import java.awt.*;
-
 import src.GamePanel;
 
 /*  Super class for all entities
