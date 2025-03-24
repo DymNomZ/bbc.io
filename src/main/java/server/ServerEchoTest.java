@@ -10,7 +10,7 @@ public class ServerEchoTest {
         try (ServerSocket s = new ServerSocket(SocketConfig.PORT)) {
 
         } catch (IOException e) {
-            System.err.println();
+            System.err.println(e);
         }
     }
 }

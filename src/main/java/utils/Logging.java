@@ -1,22 +1,22 @@
 package utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.InputStream;
+import java.io.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Logging implements AutoCloseable {
     private static final BufferedWriter log_file = initialize();
 
-    public static String currentDateTime() {
+    public static String messagePrefix(Object class_obj) {
         StringBuilder sb = new StringBuilder();
 
         Date currentDate = new Date();
 
         sb.append('[');
         sb.append(currentDate);
-        sb.append(']');
+        sb.append("][");
+        sb.append(class_obj.getClass().getName());
+        sb.append("] ");
 
         return sb.toString();
     }
@@ -24,23 +24,53 @@ public class Logging implements AutoCloseable {
     private static BufferedWriter initialize() {
         BufferedWriter log_obj;
 
+        String append = "";
+        LocalDate ld = LocalDate.now();
+        for (int i = 1; true; i++) {
+            if (!new File(ld + append).exists()) {
+                break;
+            }
+            append = " (" + i + ")";
+        }
+
         try {
-
-
-            log_obj = new BufferedWriter(new FileWriter("log/"));
+            log_obj = new BufferedWriter(new FileWriter("log/" + ld + append));
         } catch (Exception e) {
+            System.err.println("[ ERROR ]" + messagePrefix(Logging.class) + "Log file unable to be initialized");
             return null;
         }
 
         return log_obj;
     }
 
-    public static void error(Object classObj, String s) {
-        classObj.getClass().getName();
+    private static void writeToLog(String message) {
+        try {
+            if (log_file != null) {
+                log_file.write(message + '\n');
+            }
+        } catch (IOException e) {
+            System.err.println("[ ERROR ]" + messagePrefix(Logging.class) + "Unable to write to log file");
+        }
+    }
+
+    public static void error(Object this_obj, String error_message) {
+        String message = "[ ERROR ]" + messagePrefix(this_obj) + error_message;
+
+        writeToLog(message);
+        System.err.println(message);
+    }
+
+    public static void write(Object this_obj, String message) {
+        message = "[  OUT  ]" + messagePrefix(this_obj) + message;
+
+        writeToLog(message);
+        System.err.println(message);
     }
 
     @Override
     public void close() throws Exception {
-        log_file.close();
+        if (log_file != null) {
+            log_file.close();
+        };
     }
 }
