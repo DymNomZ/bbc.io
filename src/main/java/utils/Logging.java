@@ -71,7 +71,7 @@ public class Logging implements AutoCloseable {
         message = "[  OUT  ]" + messagePrefix(this_obj) + message;
 
         writeToLog(message);
-        System.err.println(message);
+        System.out.println(message);
     }
 
     @Override
