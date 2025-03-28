@@ -15,7 +15,11 @@ public class Logging implements AutoCloseable {
         sb.append('[');
         sb.append(currentDate);
         sb.append("][");
-        sb.append(class_obj.getClass().getName());
+        if (class_obj instanceof Class) {
+            sb.append(((Class) class_obj).getName());
+        } else {
+            sb.append(class_obj.getClass().getName());
+        }
         sb.append("] ");
 
         return sb.toString();
@@ -24,16 +28,18 @@ public class Logging implements AutoCloseable {
     private static BufferedWriter initialize() {
         BufferedWriter log_obj;
 
-        String append = "";
+        String append = ".txt";
         LocalDate ld = LocalDate.now();
+
         for (int i = 1; true; i++) {
-            if (!new File(ld + append).exists()) {
+            if (!new File("log/" + ld + append).exists()) {
                 break;
             }
-            append = " (" + i + ")";
+            append = " (" + i + ").txt";
         }
 
         try {
+            new File("log").mkdir();
             log_obj = new BufferedWriter(new FileWriter("log/" + ld + append));
         } catch (Exception e) {
             System.err.println("[ ERROR ]" + messagePrefix(Logging.class) + "Log file unable to be initialized");
@@ -47,6 +53,7 @@ public class Logging implements AutoCloseable {
         try {
             if (log_file != null) {
                 log_file.write(message + '\n');
+                log_file.flush();
             }
         } catch (IOException e) {
             System.err.println("[ ERROR ]" + messagePrefix(Logging.class) + "Unable to write to log file");
