@@ -15,13 +15,12 @@ public class ServerEchoTest {
                     s.setSoTimeout(5000);
 
                     client.getOutputStream().write(client.getInputStream().readAllBytes());
-                    client.getOutputStream().close();
                 } catch (IOException e) {
                     Logging.error(ServerEchoTest.class, "Client request dropped");
                 }
             }
         } catch (IOException e) {
-            System.err.println(e);
+            Logging.error(ServerEchoTest.class, "Server Exception");
         }
     }
 }
