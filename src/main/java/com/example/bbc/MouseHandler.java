@@ -34,7 +34,7 @@ public class MouseHandler implements EventHandler<MouseEvent> {
             case SECONDARY -> right_is_pressed = true;
         }
         //handle button dynamic GUI
-        handleButtons(e);
+//        handleButtons(e);
 
     }
 }

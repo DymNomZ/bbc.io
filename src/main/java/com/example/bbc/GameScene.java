@@ -35,13 +35,13 @@ public class GameScene extends Scene implements Runnable {
     Canvas canvas = new Canvas(300, 200);
     GraphicsContext gc = canvas.getGraphicsContext2D();
 
-    static {
-        try {
-            root = fxmlLoader.load(canvas);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    static {
+//        try {
+//            root = fxmlLoader.load(canvas);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public GameScene() {
         super(root, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -79,12 +79,12 @@ public class GameScene extends Scene implements Runnable {
         while (main_thread != null) {
 
             last_system_time = System.nanoTime() - (System.nanoTime() - last_system_time);
-            repaint();
+//            repaint();
             d1.move();
 
             mouse_handler.mouse_location_on_screen = MouseInfo.getPointerInfo().getLocation();
 
-            SwingUtilities.convertPointFromScreen(mouse_handler.mouse_location_on_screen,this);
+//            SwingUtilities.convertPointFromScreen(mouse_handler.mouse_location_on_screen,this);
             updateMousePosition(mouse_handler.mouse_location_on_screen.x,mouse_handler.mouse_location_on_screen.y);
 
             if (lastEntityCheck < last_system_time) {
@@ -110,23 +110,23 @@ public class GameScene extends Scene implements Runnable {
     }
 
     public void updateMousePosition(int x, int y) {
-        mouse_handler.mouse_x = x - (d1.x - Utils.camera.x);
-        mouse_handler.mouse_y = y - (d1.y - Utils.camera.y);
+//        mouse_handler.mouse_x = x - (d1.x - Utils.camera.x);
+//        mouse_handler.mouse_y = y - (d1.y - Utils.camera.y);
     }
 
     void handleInteractions(Player d1, Graphics g) {
 
     }
 
-    @Override
+//    @Override
     public void paintComponent(Graphics g){
 
-        super.paintComponent(g);
-
-        map.view(d1, Utils.camera);
-        map.displayTiles(g, Utils.camera);
-        map.verifyEntityPosition(d1);
-        d1.display(g, Utils.camera);
+//        super.paintComponent(g);
+//
+//        map.view(d1, Utils.camera);
+//        map.displayTiles(g, Utils.camera);
+//        map.verifyEntityPosition(d1);
+//        d1.display(g, Utils.camera);
 
         handleInteractions(d1, g);
 
