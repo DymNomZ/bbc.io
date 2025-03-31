@@ -24,6 +24,6 @@ public class TankEntity extends Entity {
 
         rectangle.setTranslateY(0 - rectangle.getHeight() / 2);
 
-        entityGroup.getChildren().addAll(rectangle, circle);
+        entity_group.getChildren().addAll(rectangle, circle);
     }
 }

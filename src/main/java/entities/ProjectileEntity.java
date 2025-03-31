@@ -13,13 +13,13 @@ public class ProjectileEntity extends Entity {
         circle.setRadius(5);
         this.angle = angle;
         this.speed = speed;
-        entityGroup.getChildren().add(circle);
+        entity_group.getChildren().add(circle);
         original_position = new Point2D(x, y);
     }
 
     public double distanceFromOriginalPosition(){
-        Point2D entityGroup_position = new Point2D(entityGroup.getLayoutX(), entityGroup.getLayoutY());
-        return entityGroup_position.distance(original_position);
+        Point2D entity_group_position = new Point2D(entity_group.getLayoutX(), entity_group.getLayoutY());
+        return entity_group_position.distance(original_position);
     }
     public void updatePosition(){
         double angle_radians = Math.toRadians(angle);

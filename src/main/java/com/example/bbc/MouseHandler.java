@@ -7,17 +7,23 @@ import javafx.scene.input.MouseEvent;
 import java.awt.*;
 
 public class MouseHandler implements EventHandler<MouseEvent> {
+
     int mouse_x;
     int mouse_y;
     Point mouse_location_on_screen;
 
-    boolean left_is_pressed  = false;
-    boolean right_is_pressed = false;
+    public boolean left_is_pressed  = false;
+    public boolean right_is_pressed = false;
+    public MouseEvent event = null;
 
     @Override
     public void handle(MouseEvent event) {
-        if (event.getEventType() == MouseEvent.MOUSE_PRESSED) mousePressed(event);
-        else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) mouseReleased(event);
+        this.event = event;
+        mouseMoved(event);
+    }
+
+    public void mouseMoved(MouseEvent e){
+
     }
 
     public void mouseReleased(MouseEvent e){
@@ -33,8 +39,9 @@ public class MouseHandler implements EventHandler<MouseEvent> {
             case PRIMARY -> left_is_pressed = true;
             case SECONDARY -> right_is_pressed = true;
         }
-        //handle button dynamic GUI
-//        handleButtons(e);
+    }
+
+    public void mouseClicked(MouseEvent e){
 
     }
 }
