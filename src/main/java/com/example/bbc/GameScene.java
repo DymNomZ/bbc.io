@@ -23,10 +23,11 @@ public class GameScene extends Scene {
 
     private Entity main_player;
     private final Set<KeyCode> active_keys = new HashSet<>();
-    private double mouse_x, mouse_y;
+    private double mouse_x, mouse_y, center_x, center_y;
     public static List<Entity> entity_list;
 
     public static MouseHandler mouse_handler;
+    public static KeyHandler key_handler;
 
     public GameScene() {
         super(root, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -40,17 +41,24 @@ public class GameScene extends Scene {
 
         mouse_handler = new MouseHandler();
 
+        key_handler = new KeyHandler();
+
         main_player = new TankEntity();
         entity_list = new ArrayList<>();
 
-        double center_x = this.getWidth() / 2;
-        double center_y = this.getHeight() / 2;
+        center_x = this.getWidth() / 2;
+        center_y = this.getHeight() / 2;
+
+        main_player.setPosition(center_x, center_y);
 
         spawnEntity(main_player);
 
         this.setOnMouseMoved(mouse_handler::handle);
         this.setOnMouseReleased(mouse_handler::mouseReleased);
         this.setOnMousePressed(mouse_handler::mousePressed);
+
+        this.setOnKeyPressed(key_handler::keyPressed);
+        this.setOnKeyReleased(key_handler::keyReleased);
 
         gameLoop.start();
 
@@ -71,6 +79,7 @@ public class GameScene extends Scene {
         if(mouse_handler.left_is_pressed){
             main_player.shoot();
         }
+        main_player.move();
     }
 
     private final AnimationTimer gameLoop = new AnimationTimer() {
@@ -83,10 +92,11 @@ public class GameScene extends Scene {
                 return;
             }
 
-            main_player.getEntity_group().setLayoutX(root.getScene().getWidth() / 2);
-            main_player.getEntity_group().setLayoutY(root.getScene().getHeight() / 2);
+            //center, will be important for camera implementation
+//            main_player.setPosition(center_x, center_y);
 
             update();
+            //System.out.println(main_player.getX() + " " + main_player.getY());
 
             Iterator it = entity_list.iterator();
             while (it.hasNext()) {

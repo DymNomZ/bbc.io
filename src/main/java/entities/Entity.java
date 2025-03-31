@@ -1,6 +1,7 @@
 package entities;
 
 import com.example.bbc.GameScene;
+import com.example.bbc.KeyHandler;
 import com.example.bbc.MouseHandler;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
@@ -9,6 +10,7 @@ import utils.Scenes;
 public abstract class Entity {
 
     private MouseHandler mouse_handler;
+    private KeyHandler key_handler;
     protected double x;
     protected double y;
     protected Group entity_group;
@@ -19,10 +21,33 @@ public abstract class Entity {
         rotation = new Rotate(0); // Initialize rotation
         entity_group.getTransforms().add(rotation); // Apply rotation transform
         mouse_handler = GameScene.mouse_handler;
+        key_handler = GameScene.key_handler;
     }
 
     public void render(Group root) {
         root.getChildren().add(entity_group);
+    }
+
+    public void move(){
+
+        int speed = 5;
+
+        if(key_handler.up_pressed == key_handler.down_pressed) {
+            setPosition(getX(), getY());
+        }
+        else if(key_handler.up_pressed)
+            setPosition(getX(), getY() - speed);
+        else if(key_handler.down_pressed)
+            setPosition(getX(), getY() + speed);
+
+        if(key_handler.right_pressed == key_handler.left_pressed){
+            setPosition(getX(), getY());
+        }
+        else if(key_handler.left_pressed)
+            setPosition(getX() - speed, getY());
+        else if(key_handler.right_pressed)
+            setPosition(getX() + speed, getY());
+
     }
 
     public void shoot(){
