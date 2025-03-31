@@ -64,13 +64,13 @@
          <Button fx:id="btnUpgradeHealth" alignment="CENTER" ellipsisString="+" minHeight="20.0" mnemonicParsing="false" onAction="#onUpgradeHealth" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #FA7579;" text="+" textAlignment="CENTER" GridPane.columnIndex="1" />
       </children>
    </GridPane>
-   <Button fx:id="manualAddXP" mnemonicParsing="false" onAction="#ManualAddXP" text="Add XP" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="50.0" />
+   <Button fx:id="TEMP_manual_add_xp" mnemonicParsing="false" onAction="#TEMP_manualAddXP" text="Add XP" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="50.0" />
    <Label text="Health: " AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="50.0" />
    <Label layoutX="10.0" layoutY="10.0" text="Speed: " AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="80.0" />
    <Label layoutX="20.0" layoutY="20.0" text="Damage:" AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="110.0" />
    <Label layoutX="30.0" layoutY="30.0" text="XP:" AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="140.0" />
-   <Label fx:id="TEMPlblHealth" layoutX="10.0" layoutY="10.0" text="Health: " AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="50.0" />
-   <Label fx:id="TEMPlblSpeed" layoutX="20.0" layoutY="20.0" text="Speed: " AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="80.0" />
-   <Label fx:id="TEMPlblDamage" layoutX="30.0" layoutY="30.0" text="Damage:" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="110.0" />
-   <Label fx:id="TEMPlblXP" layoutX="40.0" layoutY="40.0" text="XP:" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="140.0" />
+   <Label fx:id="TEMP_lbl_health" layoutX="10.0" layoutY="10.0" text="Health: " AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="50.0" />
+   <Label fx:id="TEMP_lbl_speed" layoutX="20.0" layoutY="20.0" text="Speed: " AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="80.0" />
+   <Label fx:id="TEMP_lbl_damage" layoutX="30.0" layoutY="30.0" text="Damage:" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="110.0" />
+   <Label fx:id="TEMP_lbl_xp" layoutX="40.0" layoutY="40.0" text="XP:" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="140.0" />
 </AnchorPane>
