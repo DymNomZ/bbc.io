@@ -1,0 +1,79 @@
+/* General Styles */
+.label-status, .label-info {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.score-value, .ammo-value {
+    -fx-text-fill: #ffcc00;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.player-name {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+
+/* Top Bar */
+#topBar {
+    -fx-background-color: rgba(0, 0, 0, 0.0);
+    -fx-background-radius: 5;
+}
+
+/* Health Bar Customization */
+.health-bar .bar {
+    -fx-background-color: linear-gradient(to right, #ff0000, #00ff00);
+}
+
+/* Bottom Panel */
+#bottomPanel {
+    -fx-background-color: rgba(0, 0, 0, 0.0);
+    -fx-background-radius: 5;
+}
+
+/* Kill Feed */
+.kill-feed {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+}
+
+.kill-feed-entry {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+}
+
+/* Minimap */
+.minimap-container {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+}
+
+.minimap {
+    -fx-background-color: #111111;
+    -fx-border-color: #444444;
+    -fx-border-width: 1;
+}
+
+/* Debug Panel */
+#debugInfo {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+}
+
+.debug-title {
+    -fx-text-fill: #ff5555;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.debug-text {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 12px;
+    -fx-font-family: "Courier New";
+}

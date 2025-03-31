@@ -17,7 +17,7 @@ public class IOGame extends Application {
         MAIN_STAGE.setTitle("bbc.io");
         MAIN_STAGE.setScene(Scenes.GAME_SCENE);
         // Maximize window by default
-        MAIN_STAGE.setMaximized(true);
+        MAIN_STAGE.setMaximized(false);
 
         // Set fullscreen
         MAIN_STAGE.setFullScreen(false);

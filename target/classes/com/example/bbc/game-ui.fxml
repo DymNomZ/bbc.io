@@ -64,7 +64,7 @@
          <Button fx:id="btnUpgradeHealth" alignment="CENTER" ellipsisString="+" minHeight="20.0" mnemonicParsing="false" onAction="#onUpgradeHealth" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #FA7579;" text="+" textAlignment="CENTER" GridPane.columnIndex="1" />
       </children>
    </GridPane>
-   <Button fx:id="manualAddXP" mnemonicParsing="false" onAction="#manualAddXP" text="Add XP" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="50.0" />
+   <Button fx:id="manualAddXP" mnemonicParsing="false" onAction="#ManualAddXP" text="Add XP" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="50.0" />
    <Label text="Health: " AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="50.0" />
    <Label layoutX="10.0" layoutY="10.0" text="Speed: " AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="80.0" />
    <Label layoutX="20.0" layoutY="20.0" text="Damage:" AnchorPane.leftAnchor="130.0" AnchorPane.topAnchor="110.0" />
