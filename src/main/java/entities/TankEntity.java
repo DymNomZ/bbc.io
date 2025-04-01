@@ -14,7 +14,6 @@ public class TankEntity extends Entity {
         circle.setStrokeWidth(2.0);
         circle.setStroke(Color.BLACK);
 
-
         Rectangle rectangle = new Rectangle();
         rectangle.setHeight(10);
         rectangle.setWidth(50);
@@ -22,6 +21,8 @@ public class TankEntity extends Entity {
         rectangle.setStroke(Color.BLACK);
         rectangle.setStrokeWidth(2.0);
 
+        //rectangle skews to the right initially, this aligns it to the center of the circle
+        //Credits Seth - Dymes
         rectangle.setTranslateY(0 - rectangle.getHeight() / 2);
 
         entity_group.getChildren().addAll(rectangle, circle);

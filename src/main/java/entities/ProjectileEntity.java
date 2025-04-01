@@ -25,7 +25,7 @@ public class ProjectileEntity extends Entity {
         double angle_radians = Math.toRadians(angle);
         double delta_x = speed * Math.cos(angle_radians);
         double delta_y = speed * Math.sin(angle_radians);
-        setPosition(x+delta_x, y+delta_y);
+        setPosition(pos_x +delta_x, pos_y +delta_y);
     }
 
 

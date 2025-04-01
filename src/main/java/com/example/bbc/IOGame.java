@@ -15,14 +15,16 @@ public class IOGame extends Application {
         MAIN_STAGE = stage;
 
         MAIN_STAGE.setTitle("bbc.io");
+        MAIN_STAGE.setMinWidth(1280);
+        MAIN_STAGE.setMinHeight(720);
         MAIN_STAGE.setScene(Scenes.GAME_SCENE);
+
         // Maximize window by default
         MAIN_STAGE.setMaximized(false);
-
         // Set fullscreen
         MAIN_STAGE.setFullScreen(false);
-        MAIN_STAGE.show();
 
+        MAIN_STAGE.show();
     }
 
     public static void main(String[] args) {
