@@ -9,9 +9,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.TilePane;
-import javafx.scene.shape.Circle;
 
 import java.util.*;
 import java.util.List;
@@ -60,7 +57,7 @@ public class GameScene extends Scene {
 
         spawnEntity(main_player);
 
-        this.setOnMouseMoved(mouse_handler::handle);
+        this.setOnMouseMoved(mouse_handler);
         this.setOnMouseReleased(mouse_handler::mouseReleased);
         this.setOnMousePressed(mouse_handler::mousePressed);
 
@@ -92,20 +89,21 @@ public class GameScene extends Scene {
     }
 
     private void update(){
-        main_player.lookAt();
-        if(mouse_handler.left_is_pressed){
-//            main_player.shoot();
-        }
 
-//        System.out.println(background_view.getLayoutY());
+        main_player.lookAt();
+
+        if(mouse_handler.left_is_pressed){
+            main_player.shoot();
+        }
 
         main_player.move();
 
+        //FIXME
         if(key_handler.up_pressed){
             background_view.setLayoutY(background_view.getLayoutY() + 5);
         }
 
-        System.out.println(background_view.getLayoutY());
+//        System.out.println(background_view.getLayoutY());
     }
 
     private final AnimationTimer gameLoop = new AnimationTimer() {
