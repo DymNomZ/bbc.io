@@ -60,5 +60,8 @@ public class KeyHandler implements EventHandler<KeyEvent> {
         four_pressed = false;
         five_pressed = false;
     }
+    public boolean movementKeysPressed(){
+        return up_pressed || down_pressed || left_pressed || right_pressed;
+    }
 
 }

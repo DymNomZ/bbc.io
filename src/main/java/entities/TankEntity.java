@@ -27,4 +27,18 @@ public class TankEntity extends Entity {
 
         entity_group.getChildren().addAll(rectangle, circle);
     }
+    public void move(){
+        int speed = 1;
+
+        if(key_handler.up_pressed) pos_y -= speed;
+        else if(key_handler.down_pressed) pos_y += speed;
+
+        else if(key_handler.left_pressed) pos_x -= speed;
+        else if(key_handler.right_pressed) pos_x += speed;
+
+        System.out.println("Sending new player data: " + pos_x + "," + pos_y);
+
+        //TODO: Send player position data to server
+
+    }
 }
