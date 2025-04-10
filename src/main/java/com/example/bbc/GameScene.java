@@ -5,13 +5,12 @@ import entities.ProjectileEntity;
 import entities.TankEntity;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 
 import java.util.*;
 import java.util.List;
@@ -34,47 +33,27 @@ public class GameScene extends Scene {
 
     public static MouseHandler mouse_handler;
     public static KeyHandler key_handler;
-    ImageView background_view1;
-    ImageView background_view2;
-    ImageView background_view3;
-    ImageView background_view4;
+
+    public static List<Line> vertical_bg_lines;
+    public static List<Line> horizontal_bg_lines;
 
 
     public GameScene() {
         super(root, SCREEN_WIDTH, SCREEN_HEIGHT);
         System.out.println("Screen Dimensions: " + SCREEN_WIDTH + ", " + SCREEN_HEIGHT);
 
-
-        Image background_image = new Image("file:src/main/java/assets/background.png");
-        background_view1 = new ImageView(background_image);
-        background_view1.fitWidthProperty().bind(WIDTH_PROPERTY);
-        background_view1.fitHeightProperty().bind(HEIGHT_PROPERTY);
-        background_view1.setTranslateX(0);
-        background_view1.setTranslateY(0);
-
-        background_view2 = new ImageView(background_image);
-        background_view2.fitWidthProperty().bind(WIDTH_PROPERTY);
-        background_view2.fitHeightProperty().bind(HEIGHT_PROPERTY);
-        background_view2.setTranslateX(0 + SCREEN_WIDTH);
-        background_view2.setTranslateY(0);
-
-        background_view3 = new ImageView(background_image);
-        background_view3.fitWidthProperty().bind(WIDTH_PROPERTY);
-        background_view3.fitHeightProperty().bind(HEIGHT_PROPERTY);
-        background_view3.setTranslateX(0 + SCREEN_WIDTH);
-        background_view3.setTranslateY(0 + SCREEN_HEIGHT);
-
-        background_view4 = new ImageView(background_image);
-        background_view4.fitWidthProperty().bind(WIDTH_PROPERTY);
-        background_view4.fitHeightProperty().bind(HEIGHT_PROPERTY);
-        background_view4.setTranslateX(0);
-        background_view4.setTranslateY(0 + SCREEN_HEIGHT);
+        vertical_bg_lines = new ArrayList<>();
+        horizontal_bg_lines = new ArrayList<>();
 
 
-        root.getChildren().add(background_view1);
-        root.getChildren().add(background_view2);
-        root.getChildren().add(background_view3);
-        root.getChildren().add(background_view4);
+        HEIGHT_PROPERTY.addListener((observable, oldValue, newValue) -> {
+            recalculate();
+            adjustBackground();
+        });
+        WIDTH_PROPERTY.addListener((observable, oldValue, newValue) -> {
+            recalculate();
+            adjustBackground();
+        });
 
         mouse_handler = new MouseHandler();
 
@@ -110,41 +89,56 @@ public class GameScene extends Scene {
 //        entity.getEntityGroup().toBack();
     }
 
-    public void moveBackground(double x, double y) {
-        // List of background views for easy iteration
-        List<ImageView> backgrounds = Arrays.asList(background_view1, background_view2, background_view3, background_view4);
+    public void clearBackground(){
+        for(Line l : vertical_bg_lines){
+            root.getChildren().remove(l);
+        }
+        for(Line l : horizontal_bg_lines){
+            root.getChildren().remove(l);
+        }
+        vertical_bg_lines.clear();
+        horizontal_bg_lines.clear();
+    }
 
-        // Move each background by x and y
-        for (ImageView background : backgrounds) {
-            background.setTranslateX(background.getTranslateX() + x);
-            background.setTranslateY(background.getTranslateY() + y);
+    private void adjustBackground(){
+        clearBackground();
+        for(int i = 0 - (int)SCREEN_WIDTH;i < SCREEN_WIDTH;i += 80){
+            Line l = new Line(0,0,0,SCREEN_HEIGHT);
+            l.setStrokeWidth(2.0);
+            l.setTranslateX(i);
+            l.setStroke(Color.valueOf("#AAAAAA"));
+            vertical_bg_lines.add(l);
+            root.getChildren().add(l);
+            l.toBack();
+        }
+        for(int i = 0 - (int)SCREEN_HEIGHT;i < SCREEN_HEIGHT;i += 80){
+            Line l = new Line(0,0,SCREEN_WIDTH,0);
+            l.setStrokeWidth(2.0);
+            l.setTranslateY(i);
+            l.setStroke(Color.valueOf("#AAAAAA"));
+            horizontal_bg_lines.add(l);
+            root.getChildren().add(l);
+            l.toBack();
         }
 
-        // Check and reset the background layers if they move off-screen (vertically and horizontally)
-        for (ImageView background : backgrounds) {
-            // Vertical reset
-            if (background.getTranslateY() >= SCREEN_HEIGHT) {
-                // If the background has moved off the screen, move it back to the top.
-                background.setTranslateY(background.getTranslateY() - SCREEN_HEIGHT * 2);  // Move back to top
-            }
-            if (background.getTranslateY() <= -SCREEN_HEIGHT) {
-                // If the background has moved too far up, move it back to the bottom.
-                background.setTranslateY(background.getTranslateY() + SCREEN_HEIGHT * 2);  // Move back to bottom
-            }
-
-            // Horizontal reset
-            if (background.getTranslateX() >= SCREEN_WIDTH) {
-                // If the background has moved off the screen, move it back to the left.
-                background.setTranslateX(background.getTranslateX() - SCREEN_WIDTH * 2);  // Move back to left
-            }
-            if (background.getTranslateX() <= -SCREEN_WIDTH) {
-                // If the background has moved too far to the left, move it back to the right.
-                background.setTranslateX(background.getTranslateX() + SCREEN_WIDTH * 2);  // Move back to right
+    }
+    private void moveBackground(double x, double y) {
+        for(Line l : vertical_bg_lines){
+            l.setTranslateX(l.getTranslateX() + x);
+            if(l.getTranslateX() > SCREEN_WIDTH){
+                l.setTranslateX(-SCREEN_WIDTH);
+            } else if(l.getTranslateX() < -SCREEN_WIDTH){
+                l.setTranslateX(SCREEN_WIDTH);
             }
         }
-
-        System.out.println("Y Translation: " + background_view4.getTranslateY());
-        System.out.println("X Translation: " + background_view4.getTranslateX());
+        for(Line l : horizontal_bg_lines){
+            l.setTranslateY(l.getTranslateY() + y);
+            if(l.getTranslateY() > SCREEN_HEIGHT){
+                l.setTranslateY(-SCREEN_HEIGHT);
+            } else if(l.getTranslateY() < -SCREEN_HEIGHT){
+                l.setTranslateY(SCREEN_HEIGHT);
+            }
+        }
     }
 
 
@@ -167,7 +161,7 @@ public class GameScene extends Scene {
         main_player.lookAt();
 
         if(mouse_handler.left_is_pressed){
-            main_player.shoot();
+            main_player.shoot(root);
         }
 
 //        if(key_handler.movementKeysPressed())
@@ -199,7 +193,6 @@ public class GameScene extends Scene {
                 lastUpdate = now;
                 return;
             }
-            recalculate();
             update();
 
             //player is rendered constantly in the center of the client's screen
