@@ -2,6 +2,7 @@ package classes;
 
 import java.awt.*;
 
+@Deprecated
 public class CameraEntity extends PanelEntity{
 
     public CameraEntity(int width, int height){

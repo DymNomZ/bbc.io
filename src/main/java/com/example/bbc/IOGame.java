@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import utils.Scenes;
 import java.io.IOException;
 
+@Deprecated
 public class IOGame extends Application {
 
     static Stage MAIN_STAGE;

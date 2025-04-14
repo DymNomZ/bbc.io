@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class AnimatedSprite extends Sprite {
     private final List<Sprite> sprites;
     private long interval;

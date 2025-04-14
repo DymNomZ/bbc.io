@@ -3,6 +3,7 @@ package classes;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+@Deprecated
 public class NormalSprite extends Sprite {
     private BufferedImage sprite_buffer;
     private final NormalSprite raw_buffer;

@@ -12,6 +12,7 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+@Deprecated
 public class MapLoader {
 
     ArrayList<Tile> loaded_tiles = new ArrayList<>();

@@ -3,6 +3,7 @@ package classes;
 import com.example.bbc.KeyHandler;
 import interfaces.EntityCollidable;
 
+@Deprecated
 public class Player extends MapEntity implements EntityCollidable {
 
     private final KeyHandler inputs;

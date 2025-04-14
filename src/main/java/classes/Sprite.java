@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
+@Deprecated
 public abstract class Sprite extends Asset {
     //bytes of void image
     private static final byte[] void_image = {

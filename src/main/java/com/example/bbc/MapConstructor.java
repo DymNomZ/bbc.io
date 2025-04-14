@@ -8,6 +8,7 @@ import interfaces.CollisionHandler;
 import java.awt.*;
 import java.util.ArrayList;
 
+@Deprecated
 public class MapConstructor {
 
     MapLoader map_loader;
