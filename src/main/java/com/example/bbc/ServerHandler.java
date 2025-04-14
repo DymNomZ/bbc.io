@@ -1,34 +1,35 @@
 package com.example.bbc;
 
 import configs.SocketConfig;
-import datas.GameData;
-import datas.InputData;
-import datas.LobbyData;
-import datas.UserData;
+import datas.*;
 import utils.Logging;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.NetworkInterface;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.UUID;
 
 public class ServerHandler {
     private ServerDataListener<GameData> game_listener = null;
     private ServerDataListener<LobbyData> lobby_listener = null;
     private ServerListener disconnect_listener = null;
-    private ServerListener connect_listener = null;
+    private ServerDataListener<UserData> connect_listener = null;
+    private ServerListener error_listener = null;
     private Thread tcp_thread;
+    private String name = "";
+    private int lobby_id = 0;
 
     public ServerHandler() {
-        //UUID user_id = UUID.randomUUID();
-
         tcp_thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 TCPThread();
             }
         });
+        tcp_thread.start();
     }
 
     private void UDPOutputThread() {
@@ -40,6 +41,28 @@ public class ServerHandler {
     }
 
     private void TCPThread() {
+        byte[] id = null;
+        boolean is_connected = false;
+
+        try {
+            for (NetworkInterface i : NetworkInterface.networkInterfaces().toList()) {
+                id = i.getHardwareAddress();
+                if (id != null) {
+                    break;
+                }
+            }
+
+            if (id == null) {
+                Logging.error(this, "No Network interface from this device have a mac address / is connected to the internet");
+                if (error_listener != null) {
+                    error_listener.run();
+                }
+                return;
+            }
+        } catch (SocketException e) {
+            throw new RuntimeException("Cant get Device Mac Address as ID");
+        }
+
         while (true) {
             try (Socket server = new Socket(SocketConfig.HOSTNAME, SocketConfig.PORT)) {
                 server.setSoTimeout(30000);
@@ -52,7 +75,12 @@ public class ServerHandler {
                     throw new IOException();
                 }
 
-                // handle client here
+                AuthData authPacket = new AuthData(id, name, lobby_id);
+
+                stdin.write(authPacket.serialize());
+                stdin.flush();
+
+
             } catch (IOException e) {
                 Logging.error(this, "Unable to connect to server. . . Retrying in 5 seconds");
             }
@@ -63,6 +91,10 @@ public class ServerHandler {
                 return;
             }
         }
+    }
+
+    public void onHandlerError(ServerListener listener) {
+        error_listener = listener;
     }
 
     // Data of entities to apply to game
@@ -79,7 +111,7 @@ public class ServerHandler {
         disconnect_listener = listener;
     }
 
-    public void onConnect(ServerListener listener) {
+    public void onConnected(ServerDataListener<UserData> listener) {
         connect_listener = listener;
     }
     
@@ -91,11 +123,27 @@ public class ServerHandler {
         // send user data (name or character modification)
     }
 
-    public void ready() {
+    public void disconnect() {
 
     }
 
-    public void unready() {
+    public void play() {
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+
+        // set name to server if connected
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        new ServerHandler();
+
+        Thread.sleep(232131);
     }
 }
