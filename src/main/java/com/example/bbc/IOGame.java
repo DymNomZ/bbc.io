@@ -14,7 +14,6 @@ public class IOGame extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         MAIN_STAGE = stage;
-
         MAIN_STAGE.setTitle("bbc.io");
         MAIN_STAGE.setMinWidth(1280);
         MAIN_STAGE.setMinHeight(720);
