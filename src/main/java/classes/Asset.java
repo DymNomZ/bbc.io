@@ -2,7 +2,7 @@ package classes;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-
+@Deprecated
 public abstract class Asset {
     private static final HashMap<String, WeakReference<Asset>> loaded_assets = new HashMap<>();
 

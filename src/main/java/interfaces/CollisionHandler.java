@@ -2,6 +2,7 @@ package interfaces;
 
 // Callbacks called by verifyEntityCollision
 // These callbacks are specifically for solid tile collisions
+@Deprecated
 public interface CollisionHandler {
     default void onCollision() {}
 

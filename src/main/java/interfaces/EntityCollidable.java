@@ -2,6 +2,7 @@ package interfaces;
 
 import classes.PanelEntity;
 
+@Deprecated
 public interface EntityCollidable{
 
     default void onEntityCollision(PanelEntity e){}

@@ -3,6 +3,7 @@ package entities;
 import com.example.bbc.GameScene;
 import com.example.bbc.KeyHandler;
 import com.example.bbc.MouseHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -36,7 +37,7 @@ public abstract class Entity {
     private long last_shot_time = 0;
     private long shot_cooldown = 500_000_000;
 
-    public void shoot(){
+    public void shoot(StackPane root){
 
         long currentTime = System.nanoTime();
         if (currentTime - last_shot_time < shot_cooldown) {
@@ -48,12 +49,16 @@ public abstract class Entity {
         double mouse_x = mouse_handler.event.getSceneX();
         double mouse_y = mouse_handler.event.getSceneY();
 
+        Point2D point2D = root.sceneToLocal(mouse_x, mouse_y);
+        mouse_x = point2D.getX();
+        mouse_y = point2D.getY();
         double angle = Math.toDegrees(Math.atan2(mouse_y - y, mouse_x - x));
         Entity entity = new ProjectileEntity(angle, 5, getLayoutX(), getLayoutY());
         entity.setPosition(x + 45 * (Math.cos(Math.toRadians(angle))), y + 45 * (Math.sin(Math.toRadians(angle))));
         GameScene.spawnEntity(entity);
 
         //TODO: Send projectile position data to server
+
 
         last_shot_time = currentTime;
     }

@@ -19,7 +19,8 @@ public class IOGame extends Application {
         MAIN_STAGE.setMinWidth(1280);
         MAIN_STAGE.setMinHeight(720);
         MAIN_STAGE.setScene(Scenes.GAME_SCENE);
-
+        MAIN_STAGE.setWidth(1280);
+        MAIN_STAGE.setHeight(720);
         // Maximize window by default
         MAIN_STAGE.setMaximized(false);
         // Set fullscreen

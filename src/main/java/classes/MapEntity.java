@@ -1,5 +1,6 @@
 package classes;
 
+@Deprecated
 public abstract class MapEntity extends PanelEntity {
     private String name;
     private int hit_points;
