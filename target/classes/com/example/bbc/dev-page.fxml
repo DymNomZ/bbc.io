@@ -53,7 +53,7 @@
             </Label>
          </children>
       </VBox>
-      <VBox fx:id="vRaymond" alignment="TOP_CENTER" layoutX="710.0" layoutY="434.0" minWidth="130.0" prefHeight="230.0" prefWidth="240.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="710.0" AnchorPane.rightAnchor="330.0">
+      <VBox fx:id="vRaymond" alignment="TOP_CENTER" layoutX="710.0" layoutY="434.0" minWidth="130.0" prefHeight="230.0" prefWidth="240.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="710.0" AnchorPane.rightAnchor="330.0" AnchorPane.topAnchor="431.0">
          <children>
             <ImageView fx:id="ivRaymondSprite" fitHeight="224.0" fitWidth="224.0" pickOnBounds="true" preserveRatio="true" />
             <Label alignment="CENTER" prefWidth="330.0" text="Raymond Gerard Tio" textAlignment="CENTER" wrapText="true">
