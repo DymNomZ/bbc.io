@@ -1,6 +1,8 @@
 package datas;
 
 public class InputData extends SerialData {
+    static private byte SERIAL_ID = SerialData.SERIAL_ID++;
+
     public boolean up_pressed = false;
     public boolean down_pressed = false;
     public boolean left_pressed = false;
