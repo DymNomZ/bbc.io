@@ -6,6 +6,9 @@ import javafx.scene.shape.Rectangle;
 
 public class TankEntity extends Entity {
 
+    Circle main_body;
+    Rectangle turret;
+
 
     public TankEntity() {
         Circle circle = new Circle();
@@ -26,7 +29,18 @@ public class TankEntity extends Entity {
         rectangle.setTranslateY(0 - rectangle.getHeight() / 2);
 
         entity_group.getChildren().addAll(rectangle, circle);
+        main_body = circle;
+        turret = rectangle;
     }
+
+    public Circle getMain_body() {
+        return main_body;
+    }
+
+    public Rectangle getTurret() {
+        return turret;
+    }
+
     public void move(){
         int speed = 1;
 

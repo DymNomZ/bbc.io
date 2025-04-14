@@ -14,11 +14,10 @@ public class IOGame extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         MAIN_STAGE = stage;
-
         MAIN_STAGE.setTitle("bbc.io");
         MAIN_STAGE.setMinWidth(1280);
         MAIN_STAGE.setMinHeight(720);
-        MAIN_STAGE.setScene(Scenes.TITLE_SCENE);
+        MAIN_STAGE.setScene(Scenes.GAME_SCENE);
         MAIN_STAGE.setWidth(1280);
         MAIN_STAGE.setHeight(720);
         // Maximize window by default
