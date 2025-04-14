@@ -9,6 +9,7 @@ import java.awt.*;
  *  This class differs from MapEntity by its JPanel specific methods and data
  *                                                                    - Lil Z
  */
+@Deprecated
 public abstract class PanelEntity {
     /* Explanation for each variable:
      * - x and y are the position of the top-leftmost pixel of the panel

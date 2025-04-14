@@ -2,6 +2,7 @@ package classes;
 
 import java.awt.image.BufferedImage;
 
+@Deprecated
 public class Tile {
     public Sprite image;
     public String name;
