@@ -4,13 +4,19 @@ import entities.Entity;
 import entities.ProjectileEntity;
 import entities.TankEntity;
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 import java.util.*;
 import java.util.List;
@@ -36,6 +42,8 @@ public class GameScene extends Scene {
 
     public static List<Line> vertical_bg_lines;
     public static List<Line> horizontal_bg_lines;
+
+    public static boolean can_be_damaged = true;
 
 
     public GameScene() {
@@ -80,6 +88,45 @@ public class GameScene extends Scene {
         System.out.println(root.getChildren());
         gameLoop.start();
 
+
+    }
+
+    private Color brighten(Color color){
+        double red = Math.min((color.getRed() + 0.5), 1.0);
+        double green = Math.min((color.getGreen() + 0.5), 1.0);
+        double blue = Math.min(color.getBlue() + 0.5, 1.0);
+        double opacity = color.getOpacity();
+        Color brightened = new Color(red, green, blue, opacity);
+        return brightened;
+    }
+
+    private void damageBrighten(Shape s){
+
+        Color fill = (Color) s.getFill();
+        Color stroke = (Color)s.getStroke();
+
+        s.setFill(brighten(fill));
+        s.setStroke(brighten(stroke));
+
+        //This is not a thread, more of like a sticky note
+        //on the javafx thread
+        //
+        //Basically saying "do this 200ms in the future ok?" to the main thread
+        PauseTransition pause = new PauseTransition(Duration.millis(200));
+        pause.setOnFinished(e -> {
+            s.setFill(fill);
+            s.setStroke(stroke);
+            can_be_damaged = true; // Unlock after cooldown
+        });
+        pause.play();
+    }
+
+    public void onPlayerDamaged() {
+        can_be_damaged = false;
+        Circle c = ((TankEntity) main_player).getMain_body();
+        Rectangle r = ((TankEntity) main_player).getTurret();
+        damageBrighten(c);
+        damageBrighten(r);
 
     }
 
@@ -179,6 +226,9 @@ public class GameScene extends Scene {
         }
         if (key_handler.right_pressed) {
             moveBackground(-5,0);
+        }
+        if(key_handler.f_pressed){
+            if(can_be_damaged)onPlayerDamaged();
         }
 
 //        System.out.println(background_view.getLayoutY());

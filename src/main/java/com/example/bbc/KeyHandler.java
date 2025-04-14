@@ -17,6 +17,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
     public boolean three_pressed = false;
     public boolean four_pressed = false;
     public boolean five_pressed = false;
+    public boolean f_pressed = false;
 
     @Override
     public void handle(KeyEvent event) {
@@ -38,6 +39,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
             case DIGIT3 -> three_pressed = true;
             case DIGIT4 -> four_pressed = true;
             case DIGIT5 -> five_pressed = true;
+            case F -> f_pressed = true;
         }
     }
 
@@ -50,6 +52,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
             case A -> left_pressed = false;
             case D -> right_pressed = false;
             case SHIFT -> lShift_pressed = false;
+            case F -> f_pressed = false;
         }
     }
 
