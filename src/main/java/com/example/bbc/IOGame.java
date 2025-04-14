@@ -1,6 +1,8 @@
 package com.example.bbc;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utils.Scenes;
 import java.io.IOException;
@@ -11,7 +13,6 @@ public class IOGame extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-
         MAIN_STAGE = stage;
 
         MAIN_STAGE.setTitle("bbc.io");

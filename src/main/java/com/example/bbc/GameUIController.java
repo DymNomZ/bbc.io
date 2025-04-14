@@ -6,6 +6,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -13,11 +15,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import utils.Scenes;
+
+import java.io.IOException;
 
 public class GameUIController {
     public Button TEMP_manual_add_xp;  //for visuals only, to be deleted
     public Label TEMP_lbl_health, TEMP_lbl_speed, TEMP_lbl_damage, TEMP_lbl_xp;  //for visuals only, to be deleted
     public AnchorPane root;
+    public Button TEMPbtnDevPage;
     IntegerProperty xp = new SimpleIntegerProperty(0);      //using IntegerProperty allows labels to react to changes to the integer
     IntegerProperty health = new SimpleIntegerProperty(100);
     IntegerProperty speed = new SimpleIntegerProperty(5);
@@ -120,4 +127,13 @@ public class GameUIController {
         }
     }
 
+    public void TEMP_devPage(ActionEvent actionEvent) throws IOException {
+//        IOGame.MAIN_STAGE.setScene(Scenes.DEVS_SCENE);
+        FXMLLoader fxmlLoader = new FXMLLoader(IOGame.class.getResource("dev-page.fxml"));
+        Stage stage = (Stage) TEMPbtnDevPage.getScene().getWindow();
+        stage.setScene(new Scene(fxmlLoader.load(), 1280, 720));
+        stage.setTitle("Student Screen");
+        stage.setScene(stage.getScene());
+        stage.show();
+    }
 }

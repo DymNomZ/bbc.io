@@ -5,6 +5,7 @@ import com.example.bbc.KeyHandler;
 import com.example.bbc.MouseHandler;
 import javafx.scene.Group;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
 public abstract class Entity {

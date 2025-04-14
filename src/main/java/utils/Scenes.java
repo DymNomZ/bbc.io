@@ -12,15 +12,23 @@ public class Scenes {
 
     public static Scene GAME_SCENE;
     public static GameUIOverlay UI_OVERLAY;
+
+    static FXMLLoader devsfxml = new FXMLLoader(Scenes.class.getResource("dev-page.fxml"));
+    public static Scene DEVS_SCENE;
     
     static {
         try {
+//            DEVS_SCENE = new Scene(devsfxml.load(), 1280, 720);      //causes error when running IOGame
             // Create the base game scene
             GameScene gameScene = new GameScene();
             
             // Create and apply UI overlay
             UI_OVERLAY = new GameUIOverlay();
             GAME_SCENE = UI_OVERLAY.applyToScene(gameScene);
+
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
             // Fallback to base game scene without UI if there's an error

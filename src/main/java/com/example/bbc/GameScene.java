@@ -227,5 +227,4 @@ public class GameScene extends Scene {
             lastUpdate = now;
         }
     };
-
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.GameLobbyUIController">
+   <children>
+      <Circle fx:id="btnColorRed" fill="#fa7579" layoutX="87.0" layoutY="102.0" onMouseClicked="#onChangeColorClick" radius="36.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="btnColorYellow" fill="#f8e693" layoutX="220.0" layoutY="102.0" onMouseClicked="#onChangeColorClick" radius="36.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="btnColorBlue" fill="#8eb2fe" layoutX="350.0" layoutY="102.0" onMouseClicked="#onChangeColorClick" radius="36.0" stroke="BLACK" strokeType="INSIDE" />
+   </children>
+</AnchorPane>
