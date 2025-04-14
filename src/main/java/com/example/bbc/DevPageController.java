@@ -1,5 +1,7 @@
 package com.example.bbc;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -22,18 +24,14 @@ public class DevPageController {
 
     public void initialize(){
         Image dymSprite = new Image("file:src/main/java/assets/dymier_left_F0-resized.png");
-//        vDym.setMinHeight(Double.MIN_VALUE);
-//        vDym.setMinWidth(Double.MIN_VALUE);
-        vDym.setMaxHeight(Double.MAX_VALUE);
-        vDym.setMaxWidth(Double.MAX_VALUE);
         vDym.setAlignment(Pos.CENTER);
         ivDymSprite.setImage(dymSprite);
         ivDymSprite.setSmooth(false);
         ivDymSprite.setPreserveRatio(true);
-//        paneDym.setMaxWidth(5000.0);
-//        paneDym.setMaxHeight(5000.0);
-        ivDymSprite.fitHeightProperty().bind(vDym.heightProperty());
-        ivDymSprite.fitWidthProperty().bind(vDym.widthProperty());
+        ivDymSprite.fitHeightProperty().bind(vDym.heightProperty().divide(1.4));
+        ivDymSprite.fitWidthProperty().bind(vDym.widthProperty().divide(1.4));
+        System.out.println("Vbox: " + vDym.isResizable());
+        System.out.println("ImageView: " + ivDymSprite.isResizable());
         //add pane and store IV inside
         Image sethSprite = new Image("file:src/main/java/assets/seth_left_F0-resized.png");
         vSeth.setMinHeight(Double.MIN_VALUE);
@@ -75,5 +73,15 @@ public class DevPageController {
         ivRaymondSprite.setPreserveRatio(true);
         ivRaymondSprite.fitHeightProperty().bind(vRaymond.heightProperty());
         ivRaymondSprite.fitWidthProperty().bind(vRaymond.widthProperty());
+        apDevScreen.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+                System.out.println("Width: " + newSceneWidth);
+            }
+        });
+        apDevScreen.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+                System.out.println("Height: " + newSceneHeight);
+            }
+        });
     }
 }
