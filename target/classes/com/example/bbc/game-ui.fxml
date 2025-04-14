@@ -74,4 +74,5 @@
    <Label fx:id="TEMP_lbl_damage" layoutX="30.0" layoutY="30.0" text="Damage:" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="110.0" />
    <Label fx:id="TEMP_lbl_xp" layoutX="40.0" layoutY="40.0" text="XP:" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="140.0" />
    <Button fx:id="TEMPbtnDevPage" mnemonicParsing="false" onAction="#TEMP_devPage" text="Dev Page" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="200.0" />
+   <Button fx:id="TEMPbtnLobbyPage" layoutX="70.0" layoutY="234.0" mnemonicParsing="false" onAction="#TEMP_lobbyPage" text="Lobby Page" />
 </AnchorPane>

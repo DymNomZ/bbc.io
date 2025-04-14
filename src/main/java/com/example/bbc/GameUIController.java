@@ -25,6 +25,7 @@ public class GameUIController {
     public Label TEMP_lbl_health, TEMP_lbl_speed, TEMP_lbl_damage, TEMP_lbl_xp;  //for visuals only, to be deleted
     public AnchorPane root;
     public Button TEMPbtnDevPage;
+    public Button TEMPbtnLobbyPage;
     IntegerProperty xp = new SimpleIntegerProperty(0);      //using IntegerProperty allows labels to react to changes to the integer
     IntegerProperty health = new SimpleIntegerProperty(100);
     IntegerProperty speed = new SimpleIntegerProperty(5);
@@ -132,7 +133,17 @@ public class GameUIController {
         FXMLLoader fxmlLoader = new FXMLLoader(IOGame.class.getResource("dev-page.fxml"));
         Stage stage = (Stage) TEMPbtnDevPage.getScene().getWindow();
         stage.setScene(new Scene(fxmlLoader.load(), 1280, 720));
-        stage.setTitle("Student Screen");
+        stage.setTitle("Dev Screen");
+        stage.setScene(stage.getScene());
+        stage.show();
+    }
+
+    public void TEMP_lobbyPage(ActionEvent actionEvent) throws IOException {
+//        IOGame.MAIN_STAGE.setScene(Scenes.DEVS_SCENE);
+        FXMLLoader fxmlLoader = new FXMLLoader(IOGame.class.getResource("game-lobby-ui.fxml"));
+        Stage stage = (Stage) TEMPbtnLobbyPage.getScene().getWindow();
+        stage.setScene(new Scene(fxmlLoader.load(), 1280, 720));
+        stage.setTitle("Lobby Screen");
         stage.setScene(stage.getScene());
         stage.show();
     }
