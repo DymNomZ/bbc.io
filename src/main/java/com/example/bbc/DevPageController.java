@@ -1,6 +1,7 @@
 package com.example.bbc;
 
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableNumberValue;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,19 +21,14 @@ public class DevPageController {
     public ImageView ivDymSprite, ivSethSprite, ivLanceSprite, ivZillionSprite, ivRaymondSprite;
     public AnchorPane apDevScreen;
     public VBox vDym, vSeth, vLance, vZillion, vRaymond;
-    public Pane paneDym;
 
     public void initialize(){
         Image dymSprite = new Image("file:src/main/java/assets/dymier_left_F0-resized.png");
-        vDym.setAlignment(Pos.CENTER);
         ivDymSprite.setImage(dymSprite);
         ivDymSprite.setSmooth(false);
         ivDymSprite.setPreserveRatio(true);
-        ivDymSprite.fitHeightProperty().bind(vDym.heightProperty().divide(1.4));
-        ivDymSprite.fitWidthProperty().bind(vDym.widthProperty().divide(1.4));
-        System.out.println("Vbox: " + vDym.isResizable());
-        System.out.println("ImageView: " + ivDymSprite.isResizable());
-        //add pane and store IV inside
+        ivDymSprite.fitHeightProperty().bind(vDym.heightProperty());
+        ivDymSprite.fitWidthProperty().bind(vDym.widthProperty());
         Image sethSprite = new Image("file:src/main/java/assets/seth_left_F0-resized.png");
         vSeth.setMinHeight(Double.MIN_VALUE);
         vSeth.setMinWidth(Double.MIN_VALUE);
@@ -75,7 +71,17 @@ public class DevPageController {
         ivRaymondSprite.fitWidthProperty().bind(vRaymond.widthProperty());
         apDevScreen.widthProperty().addListener(new ChangeListener<Number>() {
             @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-                System.out.println("Width: " + newSceneWidth);
+                System.out.println("Width: " + newSceneWidth + "\tDivider: " + newSceneWidth.doubleValue()/1000);
+                ivDymSprite.fitHeightProperty().bind(vDym.heightProperty().divide(newSceneWidth.intValue()/1264));
+                ivDymSprite.fitWidthProperty().bind(vDym.widthProperty().divide(newSceneWidth.intValue()/681));
+                ivSethSprite.fitHeightProperty().bind(vSeth.heightProperty().divide(newSceneWidth.intValue()/1264));
+                ivSethSprite.fitWidthProperty().bind(vSeth.widthProperty().divide(newSceneWidth.intValue()/681));
+                ivLanceSprite.fitHeightProperty().bind(vLance.heightProperty().divide(newSceneWidth.intValue()/1264));
+                ivLanceSprite.fitWidthProperty().bind(vLance.widthProperty().divide(newSceneWidth.intValue()/681));
+                ivZillionSprite.fitHeightProperty().bind(vZillion.heightProperty().divide(newSceneWidth.intValue()/1264));
+                ivZillionSprite.fitWidthProperty().bind(vZillion.widthProperty().divide(newSceneWidth.intValue()/681));
+                ivRaymondSprite.fitHeightProperty().bind(vRaymond.heightProperty().divide(newSceneWidth.intValue()/1264));
+                ivRaymondSprite.fitWidthProperty().bind(vRaymond.widthProperty().divide(newSceneWidth.intValue()/681));
             }
         });
         apDevScreen.heightProperty().addListener(new ChangeListener<Number>() {
