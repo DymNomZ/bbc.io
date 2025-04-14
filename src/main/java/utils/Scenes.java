@@ -11,9 +11,12 @@ import java.io.IOException;
 public class Scenes {
 
     public static Scene GAME_SCENE;
+    public static Scene TITLE_SCENE;
     public static GameUIOverlay UI_OVERLAY;
 
-    static FXMLLoader devsfxml = new FXMLLoader(Scenes.class.getResource("dev-page.fxml"));
+    static FXMLLoader titleSceneFXML = new FXMLLoader(IOGame.class.getResource("title-scene.fxml"));
+
+    static FXMLLoader devsFXML = new FXMLLoader(Scenes.class.getResource("dev-page.fxml"));
     public static Scene DEVS_SCENE;
     
     static {
@@ -26,8 +29,7 @@ public class Scenes {
             UI_OVERLAY = new GameUIOverlay();
             GAME_SCENE = UI_OVERLAY.applyToScene(gameScene);
 
-
-
+            TITLE_SCENE = new Scene(titleSceneFXML.load(), 600, 500);
 
         } catch (IOException e) {
             e.printStackTrace();
