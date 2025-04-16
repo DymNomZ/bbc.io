@@ -70,7 +70,7 @@ public class ServerMain {
                     Logging.write(ServerMain.class, "Client Timeout reached");
                 } catch (IOException e) {
                     client.close();
-                    Logging.write(ServerMain.class, "IOException at ");
+                    Logging.write(ServerMain.class, "IOException at adding player to a lobby");
                 }
             } catch (IOException e) {
                 Logging.error(ServerMain.class, "IOException at listener.accept");
