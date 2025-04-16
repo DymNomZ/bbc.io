@@ -6,24 +6,24 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="apDevScreen" minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.DevPageController">
+<AnchorPane fx:id="apDevScreen" minHeight="720.0" minWidth="1264.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.DevPageController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="45.0" text="Developers Page" textAlignment="CENTER" AnchorPane.leftAnchor="450.0" AnchorPane.rightAnchor="450.0">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="22.0" text="Developers Page" textAlignment="CENTER" AnchorPane.leftAnchor="450.0" AnchorPane.rightAnchor="450.0">
          <font>
             <Font size="48.0" />
          </font>
       </Label>
-      <VBox fx:id="vDym" alignment="TOP_CENTER" layoutX="139.0" layoutY="189.0" maxHeight="400.0" maxWidth="400.0" minWidth="-Infinity" prefHeight="230.0" prefWidth="240.0" AnchorPane.bottomAnchor="311.0" AnchorPane.leftAnchor="115.0" AnchorPane.rightAnchor="925.0" AnchorPane.topAnchor="150.0">
+      <VBox fx:id="vDym" alignment="TOP_CENTER" maxHeight="400.0" maxWidth="400.0" minWidth="-Infinity" prefHeight="230.0" prefWidth="240.0" AnchorPane.bottomAnchor="361.0" AnchorPane.leftAnchor="115.0" AnchorPane.rightAnchor="925.0" AnchorPane.topAnchor="100.0">
          <children>
             <ImageView fx:id="ivDymSprite" fitHeight="224.0" fitWidth="224.0" pickOnBounds="true" preserveRatio="true" />
-            <Label alignment="CENTER" minWidth="-Infinity" prefWidth="330.0" text="John Dymier Borgonia" textAlignment="CENTER" wrapText="true">
+            <Label alignment="CENTER" minWidth="-Infinity" prefHeight="35.0" prefWidth="240.0" text="John Dymier Borgonia" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
          </children>
       </VBox>
-      <VBox fx:id="vSeth" alignment="TOP_CENTER" layoutX="520.0" layoutY="175.0" minWidth="130.0" prefHeight="230.0" prefWidth="240.0" AnchorPane.bottomAnchor="311.0" AnchorPane.leftAnchor="520.0" AnchorPane.rightAnchor="520.0" AnchorPane.topAnchor="150.0">
+      <VBox fx:id="vSeth" alignment="TOP_CENTER" layoutX="520.0" layoutY="175.0" minWidth="130.0" prefHeight="230.0" prefWidth="240.0" AnchorPane.bottomAnchor="361.0" AnchorPane.leftAnchor="520.0" AnchorPane.rightAnchor="520.0" AnchorPane.topAnchor="100.0">
          <children>
             <ImageView fx:id="ivSethSprite" fitHeight="224.0" fitWidth="224.0" pickOnBounds="true" preserveRatio="true" />
             <Label alignment="CENTER" prefWidth="330.0" text="Seth Nathaniel Emia" textAlignment="CENTER" wrapText="true">
@@ -33,7 +33,7 @@
             </Label>
          </children>
       </VBox>
-      <VBox fx:id="vLance" alignment="TOP_CENTER" layoutX="950.0" layoutY="175.0" minWidth="130.0" prefHeight="230.0" prefWidth="240.0" AnchorPane.bottomAnchor="311.0" AnchorPane.leftAnchor="925.0" AnchorPane.rightAnchor="115.0" AnchorPane.topAnchor="150.0">
+      <VBox fx:id="vLance" alignment="TOP_CENTER" layoutX="950.0" layoutY="175.0" minWidth="130.0" prefHeight="230.0" prefWidth="240.0" AnchorPane.bottomAnchor="361.0" AnchorPane.leftAnchor="925.0" AnchorPane.rightAnchor="115.0" AnchorPane.topAnchor="100.0">
          <children>
             <ImageView fx:id="ivLanceSprite" fitHeight="224.0" fitWidth="224.0" pickOnBounds="true" preserveRatio="true" />
             <Label alignment="CENTER" prefWidth="330.0" text="Lance Joseph Enario" textAlignment="CENTER" wrapText="true">
