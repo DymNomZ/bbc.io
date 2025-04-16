@@ -2,6 +2,7 @@ package com.example.bbc;
 
 import configs.SocketConfig;
 import datas.*;
+import exceptions.BBCServerNotConnected;
 import utils.Logging;
 
 import java.io.IOException;
@@ -10,7 +11,6 @@ import java.io.OutputStream;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.UUID;
 
 public class ServerHandler {
     private ServerDataListener<GameData> game_listener = null;
@@ -21,6 +21,7 @@ public class ServerHandler {
     private Thread tcp_thread;
     private String name = "";
     private int lobby_id = 0;
+    private boolean isConnected = false;
 
     public ServerHandler() {
         tcp_thread = new Thread(new Runnable() {
@@ -42,7 +43,6 @@ public class ServerHandler {
 
     private void TCPThread() {
         byte[] id = null;
-        boolean is_connected = false;
 
         try {
             for (NetworkInterface i : NetworkInterface.networkInterfaces().toList()) {
@@ -128,7 +128,9 @@ public class ServerHandler {
     }
 
     public void play() {
-
+        if (!isConnected) {
+            throw new BBCServerNotConnected();
+        }
     }
 
     public String getName() {
@@ -139,11 +141,5 @@ public class ServerHandler {
         this.name = name;
 
         // set name to server if connected
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        new ServerHandler();
-
-        Thread.sleep(232131);
     }
 }

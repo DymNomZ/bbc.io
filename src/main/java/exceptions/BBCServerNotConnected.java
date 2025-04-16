@@ -1,7 +1,7 @@
 package exceptions;
 
 public class BBCServerNotConnected extends RuntimeException {
-    public BBCServerNotConnected(String message) {
-        super(message);
+    public BBCServerNotConnected() {
+        super("Not connected to the server");
     }
 }

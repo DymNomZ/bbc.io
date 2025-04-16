@@ -22,4 +22,12 @@ public abstract class SerialData {
     static protected long decodeLong(byte[] val) {
         return ByteBuffer.wrap(val).getLong();
     }
+
+    static protected byte[] convertDouble(double val) {
+        return ByteBuffer.allocate(8).putDouble(val).array();
+    }
+
+    static protected double decodeDouble(byte[] val) {
+        return ByteBuffer.wrap(val).getDouble();
+    }
 }
