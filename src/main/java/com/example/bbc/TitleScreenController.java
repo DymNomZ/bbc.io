@@ -5,6 +5,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 
+import static com.example.bbc.IOGame.MAIN_STAGE;
+import static utils.Scenes.GAME_SCENE;
+import static utils.Scenes.LOBBY_SCENE;
+
 public class TitleScreenController {
     public ImageView titleImageView;
     public TextField playerNameTF;
@@ -29,10 +33,10 @@ public class TitleScreenController {
         titleImageView.setFitWidth(500);
         titleImageView.setFitHeight(300);
         titleImageView.setPreserveRatio(true);
-
     }
 
     public void test(){
-        System.out.println("lol");
+        //to be adjusted to go to lobby screen once lobby screen works
+        MAIN_STAGE.setScene(LOBBY_SCENE);
     }
 }

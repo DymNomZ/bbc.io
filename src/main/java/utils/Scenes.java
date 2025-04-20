@@ -12,10 +12,11 @@ public class Scenes {
 
     public static Scene GAME_SCENE;
     public static Scene TITLE_SCENE;
+    public static Scene LOBBY_SCENE;
     public static GameUIOverlay UI_OVERLAY;
 
     static FXMLLoader titleSceneFXML = new FXMLLoader(IOGame.class.getResource("title-scene.fxml"));
-
+    static FXMLLoader lobbySceneFXML = new FXMLLoader(IOGame.class.getResource("game-lobby-ui.fxml"));
     static FXMLLoader devsFXML = new FXMLLoader(Scenes.class.getResource("dev-page.fxml"));
     public static Scene DEVS_SCENE;
     
@@ -29,8 +30,8 @@ public class Scenes {
             UI_OVERLAY = new GameUIOverlay();
             GAME_SCENE = UI_OVERLAY.applyToScene(gameScene);
 
-            TITLE_SCENE = new Scene(titleSceneFXML.load(), 600, 500);
-
+            TITLE_SCENE = new Scene(titleSceneFXML.load(), 1280, 720);
+            LOBBY_SCENE = new Scene(lobbySceneFXML.load(),1280, 720);
         } catch (IOException e) {
             e.printStackTrace();
             // Fallback to base game scene without UI if there's an error

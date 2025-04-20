@@ -33,7 +33,8 @@ public class GameScene extends Scene {
 
     public static StackPane root = new StackPane();
 
-    private final Entity main_player;
+    //changed player from final to static for color change testing
+    public static Entity main_player;
     private double center_x, center_y;
     public static List<Entity> entity_list;
 
@@ -270,4 +271,5 @@ public class GameScene extends Scene {
             lastUpdate = now;
         }
     };
+
 }

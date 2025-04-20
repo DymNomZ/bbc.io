@@ -1,6 +1,7 @@
 package entities;
 
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
@@ -9,19 +10,25 @@ public class TankEntity extends Entity {
     Circle main_body;
     Rectangle turret;
 
-
+    // constructor for base colors
+    // - Lance
     public TankEntity() {
+        this(Color.BLUE, Color.RED, Color.BLACK);
+    }
+    
+    // adjustments for user-chosen color options to apply
+    public TankEntity(Paint bodyColor, Paint turretColor, Paint borderColor) {
         Circle circle = new Circle();
         circle.setRadius(20);
-        circle.setFill(Color.BLUE);
+        circle.setFill(bodyColor);
         circle.setStrokeWidth(2.0);
-        circle.setStroke(Color.BLACK);
+        circle.setStroke(borderColor);
 
         Rectangle rectangle = new Rectangle();
         rectangle.setHeight(10);
         rectangle.setWidth(50);
-        rectangle.setFill(Color.RED);
-        rectangle.setStroke(Color.BLACK);
+        rectangle.setFill(turretColor);
+        rectangle.setStroke(borderColor);
         rectangle.setStrokeWidth(2.0);
 
         //rectangle skews to the right initially, this aligns it to the center of the circle
@@ -39,6 +46,19 @@ public class TankEntity extends Entity {
 
     public Rectangle getTurret() {
         return turret;
+    }
+
+    public void setBodyColor(Paint color) {
+        main_body.setFill(color);
+    }
+    
+    public void setTurretColor(Paint color) {
+        turret.setFill(color);
+    }
+    
+    public void setBorderColor(Paint color) {
+        main_body.setStroke(color);
+        turret.setStroke(color);
     }
 
     public void move(){
