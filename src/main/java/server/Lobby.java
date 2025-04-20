@@ -3,16 +3,19 @@ package server;
 import configs.SocketConfig;
 import datas.AuthData;
 import datas.InputData;
+import datas.LobbyData;
+import datas.UserData;
 import server.model.PlayerData;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Lobby {
-    private HashMap<InetAddress, PlayerData> players_data = new HashMap<>();
+    public HashMap<InetAddress, PlayerData> players_data = new HashMap<>();
     static private int ID = 1;
     static private final int MAX_PLAYERS = 20;
     private int id;
@@ -79,8 +82,19 @@ public class Lobby {
             // get data and extract
             PlayerData player = new PlayerData(authPacket, client, this);
             players_data.put(client.getInetAddress(), player);
+            return true;
         }
 
         return false;
+    }
+
+    public LobbyData initialLobbyData() {
+        LobbyData data = new LobbyData();
+        data.id = id;
+        for (PlayerData i : players_data.values()) {
+            data.users.add(new UserData(i.id, i.name, i.score));
+        }
+
+        return data;
     }
 }

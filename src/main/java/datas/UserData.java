@@ -9,6 +9,7 @@ public class UserData extends SerialData {
     static private byte SERIAL_ID = SerialData.SERIAL_ID++;
     static private final byte USER_FULL = 1, USER_PARTIAL = 2;
 
+    public byte[] id;
     public String name;
     public long score;
     private byte type;
@@ -16,7 +17,10 @@ public class UserData extends SerialData {
     public byte[] body_color;
     public byte[] barrel_color;
 
+
+
     public UserData(InputStream stream) throws IOException {
+        id = stream.readNBytes(6);
         score = decodeLong(stream.readNBytes(8));
         int size = decodeInt(stream.readNBytes(4));
         name = new String(stream.readNBytes(size), StandardCharsets.UTF_8);
@@ -29,11 +33,29 @@ public class UserData extends SerialData {
         }
     }
 
+    public UserData(byte[] id, String name, long score) {
+        this.id = id;
+        this.name = name;
+        this.score = score;
+        type = USER_PARTIAL;
+    }
+
+    public UserData(byte[] id, String name, long score, byte[] border_color, byte[] body_color, byte[] barrel_color) {
+        this.id = id;
+        this.name = name;
+        this.score = score;
+        type = USER_FULL;
+        this.border_color = border_color;
+        this.body_color = body_color;
+        this.barrel_color = barrel_color;
+    }
+
     @Override
     public byte[] serialize() {
         ByteArrayOutputStream array = new ByteArrayOutputStream();
 
         try {
+            array.write(id);
             array.write(convertLong(score));
             array.write(convertInt(name.length()));
             array.write(name.getBytes(StandardCharsets.UTF_8));
