@@ -7,6 +7,8 @@ import server.Lobby;
 
 import java.net.Socket;
 
+import static configs.DimensionConfig.*;
+
 public class PlayerData {
     private ClientHandler handler;
     public byte[] id;
@@ -15,11 +17,18 @@ public class PlayerData {
     public boolean playing = false;
     private InputData inputs;
 
+    public byte[] border_color;
+    public byte[] body_color;
+    public byte[] barrel_color;
+
     public PlayerData(AuthData auth, Socket client, Lobby lobby) {
         id = auth.id;
         name = auth.name;
 
-        // get score by db
+        // get score by db & color
+        border_color = DEFAULT_BORDER.clone();
+        body_color = DEFAULT_BODY.clone();
+        barrel_color = DEFAULT_BARREL.clone();
         score = 0;
 
         handler = new ClientHandler(client, lobby);
