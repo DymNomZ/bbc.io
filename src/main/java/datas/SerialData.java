@@ -3,8 +3,6 @@ package datas;
 import java.nio.ByteBuffer;
 
 public abstract class SerialData {
-    static protected byte SERIAL_ID = 1;
-
     abstract public byte[] serialize();
 
     static protected byte[] convertInt(int val) {

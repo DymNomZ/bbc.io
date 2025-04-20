@@ -1,36 +1,38 @@
 package server;
 
-import configs.SocketConfig;
-import datas.AuthData;
-import datas.InputData;
-import datas.LobbyData;
-import datas.UserData;
+import datas.*;
 import server.model.PlayerData;
+import server.model.ServerEntity;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.WeakHashMap;
 
 public class Lobby {
     public HashMap<InetAddress, PlayerData> players_data = new HashMap<>();
+
+    // TODO: May be replaced for quad trees data struct
+    public WeakHashMap<PlayerData, ServerEntity> entity_data = new WeakHashMap<>();
+
+    public LinkedList<PlayerData> spawn_queue = new LinkedList<>();
     static private int ID = 1;
     static private final int MAX_PLAYERS = 20;
     private int id;
-    private DatagramSocket inputSocket;
-    private boolean running = true;
+    public final DatagramSocket input_socket;
+    public boolean running = true;
     private final Thread game_thread, input_thread;
 
     public Lobby() throws IOException {
-        // setup of maps
+        // TODO: Initialize Map (if required)
         do {
             id = ID++;
         } while (id == 0);
 
-        inputSocket = new DatagramSocket(SocketConfig.PORT);
-        inputSocket.setSoTimeout(3000);
+        input_socket = new DatagramSocket();
+        input_socket.setSoTimeout(3000);
 
         input_thread = new Thread(new Runnable() {
             @Override
@@ -50,7 +52,32 @@ public class Lobby {
     }
 
     private void gameThread() {
-        // Game Algo
+        while (running) {
+            long game_clock = System.currentTimeMillis();
+
+            for (PlayerData i : entity_data.keySet()) {
+                ServerEntity entity = entity_data.get(i);
+
+                if (entity.is_projectile) {
+                    entity.move(game_clock);
+                } else {
+                    entity.move(game_clock, i.getInputs());
+                }
+            }
+
+            while (!spawn_queue.isEmpty()) {
+                PlayerData player = spawn_queue.remove();
+                entity_data.put(player, new ServerEntity(player.id, 0, game_clock));
+            }
+
+            long sleep_clock = Math.max(2 - (System.currentTimeMillis() - game_clock), 0);
+            try {
+                Thread.sleep(sleep_clock);
+            } catch (InterruptedException e) {
+                running = false;
+                return;
+            }
+        }
     }
 
     private void inputThread() {
@@ -59,7 +86,7 @@ public class Lobby {
 
         while (running) {
             try {
-                inputSocket.receive(packet);
+                input_socket.receive(packet);
             } catch (IOException e) {
                 continue;
             }
@@ -79,7 +106,6 @@ public class Lobby {
             InputStream stream = client.getInputStream();
             AuthData authPacket = new AuthData(stream);
 
-            // get data and extract
             PlayerData player = new PlayerData(authPacket, client, this);
             players_data.put(client.getInetAddress(), player);
             return true;

@@ -43,7 +43,6 @@ public class ServerMain {
                     if (Arrays.equals(pass, SocketConfig.KEY)) {
                         stdin.write(255);
                         stdin.flush();
-                        client.setSoTimeout(30000);
                         boolean playerAdded = false;
 
                         for (Lobby i : lobbies) {

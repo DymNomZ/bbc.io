@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class AuthData extends SerialData{
-    static private byte SERIAL_ID = SerialData.SERIAL_ID++;
+    static private final byte SERIAL_ID = 1;
     public byte[] id;
     public String name;
     public int lobby_id = 0;

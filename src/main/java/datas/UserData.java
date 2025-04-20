@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class UserData extends SerialData {
-    static private byte SERIAL_ID = SerialData.SERIAL_ID++;
+    static private final byte SERIAL_ID = 6;
     static private final byte USER_FULL = 1, USER_PARTIAL = 2;
 
     public byte[] id;
@@ -16,8 +16,6 @@ public class UserData extends SerialData {
     public byte[] border_color;
     public byte[] body_color;
     public byte[] barrel_color;
-
-
 
     public UserData(InputStream stream) throws IOException {
         id = stream.readNBytes(6);

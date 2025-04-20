@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyData extends SerialData {
-    static private byte SERIAL_ID = SerialData.SERIAL_ID++;
+    static private final byte SERIAL_ID = 5;
     public int id;
     public List<UserData> users = new ArrayList<>();
 

@@ -25,10 +25,11 @@ public class PlayerData {
         id = auth.id;
         name = auth.name;
 
-        // get score by db & color
-        border_color = DEFAULT_BORDER.clone();
-        body_color = DEFAULT_BODY.clone();
-        barrel_color = DEFAULT_BARREL.clone();
+        // TODO: get score & color from db
+        // Dummy data of user
+        border_color = DEFAULT_COLOR_BORDER.clone();
+        body_color = DEFAULT_COLOR_BODY.clone();
+        barrel_color = DEFAULT_COLOR_BARREL.clone();
         score = 0;
 
         handler = new ClientHandler(client, lobby);

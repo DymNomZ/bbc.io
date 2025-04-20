@@ -7,5 +7,6 @@ module com.example.bbc {
     opens com.example.bbc to javafx.fxml;
     exports com.example.bbc;
     exports classes;
+    exports datas;
     opens classes to javafx.fxml;
 }
