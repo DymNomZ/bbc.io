@@ -14,9 +14,9 @@
       </ImageView>
          </children>
       </HBox>
-      <TextField fx:id="playerNameTF" layoutX="448.0" layoutY="340.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="400.0" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="340.0">
+      <TextField fx:id="playerNameTF" layoutX="448.0" layoutY="340.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="400.0" styleClass=".red-bold-prompt" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="340.0">
       </TextField>
-      <Button fx:id="playBtn" layoutX="600.0" layoutY="467.0" mnemonicParsing="false" onAction="#test" AnchorPane.leftAnchor="600.0" AnchorPane.rightAnchor="600.0" AnchorPane.topAnchor="400.0" />
+      <Button fx:id="playBtn" layoutX="600.0" layoutY="467.0" mnemonicParsing="false" onAction="#onPlay" AnchorPane.leftAnchor="600.0" AnchorPane.rightAnchor="600.0" AnchorPane.topAnchor="400.0" />
       <Button fx:id="aboutDevsBtn" layoutX="1072.0" layoutY="583.0" mnemonicParsing="false" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="50.0">
       </Button>
    </children>

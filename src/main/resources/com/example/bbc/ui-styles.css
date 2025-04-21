@@ -11,6 +11,11 @@
     -fx-font-size: 14px;
 }
 
+.red-bold-prompt .prompt-text {
+    -fx-fill: red;
+    -fx-font-weight: bold;
+}
+
 .player-name {
     -fx-text-fill: white;
     -fx-font-weight: bold;

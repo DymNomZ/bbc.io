@@ -39,8 +39,15 @@ public class TitleScreenController {
     }
 
     public void onPlay(){
-        //to be adjusted to go to lobby screen once lobby screen works
+
+        if(playerNameTF.getText().isEmpty()){
+            //TODO: Improve
+            playerNameTF.setText("Must enter playername!");
+            return;
+        }
+
         SERVER_API = new ServerHandler(playerNameTF.getText());
+
         SERVER_API.onConnected(new ServerDataListener<LobbyData>() {
             @Override
             public void run(LobbyData data) {

@@ -28,9 +28,6 @@ public class ServerHandler {
     private UserData current_user = null;
 
     public ServerHandler(String name) {
-        if(name.isEmpty()){
-            throw new IllegalArgumentException();
-        }
 
         this.name = name;
 
@@ -126,10 +123,12 @@ public class ServerHandler {
                 LobbyData lobbyData = new LobbyData(stdout);
 
                 for (UserData i : lobbyData.users) {
-                    if (Arrays.equals(i.id, id)) {
-                        current_user = i;
-                        break;
-                    }
+//                    if (Arrays.equals(i.id, id)) {
+//                        current_user = i;
+//                        break;
+//                    }
+                    current_user = i;
+                    break;
                 }
 
                 is_connected = true;
