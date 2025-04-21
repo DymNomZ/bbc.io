@@ -1,15 +1,20 @@
 package com.example.bbc;
 
+import datas.UserData;
 import entities.TankEntity;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import utils.Helpers;
 import utils.Scenes;
 import javafx.event.ActionEvent;
+
+import static com.example.bbc.IOGame.SERVER_API;
 
 public class GameLobbyUIController {
     // Color Options
@@ -78,6 +83,16 @@ public class GameLobbyUIController {
     public void onReadyButtonClick(ActionEvent event) {
         // Apply selected colors to the TankEntity before starting the game
         applyColorsToTankEntity();
+
+//        UserData current_user = SERVER_API.getUser();
+
+        //converting to bytes
+//        current_user.body_color = Helpers.colorToRGBBytes((Color)bodyColor);
+//        current_user.barrel_color = Helpers.colorToRGBBytes((Color)barrelColor);
+//        current_user.border_color = Helpers.colorToRGBBytes((Color)borderColor);
+
+        //send data to server
+//        SERVER_API.modifyUser(current_user);
         
         // Switch to game scene
         Stage stage = (Stage) btnReady.getScene().getWindow();

@@ -5,11 +5,11 @@ import java.nio.ByteBuffer;
 public abstract class SerialData {
     abstract public byte[] serialize();
 
-    static protected byte[] convertInt(int val) {
+    static public byte[] convertInt(int val) {
         return ByteBuffer.allocate(4).putInt(val).array();
     }
 
-    static protected int decodeInt(byte[] val) {
+    static public int decodeInt(byte[] val) {
         return ByteBuffer.wrap(val).getInt();
     }
 

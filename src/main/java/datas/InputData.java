@@ -10,7 +10,7 @@ public class InputData extends SerialData {
     public boolean left_pressed = false;
     public boolean right_pressed = false;
 
-    public boolean left_shift_pressed = false;
+    public boolean lShift_pressed = false;
     public double angle = 0.00;
 
     public InputData() {}
@@ -22,7 +22,7 @@ public class InputData extends SerialData {
         down_pressed = (inputs & 0x02) == 2;
         left_pressed = (inputs & 0x04) == 4;
         right_pressed = (inputs & 0x08) == 8;
-        left_shift_pressed = (inputs & 0x10) == 16;
+        lShift_pressed = (inputs & 0x10) == 16;
 
         angle = decodeDouble(Arrays.copyOfRange(data, 1, 9));
     }
@@ -36,7 +36,7 @@ public class InputData extends SerialData {
         data[0] |= (byte) (down_pressed ? 0x02 : 0);
         data[0] |= (byte) (left_pressed ? 0x04 : 0);
         data[0] |= (byte) (right_pressed ? 0x08 : 0);
-        data[0] |= (byte) (left_shift_pressed ? 0x10 : 0);
+        data[0] |= (byte) (lShift_pressed ? 0x10 : 0);
 
         byte[] angle = convertDouble(this.angle);
         for (int i = 0; i < 8; i++) {

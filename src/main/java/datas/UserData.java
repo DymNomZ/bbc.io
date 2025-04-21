@@ -1,5 +1,7 @@
 package datas;
 
+import server.model.PlayerData;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +31,17 @@ public class UserData extends SerialData {
             body_color = stream.readNBytes(3);
             barrel_color = stream.readNBytes(3);
         }
+    }
+
+    public UserData(PlayerData player) {
+        id = player.id;
+        name = player.name;
+        score = player.score;
+
+        type = USER_FULL;
+        body_color = player.body_color.clone();
+        border_color = player.border_color.clone();
+        barrel_color = player.barrel_color.clone();
     }
 
     public UserData(byte[] id, String name, long score) {

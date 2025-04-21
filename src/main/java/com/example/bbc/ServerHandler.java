@@ -27,7 +27,10 @@ public class ServerHandler {
     private boolean is_connected = false;
     private UserData current_user = null;
 
-    public ServerHandler() {
+    public ServerHandler(String name) {
+
+        this.name = name;
+
         try {
             UDP_socket = new DatagramSocket(SocketConfig.PORT);
         } catch (SocketException e) {
@@ -40,6 +43,7 @@ public class ServerHandler {
                 TCPThread();
             }
         });
+        tcp_thread.setDaemon(true);
         tcp_thread.start();
     }
 
@@ -113,36 +117,49 @@ public class ServerHandler {
                 server_stdin.write(authPacket.serialize());
                 server_stdin.flush();
 
-                int udpPort = stdout.read();
+                int udpPort = SerialData.decodeInt(stdout.readNBytes(4));
+
+                stdout.read(); // ignore SerialData Type
                 LobbyData lobbyData = new LobbyData(stdout);
 
                 for (UserData i : lobbyData.users) {
-                    if (Arrays.equals(i.id, id)) {
-                        current_user = i;
-                        break;
-                    }
+//                    if (Arrays.equals(i.id, id)) {
+//                        current_user = i;
+//                        break;
+//                    }
+                    current_user = i;
+                    break;
                 }
 
                 is_connected = true;
+                lobby_id = lobbyData.id;
                 invokeDataListener(connect_listener, lobbyData);
 
                 input_packet = new DatagramPacket(new byte[9], 9, server.getInetAddress(), udpPort);
-                new Thread(new Runnable() {
+
+                Thread udp_thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         UDPOutputThread();
                     }
-                }).start();
-                new Thread(new Runnable() {
+                });
+                udp_thread.setDaemon(true);
+                udp_thread.start();
+
+                udp_thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         UDPInputThread();
                     }
-                }).start();
+                });
+                udp_thread.setDaemon(true);
+                udp_thread.start();
 
                 while (server.isConnected()) {
-                    lobbyData = new LobbyData(stdout);
-                    invokeDataListener(lobby_listener, lobbyData);
+                    try {
+                        lobbyData = new LobbyData(stdout);
+                        invokeDataListener(lobby_listener, lobbyData);
+                    } catch (SocketTimeoutException ignored) {}
                 }
             } catch (IOException e) {
                 Logging.error(this, "Unable to connect to server. . . Retrying in 5 seconds");
