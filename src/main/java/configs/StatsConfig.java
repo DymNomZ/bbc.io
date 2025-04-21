@@ -1,6 +1,8 @@
 package configs;
 
 public class StatsConfig {
+
+    public static final double PLAYER_WIDTH = 20;
     public static final double PLAYER_HEALTH = 100;
     public static final double PROJECTILE_DAMAGE = 10;
 

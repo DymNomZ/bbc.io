@@ -1,62 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Rectangle?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.GameLobbyUIController">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #2C3E50;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.GameLobbyUIController">
    <children>
-      <Button layoutX="189.0" layoutY="292.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="227.0" text="Ready" />
-      <GridPane alignment="CENTER" gridLinesVisible="true" layoutX="304.0" layoutY="145.0" prefHeight="72.0" prefWidth="221.0">
-        <columnConstraints>
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Rectangle fx:id="btnColorRed" arcHeight="5.0" arcWidth="5.0" fill="#fa7579" height="20.0" onMouseClicked="#onChangeColorClick" stroke="BLACK" strokeType="INSIDE" width="20.0">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </Rectangle>
-            <Rectangle fx:id="btnColorYellow" arcHeight="5.0" arcWidth="5.0" fill="#f8e693" height="20.0" onMouseClicked="#onChangeColorClick" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.columnIndex="2" />
-            <Rectangle fx:id="btnColorBlue" arcHeight="5.0" arcWidth="5.0" fill="#93cff5" height="20.0" onMouseClicked="#onChangeColorClick" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.columnIndex="4" />
-            <Rectangle fx:id="btnColorOrange" arcHeight="5.0" arcWidth="5.0" fill="#f5d095" height="20.0" onMouseClicked="#onChangeColorClick" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.columnIndex="1" />
-            <Rectangle fx:id="btnColorLime" arcHeight="5.0" arcWidth="5.0" fill="#ccf595" height="20.0" onMouseClicked="#onChangeColorClick" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.columnIndex="3" />
-            <Rectangle fx:id="btnColorViolet" arcHeight="5.0" arcWidth="5.0" fill="#959ff5" height="20.0" onMouseClicked="#onChangeColorClick" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.rowIndex="1" />
-            <Rectangle fx:id="btnColorPink" arcHeight="5.0" arcWidth="5.0" fill="#e095f5" height="20.0" onMouseClicked="#onChangeColorClick" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Rectangle fx:id="btnColorCyan" arcHeight="5.0" arcWidth="5.0" fill="#95f5eb" height="20.0" onMouseClicked="#onChangeColorClick" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Rectangle fx:id="btnColorEmerald" arcHeight="5.0" arcWidth="5.0" fill="#95f5ad" height="20.0" onMouseClicked="#onChangeColorClick" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <Rectangle fx:id="btnColorBlack" arcHeight="5.0" arcWidth="5.0" height="20.0" onMouseClicked="#onChangeColorClick" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-         </children>
-      </GridPane>
-      <GridPane gridLinesVisible="true" layoutX="304.0" layoutY="115.0" prefHeight="30.0" prefWidth="221.0">
-        <columnConstraints>
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Button fx:id="btnSelectBody" mnemonicParsing="false" onAction="#onCategoryButtonClick" onMouseClicked="#onCategoryButtonClick" text="Body" />
-            <Button fx:id="btnSelectBarrel" mnemonicParsing="false" onAction="#onCategoryButtonClick" onMouseClicked="#onCategoryButtonClick" text="Barrel" GridPane.columnIndex="1" />
-            <Button fx:id="btnSelectBorder" mnemonicParsing="false" onAction="#onCategoryButtonClick" onMouseClicked="#onCategoryButtonClick" text="Border" GridPane.columnIndex="2" />
-         </children>
-      </GridPane>
-      <Rectangle fx:id="spTankBarrel" arcHeight="5.0" arcWidth="5.0" fill="#5b6bff" height="97.0" layoutX="159.0" layoutY="108.0" stroke="BLACK" strokeType="INSIDE" width="27.0" />
-      <Circle fx:id="spTankBody" fill="#fa7579" layoutX="173.0" layoutY="192.0" radius="40.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label alignment="CENTER" layoutX="0.0" layoutY="40.0" prefHeight="60.0" prefWidth="1280.0" text="CUSTOMIZE YOUR TANK" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Label>
+      <VBox alignment="CENTER" layoutX="245.0" layoutY="145.0" spacing="40.0">
+         <HBox alignment="CENTER" spacing="100.0">
+            <StackPane>
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#34495e" height="300.0" stroke="TRANSPARENT" strokeType="INSIDE" width="300.0" />
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label text="Tank Preview" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="20.0" />
+                           </VBox.margin>
+                        </Label>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <Rectangle fx:id="spTankBarrel" arcHeight="5.0" arcWidth="5.0" fill="#5b6bff" height="30.0" layoutX="147.0" layoutY="85.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" width="100.0" />
+                              <Circle fx:id="spTankBody" fill="#fa7579" layoutX="117.0" layoutY="100.0" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+            <VBox alignment="CENTER" spacing="25.0">
+               <children>
+                  <Label text="Customize Colors" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <Button fx:id="btnSelectBody" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #3498db;" text="Body" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="btnSelectBarrel" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #2ecc71;" text="Barrel" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="btnSelectBorder" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #e74c3c;" text="Border" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <GridPane alignment="CENTER" hgap="10.0" vgap="10.0">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="70.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="70.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="70.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="70.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="70.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Rectangle fx:id="btnColorRed" arcHeight="5.0" arcWidth="5.0" fill="#fa7579" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" />
+                        <Rectangle fx:id="btnColorOrange" arcHeight="5.0" arcWidth="5.0" fill="#f5d095" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="1" />
+                        <Rectangle fx:id="btnColorYellow" arcHeight="5.0" arcWidth="5.0" fill="#f8e693" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="2" />
+                        <Rectangle fx:id="btnColorLime" arcHeight="5.0" arcWidth="5.0" fill="#ccf595" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="3" />
+                        <Rectangle fx:id="btnColorBlue" arcHeight="5.0" arcWidth="5.0" fill="#93cff5" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="4" />
+                        <Rectangle fx:id="btnColorViolet" arcHeight="5.0" arcWidth="5.0" fill="#959ff5" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.rowIndex="1" />
+                        <Rectangle fx:id="btnColorPink" arcHeight="5.0" arcWidth="5.0" fill="#e095f5" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Rectangle fx:id="btnColorCyan" arcHeight="5.0" arcWidth="5.0" fill="#95f5eb" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Rectangle fx:id="btnColorEmerald" arcHeight="5.0" arcWidth="5.0" fill="#95f5ad" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Rectangle fx:id="btnColorBlack" arcHeight="5.0" arcWidth="5.0" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                           <fill>
+                              <LinearGradient endX="1.0" endY="1.0">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </LinearGradient>
+                           </fill>
+                        </Rectangle>
+                     </children>
+                  </GridPane>
+               </children>
+            </VBox>
+         </HBox>
+         <Button fx:id="btnReady" mnemonicParsing="false" onAction="#onReadyButtonClick" prefHeight="60.0" prefWidth="300.0" style="-fx-background-color: #27ae60; -fx-background-radius: 30;" text="READY" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="24.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="30.0" />
+            </VBox.margin>
+         </Button>
+      </VBox>
+      <Label alignment="CENTER" layoutX="0.0" layoutY="620.0" prefWidth="1280.0" text="Choose your tank colors and press READY when you're finished" textFill="#bdc3c7">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
