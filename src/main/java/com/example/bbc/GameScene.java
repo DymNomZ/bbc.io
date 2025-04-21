@@ -6,10 +6,7 @@ import entities.TankEntity;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -129,7 +126,6 @@ public class GameScene extends Scene {
     public static void spawnEntity(Entity entity) {
         entity_list.add(entity);
         entity.render(root);
-//        entity.getEntityGroup().toBack();
     }
 
     public void clearBackground(){
@@ -165,6 +161,7 @@ public class GameScene extends Scene {
         }
 
     }
+
     private void moveBackground(double x, double y) {
         for(Line l : vertical_bg_lines){
             l.setTranslateX(l.getTranslateX() + x);
@@ -183,9 +180,6 @@ public class GameScene extends Scene {
             }
         }
     }
-
-
-
 
     private void despawnEntity(Entity entity) {
         root.getChildren().remove(entity.getEntity_group());
@@ -207,9 +201,6 @@ public class GameScene extends Scene {
             main_player.shoot(root);
         }
 
-//        if(key_handler.movementKeysPressed())
-//            ((TankEntity)main_player).move();
-
         //FIXME
         if (key_handler.up_pressed) {
             moveBackground(0,5);
@@ -227,7 +218,6 @@ public class GameScene extends Scene {
             if(can_be_damaged)onPlayerDamaged();
         }
 
-//        System.out.println(background_view.getLayoutY());
     }
 
     private final AnimationTimer gameLoop = new AnimationTimer() {
@@ -240,8 +230,6 @@ public class GameScene extends Scene {
                 return;
             }
             update();
-
-            //player is rendered constantly in the center of the client's screen
 
             //This should be removed as this is handled in the server
             Iterator it = entity_list.iterator();

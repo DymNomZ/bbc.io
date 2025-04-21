@@ -1,14 +1,8 @@
-/* General Styles */
-.label-status, .label-info {
-    -fx-text-fill: white;
+.score-value {
+    -fx-text-fill: #000000;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
-}
-
-.score-value, .ammo-value {
-    -fx-text-fill: #ffcc00;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
+    -fx-font-family: "LEMON MILK";
 }
 
 .red-bold-prompt .prompt-text {
@@ -22,36 +16,44 @@
     -fx-font-size: 16px;
 }
 
-/* Top Bar */
 #topBar {
     -fx-background-color: rgba(0, 0, 0, 0.0);
     -fx-background-radius: 5;
 }
 
-/* Health Bar Customization */
-.health-bar .bar {
-    -fx-background-color: linear-gradient(to right, #ff0000, #00ff00);
+.label-status {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 36px;
 }
 
-/* Bottom Panel */
+.label-status .text {
+    -fx-stroke: #2e2b27;
+    -fx-stroke-width: 1;
+    -fx-font-family: "Coolvetica";
+}
+
+.health-bar .bar {
+    -fx-background-color: #F08278;
+    -fx-background-radius: 30px;
+}
+
+.health-bar .track {
+    -fx-background-color: #2e2b27;
+    -fx-background-radius: 30px;
+}
+
 #bottomPanel {
     -fx-background-color: rgba(0, 0, 0, 0.0);
     -fx-background-radius: 5;
 }
 
-/* Kill Feed */
-.kill-feed {
-    -fx-background-color: rgba(0, 0, 0, 0.4);
+.player-info {
+    -fx-background-color: rgba(0, 0, 0, 0.0);
     -fx-background-radius: 5;
     -fx-padding: 5;
 }
 
-.kill-feed-entry {
-    -fx-text-fill: white;
-    -fx-font-size: 12px;
-}
-
-/* Minimap */
 .minimap-container {
     -fx-background-color: rgba(0, 0, 0, 0.7);
     -fx-background-radius: 5;
@@ -62,23 +64,4 @@
     -fx-background-color: #111111;
     -fx-border-color: #444444;
     -fx-border-width: 1;
-}
-
-/* Debug Panel */
-#debugInfo {
-    -fx-background-color: rgba(0, 0, 0, 0.5);
-    -fx-background-radius: 5;
-    -fx-padding: 10;
-}
-
-.debug-title {
-    -fx-text-fill: #ff5555;
-    -fx-font-weight: bold;
-    -fx-font-size: 12px;
-}
-
-.debug-text {
-    -fx-text-fill: #aaaaaa;
-    -fx-font-size: 12px;
-    -fx-font-family: "Courier New";
 }

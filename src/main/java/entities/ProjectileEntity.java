@@ -28,7 +28,6 @@ public class ProjectileEntity extends Entity {
         setPosition(pos_x +delta_x, pos_y +delta_y);
     }
 
-
     public double getAngle() {
         return angle;
     }

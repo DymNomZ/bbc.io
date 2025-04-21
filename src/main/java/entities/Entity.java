@@ -6,7 +6,6 @@ import com.example.bbc.MouseHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
 public abstract class Entity {
@@ -31,8 +30,6 @@ public abstract class Entity {
     public void render(StackPane root) {
         root.getChildren().add(entity_group);
     }
-
-
 
     private long last_shot_time = 0;
     private long shot_cooldown = 500_000_000;
@@ -93,7 +90,6 @@ public abstract class Entity {
     public double getLayoutY() {
         return entity_group.getTranslateY();
     }
-
 
     public Group getEntity_group() {
         return entity_group;

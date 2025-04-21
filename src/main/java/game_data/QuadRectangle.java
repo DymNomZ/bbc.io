@@ -1,4 +1,4 @@
-package GameData;
+package game_data;
 
 
 public class QuadRectangle {
