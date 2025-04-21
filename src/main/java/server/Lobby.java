@@ -1,9 +1,9 @@
 package server;
 
+import configs.DimensionConfig;
 import configs.LobbyConfig;
 import datas.*;
-import server.model.PlayerData;
-import server.model.ServerEntity;
+import server.model.*;
 import utils.Logging;
 
 import java.io.IOException;
@@ -11,7 +11,10 @@ import java.io.InputStream;
 import java.net.*;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.WeakHashMap;
+
+import game_data.*;
 
 public class Lobby {
     public HashMap<InetAddress, PlayerData> players_data = new HashMap<>();
@@ -22,6 +25,7 @@ public class Lobby {
     public LinkedList<PlayerData> spawn_queue = new LinkedList<>();
     static private int ID = 1;
     private int id;
+    QuadTree qtree;
     public final DatagramSocket input_socket;
     public boolean running = true;
     private final Thread game_thread, input_thread;
@@ -49,30 +53,22 @@ public class Lobby {
                 gameThread();
             }
         });
-
+        qtree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1);
         input_thread.start();
         game_thread.start();
     }
 
-    // TODO: GAME LOOP HERE, SETH
     private void gameThread() {
         while (running) {
             long game_clock = System.currentTimeMillis();
 
-            for (PlayerData i : entity_data.keySet()) {
-                ServerEntity entity = entity_data.get(i);
+            moveEntities(game_clock);
 
-                if (entity.is_projectile) {
-                    entity.move(game_clock);
-                } else {
-                    entity.move(game_clock, i.getInputs());
-                }
-            }
+            handleSpawnQueue(game_clock);
 
-            while (!spawn_queue.isEmpty()) {
-                PlayerData player = spawn_queue.remove();
-                entity_data.put(player, new ServerEntity(player.id, 0, game_clock));
-            }
+            constructQTree();
+
+            quadCollisionCheck();
 
             long sleep_clock = Math.max(2 - (System.currentTimeMillis() - game_clock), 0);
             try {
@@ -80,6 +76,41 @@ public class Lobby {
             } catch (InterruptedException e) {
                 running = false;
                 return;
+            }
+        }
+    }
+
+    private void quadCollisionCheck(){
+        for (ServerEntity entity: entity_data.values()) {
+            RangeCircle circle = new RangeCircle(entity.x, entity.y, entity.radius + 1);
+            List<ServerEntity> collision = qtree.query(circle);
+            for (ServerEntity other : collision) {
+                if (entity != other) entity.isCollidingWith(other);
+            }
+        }
+    }
+
+    private void constructQTree(){
+        qtree.clear();
+        for(ServerEntity s : entity_data.values()){
+            qtree.insert(s);
+        }
+    }
+
+    private void handleSpawnQueue(long game_clock){
+        while (!spawn_queue.isEmpty()) {
+            PlayerData player = spawn_queue.remove();
+            entity_data.put(player, new PlayerEntity(game_clock,player.id));
+        }
+    }
+    private void moveEntities(long game_clock){
+        for (PlayerData i : entity_data.keySet()) {
+            ServerEntity entity = entity_data.get(i);
+
+            if (entity instanceof ProjectileEntity) {
+                entity.move(game_clock);
+            } else {
+                entity.move(game_clock, i.getInputs());
             }
         }
     }

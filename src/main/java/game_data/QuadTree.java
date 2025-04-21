@@ -1,5 +1,8 @@
 package game_data;
 
+
+import server.model.ServerEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -58,7 +61,7 @@ import java.util.List;
  */
 public class QuadTree {
     int capacity;
-    List<GameObject> objects;
+    List<ServerEntity> entities;
     QuadRectangle bounds;
     QuadTree northwest;
     QuadTree southwest;
@@ -67,7 +70,7 @@ public class QuadTree {
     boolean divided;
 
     public QuadTree(QuadRectangle bounds, int capacity) {
-        objects = new ArrayList<GameObject>();
+        entities = new ArrayList<ServerEntity>();
         this.capacity = capacity;
         this.bounds = bounds;
         northwest = null;
@@ -90,47 +93,47 @@ public class QuadTree {
         southwest = new QuadTree(sw, capacity);
         northeast = new QuadTree(ne, capacity);
         southeast = new QuadTree(se, capacity);
-        for (GameObject obj : objects) {
+        for (ServerEntity obj : entities) {
             insertIntoQuads(obj);
         }
         divided = true;
 
     }
 
-    private void insertIntoQuads(GameObject obj) {
-        if (northwest.bounds.canContain(obj)) {
-            northwest.insert(obj);
-        } else if (northeast.bounds.canContain(obj)) {
-            northeast.insert(obj);
-        } else if (southwest.bounds.canContain(obj)) {
-            southwest.insert(obj);
-        } else if (southeast.bounds.canContain(obj)) {
-            southeast.insert(obj);
+    private void insertIntoQuads(ServerEntity entity) {
+        if (northwest.bounds.canContain(entity)) {
+            northwest.insert(entity);
+        } else if (northeast.bounds.canContain(entity)) {
+            northeast.insert(entity);
+        } else if (southwest.bounds.canContain(entity)) {
+            southwest.insert(entity);
+        } else if (southeast.bounds.canContain(entity)) {
+            southeast.insert(entity);
         }
     }
 
-    public void insert(GameObject object) {
-        if(!bounds.canContain(object)) {
+    public void insert(ServerEntity entity) {
+        if(!bounds.canContain(entity)) {
             return;
         }
-        if(objects.size() < capacity && !divided) {
-            objects.add(object);
+        if(entities.size() < capacity && !divided) {
+            entities.add(entity);
         } else {
             if(!divided) {
                 subdivide();
             }
-            insertIntoQuads(object);
+            insertIntoQuads(entity);
         }
     }
 
-    public List<GameObject> query(RangeCircle c){
-        List<GameObject> found = new ArrayList<>();
+    public List<ServerEntity> query(RangeCircle c){
+        List<ServerEntity> found = new ArrayList<>();
         if(!bounds.inRange(c)){
             return found;
         } else {
-            for(GameObject object : objects) {
-                if(c.canContain(object)) {
-                    found.add(object);
+            for(ServerEntity entity : entities) {
+                if(c.canContain(entity)) {
+                    found.add(entity);
                 }
             }
             if(divided) {
@@ -156,7 +159,7 @@ public class QuadTree {
         southeast = null;
         divided = false;
 
-        objects.clear();
+        entities.clear();
     }
 
 }

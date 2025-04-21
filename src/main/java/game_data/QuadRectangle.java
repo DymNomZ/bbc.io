@@ -1,6 +1,8 @@
 package game_data;
 
 
+import server.model.ServerEntity;
+
 public class QuadRectangle {
     double x,y,w,h;
     public QuadRectangle(double x, double y, double w, double h) {
@@ -9,11 +11,11 @@ public class QuadRectangle {
         this.w = w;
         this.h = h;
     }
-    public boolean canContain(GameObject object) {
-        return x + w >= object.x
-                && y + h >= object.y
-                && object.x >= x
-                && object.y >= y;
+    public boolean canContain(ServerEntity entity) {
+        return x + w >= entity.x
+                && y + h >= entity.y
+                && entity.x >= x
+                && entity.y >= y;
     }
 
 
