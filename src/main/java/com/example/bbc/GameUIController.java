@@ -36,7 +36,6 @@ public class GameUIController {
     @FXML private ProgressBar healthBar;
     @FXML private Label scoreLabel;
     @FXML private Label playerNameLabel;
-    @FXML private VBox killFeedContainer;
     @FXML private Pane minimapPane;
     @FXML private VBox debugPanel;
     @FXML private Label coordsLabel;
@@ -55,15 +54,6 @@ public class GameUIController {
         btnUpgradeHealth.disableProperty().bind(upgrade_buttons_enabled.not());   //binds to changes to upgradeButtonsEnabled variable
         btnUpgradeSpeed.disableProperty().bind(upgrade_buttons_enabled.not());
         btnUpgradeBulletDamage.disableProperty().bind(upgrade_buttons_enabled.not());
-    }
-
-    //FIXME: Issue #2 demonstration. Feel free to remove on the next commit.
-    public void test(MouseEvent e){
-//        System.out.println("aaaaa");
-    }
-
-    public void test2(MouseEvent e){
-
     }
     
     public void toggleDebugInfo() {
@@ -96,8 +86,6 @@ public class GameUIController {
     public void handleKeyPressed(KeyEvent e) {
 
         KeyCode code = e.getCode();
-
-//        System.out.println(code);
 
         switch (code){
             case R -> resetProgressBar();

@@ -110,8 +110,9 @@ public class Lobby {
             InputStream stream = client.getInputStream();
             AuthData authPacket = new AuthData(stream);
 
-            PlayerData player = new PlayerData(authPacket, client, this);
+            PlayerData player = new PlayerData(authPacket);
             players_data.put(client.getInetAddress(), player);
+            player.startHandler(client, this);
             return true;
         }
 
@@ -123,6 +124,7 @@ public class Lobby {
 
         for (PlayerData i : players_data.values()) {
             users.add(new UserData(i));
+            Logging.write(this, i.name);
         }
 
         return new LobbyData(id, users);

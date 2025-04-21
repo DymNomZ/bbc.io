@@ -12,8 +12,9 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" mouseTransparent="false" onKeyPressed="#handleKeyPressed" onMouseClicked="#test2" onMouseMoved="#test" pickOnBounds="false" prefHeight="562.0" prefWidth="687.0" stylesheets="@ui-styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.GameUIController">
+<AnchorPane fx:id="root" mouseTransparent="false" onKeyPressed="#handleKeyPressed" pickOnBounds="false" prefHeight="562.0" prefWidth="687.0" stylesheets="@ui-styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.GameUIController">
 
     <HBox id="topBar" alignment="CENTER_LEFT" spacing="20" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
         <padding>
@@ -27,9 +28,12 @@
    <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
            
-           <VBox id="killFeed" fx:id="killFeedContainer" alignment="CENTER" maxHeight="80" minHeight="80" styleClass="kill-feed">
-              <Label styleClass="label-status" text="Health:" textAlignment="CENTER" />
-              <ProgressBar fx:id="healthBar" prefWidth="200" progress="1.0" styleClass="health-bar" />
+           <VBox alignment="CENTER" maxHeight="80" minHeight="80" styleClass="player-info">
+              <Label styleClass="label-status" text="Health:" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial" size="24.0" />
+               </font></Label>
+              <ProgressBar fx:id="healthBar" prefHeight="28.0" prefWidth="284.0" progress="1.0" styleClass="health-bar" />
            </VBox>
       </children>
    </HBox>

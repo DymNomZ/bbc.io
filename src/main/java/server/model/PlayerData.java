@@ -21,7 +21,7 @@ public class PlayerData {
     public byte[] body_color;
     public byte[] barrel_color;
 
-    public PlayerData(AuthData auth, Socket client, Lobby lobby) {
+    public PlayerData(AuthData auth) {
         id = auth.id;
         name = auth.name;
 
@@ -31,7 +31,9 @@ public class PlayerData {
         body_color = DEFAULT_COLOR_BODY.clone();
         barrel_color = DEFAULT_COLOR_BARREL.clone();
         score = 0;
+    }
 
+    public void startHandler(Socket client, Lobby lobby) {
         handler = new ClientHandler(client, lobby);
     }
 
