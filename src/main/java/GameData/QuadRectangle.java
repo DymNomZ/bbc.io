@@ -1,6 +1,5 @@
 package GameData;
 
-import static java.lang.Math.clamp;
 
 public class QuadRectangle {
     double x,y,w,h;
@@ -19,8 +18,8 @@ public class QuadRectangle {
 
 
     public boolean inRange(RangeCircle circle) {
-        double closestX = clamp(circle.x, x, x + w);
-        double closestY = clamp(circle.y, y, y + h);
+        double closestX = Math.max(circle.x, Math.min(x, x + w));
+        double closestY = Math.max(circle.y, Math.min(y, y + h));
         double dx = circle.x - closestX;
         double dy = circle.y - closestY;
         return (dx * dx + dy * dy) < (circle.radius * circle.radius);
