@@ -68,12 +68,13 @@ public class ClientHandler {
                         }
                     }
                 } catch (SocketTimeoutException ignored) {}
-                // TODO: send lobby data
+                // TODO: Improve sending lobby data
             }
-        } catch (IOException e) {
-            // TODO: handle disconnection
-        }
+        } catch (IOException ignored) {}
 
+        try {
+            tcp_socket.close();
+        } catch (IOException ignored) {}
         UDP_thread.interrupt();
         PlayerData player = lobby.players_data.remove(tcp_socket.getInetAddress());
         lobby.entity_data.remove(player);

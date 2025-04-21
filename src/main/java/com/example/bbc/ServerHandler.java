@@ -28,10 +28,11 @@ public class ServerHandler {
     private UserData current_user = null;
 
     public ServerHandler(String name) {
-
         if(name.isEmpty()){
             throw new IllegalArgumentException();
         }
+
+        this.name = name;
 
         try {
             UDP_socket = new DatagramSocket(SocketConfig.PORT);

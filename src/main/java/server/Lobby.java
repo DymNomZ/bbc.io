@@ -119,12 +119,12 @@ public class Lobby {
     }
 
     public LobbyData initialLobbyData() {
-        LobbyData data = new LobbyData();
-        data.id = id;
+        LinkedList<UserData> users = new LinkedList<>();
+
         for (PlayerData i : players_data.values()) {
-            data.users.add(new UserData(i.id, i.name, i.score));
+            users.add(new UserData(i));
         }
 
-        return data;
+        return new LobbyData(id, users);
     }
 }
