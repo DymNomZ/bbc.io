@@ -1,5 +1,7 @@
 package datas;
 
+import utils.Logging;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +26,9 @@ public class LobbyData extends SerialData {
             users.add(new UserData(stream));
         }
         size = decodeInt(stream.readNBytes(4));
-        deathMessage = new String(stream.readNBytes(size), StandardCharsets.UTF_8);
+        if (size != 0) {
+            deathMessage = new String(stream.readNBytes(size), StandardCharsets.UTF_8);
+        }
     }
 
     @Override
@@ -40,6 +44,7 @@ public class LobbyData extends SerialData {
             array.write(convertInt(deathMessage.length()));
             array.write(deathMessage.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
+            Logging.write(this, "wtf");
             return new byte[1];
         }
 

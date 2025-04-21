@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 public class Logging implements AutoCloseable {
-    private static final BufferedWriter log_file = initialize();
+    private static final BufferedWriter log_file = null; // initialize(); disabled logfile
 
     public static String messagePrefix(Object class_obj) {
         StringBuilder sb = new StringBuilder();

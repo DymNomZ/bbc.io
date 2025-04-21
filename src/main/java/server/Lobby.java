@@ -1,8 +1,10 @@
 package server;
 
+import configs.LobbyConfig;
 import datas.*;
 import server.model.PlayerData;
 import server.model.ServerEntity;
+import utils.Logging;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +21,6 @@ public class Lobby {
 
     public LinkedList<PlayerData> spawn_queue = new LinkedList<>();
     static private int ID = 1;
-    static private final int MAX_PLAYERS = 20;
     private int id;
     public final DatagramSocket input_socket;
     public boolean running = true;
@@ -33,6 +34,8 @@ public class Lobby {
 
         input_socket = new DatagramSocket();
         input_socket.setSoTimeout(3000);
+
+        Logging.write(this, "UDP PORT: " + input_socket.getLocalPort());
 
         input_thread = new Thread(new Runnable() {
             @Override
@@ -51,6 +54,7 @@ public class Lobby {
         game_thread.start();
     }
 
+    // TODO: GAME LOOP HERE, SETH
     private void gameThread() {
         while (running) {
             long game_clock = System.currentTimeMillis();
@@ -102,7 +106,7 @@ public class Lobby {
     }
 
     public boolean addPlayer(Socket client) throws IOException {
-        if (players_data.size() < MAX_PLAYERS) {
+        if (players_data.size() < LobbyConfig.MAX_PLAYERS) {
             InputStream stream = client.getInputStream();
             AuthData authPacket = new AuthData(stream);
 

@@ -1,11 +1,15 @@
 package com.example.bbc;
 
 import classes.Sprites;
+import datas.GameData;
+import datas.LobbyData;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import utils.Logging;
 
 import static com.example.bbc.IOGame.MAIN_STAGE;
+import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Scenes.GAME_SCENE;
 import static utils.Scenes.LOBBY_SCENE;
 
@@ -37,6 +41,20 @@ public class TitleScreenController {
 
     public void test(){
         //to be adjusted to go to lobby screen once lobby screen works
+        SERVER_API = new ServerHandler();
+        SERVER_API.onConnected(new ServerDataListener<LobbyData>() {
+            @Override
+            public void run(LobbyData data) {
+                Logging.write(this, "Connected to Server");
+            }
+        });
+        SERVER_API.onGameUpdate(new ServerDataListener<GameData>() {
+            @Override
+            public void run(GameData data) {
+                Logging.write(this, String.valueOf(data.entities.size()));
+            }
+        });
+
         MAIN_STAGE.setScene(LOBBY_SCENE);
     }
 }

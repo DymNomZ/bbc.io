@@ -10,6 +10,7 @@ import java.io.IOException;
 public class IOGame extends Application {
 
     static Stage MAIN_STAGE;
+    static ServerHandler SERVER_API = null;
 
     @Override
     public void start(Stage stage) throws IOException {

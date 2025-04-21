@@ -4,6 +4,8 @@ import configs.SocketConfig;
 import datas.GameData;
 import datas.InputData;
 import datas.LobbyData;
+import datas.SerialData;
+import server.model.PlayerData;
 import server.model.ServerEntity;
 
 import java.io.IOException;
@@ -50,7 +52,7 @@ public class ClientHandler {
             InputStream stdout = tcp_socket.getInputStream();
 
             // Initial lobby data of leaderboard with the udp port of lobby for inputs
-            stdin.write(lobby.input_socket.getPort());
+            stdin.write(SerialData.convertInt(lobby.input_socket.getLocalPort()));
             stdin.write(lobby_context.serialize());
             stdin.flush();
 
@@ -73,7 +75,9 @@ public class ClientHandler {
         }
 
         UDP_thread.interrupt();
-        lobby.players_data.remove(tcp_socket.getInetAddress());
+        PlayerData player = lobby.players_data.remove(tcp_socket.getInetAddress());
+        lobby.entity_data.remove(player);
+
     }
 
     private void UDPOutputThread() {
@@ -93,6 +97,8 @@ public class ClientHandler {
             } catch (Exception e) {
                 continue;
             }
+
+            packet.setData(current_data.serialize());
 
             try {
                 lobby.input_socket.send(packet);
