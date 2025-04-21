@@ -27,7 +27,12 @@ public class ServerHandler {
     private boolean is_connected = false;
     private UserData current_user = null;
 
-    public ServerHandler() {
+    public ServerHandler(String name) {
+
+        if(name.isEmpty()){
+            throw new IllegalArgumentException();
+        }
+
         try {
             UDP_socket = new DatagramSocket(SocketConfig.PORT);
         } catch (SocketException e) {

@@ -59,11 +59,11 @@ public class GameUIController {
 
     //FIXME: Issue #2 demonstration. Feel free to remove on the next commit.
     public void test(MouseEvent e){
-        System.out.println("aaaaa");
+//        System.out.println("aaaaa");
     }
 
     public void test2(MouseEvent e){
-        System.out.println("bbb");
+
     }
     
     public void toggleDebugInfo() {
@@ -97,7 +97,7 @@ public class GameUIController {
 
         KeyCode code = e.getCode();
 
-        System.out.println(code);
+//        System.out.println(code);
 
         switch (code){
             case R -> resetProgressBar();

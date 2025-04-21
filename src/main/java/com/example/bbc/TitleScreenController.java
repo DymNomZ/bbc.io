@@ -3,14 +3,13 @@ package com.example.bbc;
 import classes.Sprites;
 import datas.GameData;
 import datas.LobbyData;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import utils.Logging;
-
 import static com.example.bbc.IOGame.MAIN_STAGE;
 import static com.example.bbc.IOGame.SERVER_API;
-import static utils.Scenes.GAME_SCENE;
 import static utils.Scenes.LOBBY_SCENE;
 
 public class TitleScreenController {
@@ -39,14 +38,19 @@ public class TitleScreenController {
         titleImageView.setPreserveRatio(true);
     }
 
-    public void test(){
+    public void onPlay(){
         //to be adjusted to go to lobby screen once lobby screen works
-        SERVER_API = new ServerHandler();
+        SERVER_API = new ServerHandler(playerNameTF.getText());
         SERVER_API.onConnected(new ServerDataListener<LobbyData>() {
             @Override
             public void run(LobbyData data) {
+
                 Logging.write(this, "Connected to Server");
+                Platform.runLater(() -> {
+                    MAIN_STAGE.setScene(LOBBY_SCENE);
+                });
             }
+
         });
         SERVER_API.onGameUpdate(new ServerDataListener<GameData>() {
             @Override
@@ -55,6 +59,5 @@ public class TitleScreenController {
             }
         });
 
-        MAIN_STAGE.setScene(LOBBY_SCENE);
     }
 }
