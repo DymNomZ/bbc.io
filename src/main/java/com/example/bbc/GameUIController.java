@@ -36,7 +36,6 @@ public class GameUIController {
     @FXML private ProgressBar healthBar;
     @FXML private Label scoreLabel;
     @FXML private Label playerNameLabel;
-    @FXML private VBox killFeedContainer;
     @FXML private Pane minimapPane;
     @FXML private VBox debugPanel;
     @FXML private Label coordsLabel;

@@ -54,7 +54,6 @@ public class GameScene extends Scene {
         vertical_bg_lines = new ArrayList<>();
         horizontal_bg_lines = new ArrayList<>();
 
-
         HEIGHT_PROPERTY.addListener((observable, oldValue, newValue) -> {
             recalculate();
             adjustBackground();
@@ -75,8 +74,6 @@ public class GameScene extends Scene {
         center_y = SCREEN_HEIGHT / 2;
 
         main_player.setPosition(0,0);
-
-
         spawnEntity(main_player);
 
         this.setOnMouseMoved(mouse_handler);
@@ -88,8 +85,6 @@ public class GameScene extends Scene {
 
         System.out.println(root.getChildren());
         gameLoop.start();
-
-
     }
 
     private Color brighten(Color color){
