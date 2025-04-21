@@ -84,15 +84,15 @@ public class GameLobbyUIController {
         // Apply selected colors to the TankEntity before starting the game
         applyColorsToTankEntity();
 
-//        UserData current_user = SERVER_API.getUser();
+        UserData current_user = SERVER_API.getUser();
 
         //converting to bytes
-//        current_user.body_color = Helpers.colorToRGBBytes((Color)bodyColor);
-//        current_user.barrel_color = Helpers.colorToRGBBytes((Color)barrelColor);
-//        current_user.border_color = Helpers.colorToRGBBytes((Color)borderColor);
+        current_user.body_color = Helpers.colorToRGBBytes((Color)bodyColor);
+        current_user.barrel_color = Helpers.colorToRGBBytes((Color)barrelColor);
+        current_user.border_color = Helpers.colorToRGBBytes((Color)borderColor);
 
         //send data to server
-//        SERVER_API.modifyUser(current_user);
+        SERVER_API.modifyUser(current_user);
         
         // Switch to game scene
         Stage stage = (Stage) btnReady.getScene().getWindow();
