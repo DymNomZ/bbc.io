@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class UserData extends SerialData {
-    static private final byte SERIAL_ID = 6;
+    static public final byte SERIAL_ID = 6;
     static private final byte USER_FULL = 1, USER_PARTIAL = 2;
 
     public byte[] id;

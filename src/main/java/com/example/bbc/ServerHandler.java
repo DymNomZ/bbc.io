@@ -247,6 +247,10 @@ public class ServerHandler {
             throw new BBCServerNotConnected();
         }
         current_user = data;
-        // send to server
+        try {
+            server_stdin.write(UserData.SERIAL_ID);
+            server_stdin.write(data.serialize());
+            server_stdin.flush();
+        } catch (IOException ignored) {}
     }
 }

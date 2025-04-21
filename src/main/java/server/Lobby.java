@@ -35,7 +35,7 @@ public class Lobby {
         input_socket = new DatagramSocket();
         input_socket.setSoTimeout(3000);
 
-        Logging.write(this, "UDP PORT: " + input_socket.getLocalPort());
+        Logging.write(this, id + "] UDP PORT: " + input_socket.getLocalPort());
 
         input_thread = new Thread(new Runnable() {
             @Override

@@ -1,10 +1,7 @@
 package server;
 
 import configs.SocketConfig;
-import datas.GameData;
-import datas.InputData;
-import datas.LobbyData;
-import datas.SerialData;
+import datas.*;
 import server.model.PlayerData;
 import server.model.ServerEntity;
 
@@ -65,6 +62,16 @@ public class ClientHandler {
                     switch (dataID) {
                         case InputData.SERIAL_ID -> {
                             lobby.spawn_queue.add(lobby.players_data.get(tcp_socket.getInetAddress()));
+                        }
+                        case UserData.SERIAL_ID ->  {
+                            PlayerData player = lobby.players_data.get(tcp_socket.getInetAddress());
+                            UserData data = new UserData(stdout);
+
+                            // TODO: Propagate to db
+                            player.barrel_color = data.barrel_color;
+                            player.body_color = data.body_color;
+                            player.border_color = data.border_color;
+                            player.name = data.name;
                         }
                     }
                 } catch (SocketTimeoutException ignored) {}
