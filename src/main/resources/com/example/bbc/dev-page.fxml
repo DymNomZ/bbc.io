@@ -58,9 +58,9 @@
             </Label>
          </children>
       </VBox>
-      <VBox fx:id="vDevTitle" alignment="TOP_CENTER" layoutX="550.0" layoutY="-8.0" prefHeight="180.0" prefWidth="180.0" AnchorPane.bottomAnchor="550.0" AnchorPane.leftAnchor="550.0" AnchorPane.rightAnchor="550.0" AnchorPane.topAnchor="-10.0">
+      <VBox fx:id="vDevTitle" alignment="TOP_CENTER" layoutX="445.0" layoutY="7.0" prefHeight="110.0" prefWidth="390.0" AnchorPane.bottomAnchor="605.0" AnchorPane.leftAnchor="445.0" AnchorPane.rightAnchor="445.0" AnchorPane.topAnchor="5.0">
          <children>
-            <ImageView fx:id="ivDevTitle" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="ivDevTitle" fitHeight="100.0" fitWidth="380.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </VBox>
    </children>

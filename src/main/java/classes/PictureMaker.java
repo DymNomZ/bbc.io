@@ -17,7 +17,7 @@ public class PictureMaker {
     ArrayList<Image> frames;
     ImageView ivSpriteHolder;
     VBox vContainer;
-    public PictureMaker(ImageView ivSpriteHolder, VBox vContainer, String name, AnchorPane apDevScreen, boolean isSprite, double divider){
+    public PictureMaker(ImageView ivSpriteHolder, VBox vContainer, String name, AnchorPane apDevScreen, boolean isSprite, double divider, double max_inc){
         this.ivSpriteHolder = ivSpriteHolder;
         this.vContainer = vContainer;
         if(isSprite){
@@ -49,16 +49,15 @@ public class PictureMaker {
             @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
                 System.out.println("Width: " + newSceneWidth);
 
-                if(newSceneWidth.doubleValue()/1264.0 <= 1.52){
-                    System.out.println("Width divider: " + newSceneWidth.doubleValue()/divider);
+                if(newSceneWidth.doubleValue()/divider <= max_inc){
+                    System.out.println(name + " Width divider: " + newSceneWidth.doubleValue()/divider);
                     ivSpriteHolder.fitHeightProperty().bind(vContainer.heightProperty().divide(newSceneWidth.doubleValue()/divider));
                     ivSpriteHolder.fitWidthProperty().bind(vContainer.widthProperty().divide(newSceneWidth.doubleValue()/divider));
+                } else{
+                    System.out.println(name + " max size " + max_inc + " reached");
+                    ivSpriteHolder.fitHeightProperty().bind(vContainer.heightProperty().divide(max_inc));
+                    ivSpriteHolder.fitWidthProperty().bind(vContainer.widthProperty().divide(max_inc));
                 }
-            }
-        });
-        apDevScreen.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-                System.out.println("Height: " + newSceneHeight);
             }
         });
     }
