@@ -1,5 +1,7 @@
 package com.example.bbc;
 
+import datas.EntityData;
+import datas.GameData;
 import entities.Entity;
 import entities.ProjectileEntity;
 import entities.TankEntity;
@@ -9,14 +11,19 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
+import utils.Helpers;
+import utils.Logging;
 
 import java.util.*;
 import java.util.List;
+
+import static com.example.bbc.IOGame.SERVER_API;
 
 public class GameScene extends Scene {
 
@@ -31,7 +38,7 @@ public class GameScene extends Scene {
     public static StackPane root = new StackPane();
 
     //changed player from final to static for color change testing
-    public static Entity main_player;
+    public static TankEntity main_player;
     private double center_x, center_y;
     public static List<Entity> entity_list;
 
@@ -71,7 +78,12 @@ public class GameScene extends Scene {
         center_y = SCREEN_HEIGHT / 2;
 
         main_player.setPosition(0,0);
-        spawnEntity(main_player);
+
+        /*
+        * we do not add the player to the entity list as we will be clearing the list on every GameData received
+        * - Dymes
+        * */
+        main_player.render(root);
 
         this.setOnMouseMoved(mouse_handler);
         this.setOnMouseReleased(mouse_handler::mouseReleased);
@@ -82,6 +94,63 @@ public class GameScene extends Scene {
 
         System.out.println(root.getChildren());
         gameLoop.start();
+    }
+
+    public static void receiveGameData(){
+        /*
+        * Below is the theoretical implementation of plotting nodes (entities) to the screen when receiving
+        * GameData as the sending part on the server side is still being developed.
+        * It contains a list of EntityData which is where the algorithm will refer where to place the
+        * nodes. The listener as its function, constantly listens to the server for any sent GameData.
+        *
+        * If the list of entities received is empty, therefore the player is not in the lobby as it is set so
+        * that the player is constantly the first object on the list. This is how the algorithm handles instances
+        * where the match hasn't begun yet or the player has died has not yet respawned, still at the lobby screen.
+        *
+        * - Dynmes
+        * */
+        SERVER_API.onGameUpdate(new ServerDataListener<GameData>() {
+            @Override
+            public void run(GameData data) {
+
+                Logging.write(this, String.valueOf(data.entities.size()));
+
+                List<EntityData> entities = data.entities;
+
+                //if empty then just don't proceed
+                if(entities.isEmpty()) return;
+
+                //clear previous entities
+                for(Entity e : entity_list){
+                    root.getChildren().remove(e);
+                }
+
+
+                //loop
+                for(EntityData e : entities){
+                    //Tank
+                    if(!e.is_projectile){
+                        Paint body_color = Helpers.rgbBytesToColor(e.body_color);
+                        Paint barrel_color = Helpers.rgbBytesToColor(e.barrel_color);
+                        Paint border_color = Helpers.rgbBytesToColor(e.border_color);
+
+                        TankEntity tank = new TankEntity(body_color, barrel_color, border_color);
+                        tank.setPosition(e.x, e.y);
+                        tank.lookAt(e.angle);
+
+                        entity_list.add(tank);
+                        tank.render(root);
+                    }
+                    //Projectile
+                    else{
+                        ProjectileEntity projectile = new ProjectileEntity(e.angle, e.x, e.y);
+                        entity_list.add(projectile);
+                        projectile.render(root);
+                    }
+                }
+
+            }
+        });
     }
 
     private Color brighten(Color color){
@@ -225,30 +294,12 @@ public class GameScene extends Scene {
 
         @Override
         public void handle(long now) {
+
             if (lastUpdate == 0) {
                 lastUpdate = now;
                 return;
             }
             update();
-
-            //This should be removed as this is handled in the server
-            Iterator it = entity_list.iterator();
-            while (it.hasNext()) {
-                Entity e = (Entity) it.next();
-                if(e instanceof ProjectileEntity) {
-                    ProjectileEntity projectile = (ProjectileEntity) e;
-//                    if(projectile.distanceFromOriginalPosition() >= 200){
-//                        despawnEntity(projectile);
-//                        it.remove();
-//                        continue;
-//                    }
-                    double angleRadians = Math.toRadians(projectile.getAngle());
-                    double deltaX = projectile.getSpeed() * Math.cos(angleRadians);
-                    double deltaY = projectile.getSpeed() * Math.sin(angleRadians);
-                    projectile.setPosition(projectile.getLayoutX() + deltaX, projectile.getLayoutY() + deltaY);
-//                    System.out.println("Updating projectile");
-                }
-            }
 
             double deltaTime = (now - lastUpdate) / 1_000_000_000.0; // Convert nanoseconds to seconds
             lastUpdate = now;

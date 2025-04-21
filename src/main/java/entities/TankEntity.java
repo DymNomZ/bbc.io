@@ -17,7 +17,7 @@ public class TankEntity extends Entity {
     }
     
     // adjustments for user-chosen color options to apply
-    public TankEntity(Paint bodyColor, Paint turretColor, Paint borderColor) {
+    public TankEntity(Paint bodyColor, Paint barrelColor, Paint borderColor) {
         Circle circle = new Circle();
         circle.setRadius(20);
         circle.setFill(bodyColor);
@@ -27,7 +27,7 @@ public class TankEntity extends Entity {
         Rectangle rectangle = new Rectangle();
         rectangle.setHeight(10);
         rectangle.setWidth(50);
-        rectangle.setFill(turretColor);
+        rectangle.setFill(barrelColor);
         rectangle.setStroke(borderColor);
         rectangle.setStrokeWidth(2.0);
 
@@ -52,7 +52,7 @@ public class TankEntity extends Entity {
         main_body.setFill(color);
     }
     
-    public void setTurretColor(Paint color) {
+    public void setBarrelColor(Paint color) {
         turret.setFill(color);
     }
     

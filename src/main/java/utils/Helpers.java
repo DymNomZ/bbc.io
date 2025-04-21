@@ -16,4 +16,11 @@ public class Helpers {
                 doubleToByte(color.getBlue())
         };
     }
+
+    public static Color rgbBytesToColor(byte[] rgbBytes) {
+        double red = (rgbBytes[0] & 0xFF) / 255.0;
+        double green = (rgbBytes[1] & 0xFF) / 255.0;
+        double blue = (rgbBytes[2] & 0xFF) / 255.0;
+        return Color.color(red, green, blue);
+    }
 }

@@ -60,6 +60,12 @@ public abstract class Entity {
         last_shot_time = currentTime;
     }
 
+    //FOR ENTITY DATA READING
+    public void lookAt(double angle){
+        // Apply rotation
+        rotation.setAngle(angle);
+    }
+
     public void lookAt() {
 
         double mouse_x, mouse_y;

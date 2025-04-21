@@ -1,6 +1,7 @@
 package com.example.bbc;
 
 import classes.Sprites;
+import datas.EntityData;
 import datas.GameData;
 import datas.LobbyData;
 import javafx.application.Platform;
@@ -8,6 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import utils.Logging;
+
+import java.util.List;
+
 import static com.example.bbc.IOGame.MAIN_STAGE;
 import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Scenes.LOBBY_SCENE;
@@ -56,14 +60,11 @@ public class TitleScreenController {
                 Platform.runLater(() -> {
                     MAIN_STAGE.setScene(LOBBY_SCENE);
                 });
+
+                //Start receiving game data
+                GameScene.receiveGameData();
             }
 
-        });
-        SERVER_API.onGameUpdate(new ServerDataListener<GameData>() {
-            @Override
-            public void run(GameData data) {
-                Logging.write(this, String.valueOf(data.entities.size()));
-            }
         });
 
     }

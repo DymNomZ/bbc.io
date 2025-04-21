@@ -9,6 +9,24 @@ public class EntityData extends SerialData {
     public byte[] id;
     public boolean is_projectile;
     public double x, y, angle;
+    public byte[] border_color;
+    public byte[] body_color;
+    public byte[] barrel_color;
+
+    public EntityData(
+            byte[] id, boolean is_projectile,
+            double x, double y, double angle,
+            byte[] border_color, byte[] body_color, byte[] barrel_color
+    ) {
+        this.id = id;
+        this.is_projectile = is_projectile;
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+        this.border_color = border_color;
+        this.body_color = body_color;
+        this.barrel_color = barrel_color;
+    }
 
     // ID may be the player id or the owner id of the projectile
     public EntityData(byte[] id, double x, double y, double angle, boolean is_projectile) {
