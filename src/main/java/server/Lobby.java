@@ -2,6 +2,7 @@ package server;
 
 import configs.DimensionConfig;
 import configs.LobbyConfig;
+import configs.SocketConfig;
 import datas.*;
 import server.model.*;
 import utils.Logging;
@@ -25,6 +26,7 @@ public class Lobby {
     public LinkedList<PlayerData> spawn_queue = new LinkedList<>();
     static private int ID = 1;
     private int id;
+    private int player_id_ctr = 1;
     QuadTree qtree;
     public final DatagramSocket input_socket;
     public boolean running = true;
@@ -36,10 +38,8 @@ public class Lobby {
             id = ID++;
         } while (id == 0);
 
-        input_socket = new DatagramSocket();
-        input_socket.setSoTimeout(3000);
-
-        Logging.write(this, id + "] UDP PORT: " + input_socket.getLocalPort());
+        input_socket = new DatagramSocket(SocketConfig.PORT);
+        input_socket.setSoTimeout(10);
 
         input_thread = new Thread(new Runnable() {
             @Override
@@ -137,17 +137,27 @@ public class Lobby {
     }
 
     public boolean addPlayer(Socket client) throws IOException {
-        if (players_data.size() < LobbyConfig.MAX_PLAYERS) {
-            InputStream stream = client.getInputStream();
-            AuthData authPacket = new AuthData(stream);
 
-            PlayerData player = new PlayerData(authPacket);
-            players_data.put(client.getInetAddress(), player);
-            player.startHandler(client, this);
-            return true;
-        }
+        // TODO: find a way to implement multiple lobbies later
+//        if (players_data.size() < LobbyConfig.MAX_PLAYERS) {
+//            InputStream stream = client.getInputStream();
+//            AuthData authPacket = new AuthData(stream);
+//
+//            PlayerData player = new PlayerData(authPacket, player_id_ctr++);
+//            players_data.put(client.getInetAddress(), player);
+//            player.startHandler(client, this);
+//            return true;
+//        }
+//
+//        return false;
 
-        return false;
+        InputStream stream = client.getInputStream();
+        AuthData authPacket = new AuthData(stream);
+
+        PlayerData player = new PlayerData(authPacket, player_id_ctr++);
+        players_data.put(client.getInetAddress(), player);
+        player.startHandler(client, this);
+        return true;
     }
 
     public LobbyData initialLobbyData() {

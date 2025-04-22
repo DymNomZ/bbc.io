@@ -48,8 +48,7 @@ public class ClientHandler {
             OutputStream stdin = tcp_socket.getOutputStream();
             InputStream stdout = tcp_socket.getInputStream();
 
-            // Initial lobby data of leaderboard with the udp port of lobby for inputs
-            stdin.write(SerialData.convertInt(lobby.input_socket.getLocalPort()));
+            // Initial lobby data of leaderboard
             stdin.write(lobby_context.serialize());
             stdin.flush();
 

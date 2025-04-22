@@ -6,54 +6,64 @@ import java.io.InputStream;
 
 public class EntityData extends SerialData {
     static private final byte SERIAL_ID = 2;
-    public byte[] id;
+    public int id;
     public boolean is_projectile;
     public double x, y, angle;
-    public byte[] border_color;
-    public byte[] body_color;
-    public byte[] barrel_color;
+    public int health;
+    public long time_damaged;
 
+    // Player Data
     public EntityData(
-            byte[] id, boolean is_projectile,
-            double x, double y, double angle,
-            byte[] border_color, byte[] body_color, byte[] barrel_color
+            int id,
+            double x,
+            double y,
+            double angle,
+            int health,
+            long time_damaged
     ) {
         this.id = id;
-        this.is_projectile = is_projectile;
+        this.is_projectile = false;
         this.x = x;
         this.y = y;
         this.angle = angle;
-        this.border_color = border_color;
-        this.body_color = body_color;
-        this.barrel_color = barrel_color;
+        this.health = health;
+        this.time_damaged = time_damaged;
     }
 
-    // ID may be the player id or the owner id of the projectile
-    public EntityData(byte[] id, double x, double y, double angle, boolean is_projectile) {
+    // Projectile Data
+    public EntityData(int id, double x, double y, double angle) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.angle = angle;
-        this.is_projectile = is_projectile;
+        this.is_projectile = true;
     }
 
     public EntityData(InputStream stream) throws IOException {
-        id = stream.readNBytes(6);
+        id = decodeInt(stream.readNBytes(4));
         is_projectile = stream.read() == 1;
         x = decodeDouble(stream.readNBytes(8));
         y = decodeDouble(stream.readNBytes(8));
         angle = decodeDouble(stream.readNBytes(8));
+        if (!is_projectile) {
+            health = decodeInt(stream.readNBytes(4));
+            time_damaged = decodeLong(stream.readNBytes(8));
+        }
     }
 
     @Override
     public byte[] serialize() {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream(31);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream(43);
         try {
-            stream.write(id);
+            stream.write(convertInt(id));
             stream.write(is_projectile ? 1 : 0);
             stream.write(convertDouble(x));
             stream.write(convertDouble(y));
             stream.write(convertDouble(angle));
+            if (!is_projectile) {
+                stream.write(convertInt(health));
+                stream.write(convertLong(time_damaged));
+            }
         } catch (IOException e) {
             return new byte[1];
         }

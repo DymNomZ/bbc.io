@@ -56,7 +56,6 @@ public class ServerHandler {
 
             while (is_connected) {
                 UDP_socket.receive(packet);
-                // TODO: packet filter
                 GameData data = new GameData(packet.getData());
                 if (data.entities.isEmpty()) {
                     invokeListener(death_listener);
@@ -117,23 +116,16 @@ public class ServerHandler {
                 server_stdin.write(authPacket.serialize());
                 server_stdin.flush();
 
-                int udpPort = SerialData.decodeInt(stdout.readNBytes(4));
-
                 stdout.read(); // ignore SerialData Type
                 LobbyData lobbyData = new LobbyData(stdout);
 
-                for (UserData i : lobbyData.users) {
-                    if (Arrays.equals(i.id, id)) {
-                        current_user = i;
-                        break;
-                    }
-                }
+                current_user = lobbyData.users.getFirst();
 
                 is_connected = true;
                 lobby_id = lobbyData.id;
                 invokeDataListener(connect_listener, lobbyData);
 
-                input_packet = new DatagramPacket(new byte[9], 9, server.getInetAddress(), udpPort);
+                input_packet = new DatagramPacket(new byte[9], 9, server.getInetAddress(), SocketConfig.PORT);
 
                 Thread udp_thread = new Thread(new Runnable() {
                     @Override

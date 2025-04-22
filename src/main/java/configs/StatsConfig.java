@@ -1,7 +1,7 @@
 package configs;
 
 public class StatsConfig {
-    public static final double PLAYER_HEALTH = 100;
+    public static final int PLAYER_HEALTH = 100;
     public static final double PROJECTILE_DAMAGE = 10;
 
     // Speed per millisecond

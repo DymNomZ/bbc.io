@@ -11,7 +11,7 @@ import static configs.DimensionConfig.*;
 
 public class PlayerData {
     private ClientHandler handler;
-    public byte[] id;
+    public int id;
     public String name;
     public int score;
     public boolean playing = false;
@@ -21,8 +21,8 @@ public class PlayerData {
     public byte[] body_color;
     public byte[] barrel_color;
 
-    public PlayerData(AuthData auth) {
-        id = auth.id;
+    public PlayerData(AuthData auth, int player_id) {
+        id = player_id;
         name = auth.name;
 
         // TODO: get score & color from db

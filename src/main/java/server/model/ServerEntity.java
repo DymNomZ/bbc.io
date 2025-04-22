@@ -19,11 +19,11 @@ import java.util.Random;
 
 public abstract class ServerEntity implements Collidable<ServerEntity> {
     public double x, y, angle, radius;
-    byte[] player_id;
+    int player_id;
     double speed;
     private long last_moved_time;
 
-    public ServerEntity(long game_clock, double radius, byte[] player_id) {
+    public ServerEntity(long game_clock, double radius, int player_id) {
         this.radius = radius;
         this.player_id = player_id;
 
@@ -66,7 +66,5 @@ public abstract class ServerEntity implements Collidable<ServerEntity> {
         }
     }
 
-    public EntityData getEntityData() {
-        return new EntityData(player_id, x, y, angle, (this instanceof ProjectileEntity));
-    }
+    public abstract EntityData getEntityData();
 }
