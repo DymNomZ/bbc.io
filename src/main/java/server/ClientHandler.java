@@ -2,9 +2,12 @@ package server;
 
 import configs.SocketConfig;
 import datas.*;
+import server.game_structure.QuadTree;
+import server.game_structure.RangeCircle;
 import server.model.PlayerData;
 import server.model.ServerEntity;
 import server.model.UDPAddress;
+import utils.Logging;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +26,8 @@ public class ClientHandler {
     private final Lobby lobby;
     private LobbyData lobby_context;
     private final UDPAddress UDPAddr;
+    private boolean player_dead = true;
+    private final int player_id;
 
     public ClientHandler(Socket socket, UDPAddress UDPAddr, Lobby lobby, int player_id) {
         lobby_context = lobby.initialLobbyData();
@@ -36,6 +41,7 @@ public class ClientHandler {
             }
         }
 
+        this.player_id = player_id;
         tcp_socket = socket;
         this.lobby = lobby;
         this.UDPAddr = UDPAddr;
@@ -73,6 +79,7 @@ public class ClientHandler {
                     switch (dataID) {
                         case InputData.SERIAL_ID -> {
                             lobby.spawn_queue.add(lobby.players_data.get(UDPAddr));
+                            player_dead = false;
                         }
                         case UserData.SERIAL_ID ->  {
                             PlayerData player = lobby.players_data.get(UDPAddr);
@@ -87,6 +94,14 @@ public class ClientHandler {
                     }
                 } catch (SocketTimeoutException ignored) {}
                 // TODO: send lobby data
+                stdin.write(lobby_context.serialize());
+                stdin.flush();
+
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new IOException();
+                }
             }
         } catch (IOException ignored) {}
 
@@ -103,18 +118,46 @@ public class ClientHandler {
         // TODO: Send data only that the player can see (data sent must not exceed 50 entities)
         // TODO: Sent empty packet to signify death
 
-        DatagramPacket packet = new DatagramPacket(current_data.serialize(), 1, tcp_socket.getInetAddress(), SocketConfig.PORT);
+        DatagramPacket packet = new DatagramPacket(current_data.serialize(), 1, UDPAddr.ip, UDPAddr.port);
+
+        // Memoize Last player entity
+        ServerEntity old_player_entity = null;
 
         while (lobby.running) {
             current_data.entities.clear();
 
-            // Todo: Change this scary shet (prone to exception by modified element while iterating)
-            try {
-                for (ServerEntity i : lobby.entity_data.values()) {
+            if (!player_dead) {
+                QuadTree tree = lobby.qtree;
+
+                if (old_player_entity == null) {
+                    for (ServerEntity i : tree.entities) {
+                        if (i.player_id == player_id) {
+                            old_player_entity = i;
+                            break;
+                        }
+                    }
+                    if (old_player_entity == null) {
+                        continue;
+                    }
+                }
+
+                for (ServerEntity i : tree.query(new RangeCircle(old_player_entity.x, old_player_entity.y, old_player_entity.radius + 50))) {
+                    if (i.player_id == player_id) {
+                        old_player_entity = i;
+                        current_data.entities.addFirst(i.getEntityData());
+                        continue;
+                    }
                     current_data.entities.add(i.getEntityData());
                 }
-            } catch (Exception e) {
-                continue;
+
+                EntityData current_player = current_data.entities.getFirst();
+
+                if (current_player == null || current_player.id != player_id) {
+                    player_dead = true;
+                    current_data.entities.clear();
+                }
+            } else {
+                old_player_entity = null;
             }
 
             packet.setData(current_data.serialize());

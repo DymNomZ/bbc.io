@@ -1,4 +1,4 @@
-package game_data;
+package server.game_structure;
 
 
 import server.model.ServerEntity;

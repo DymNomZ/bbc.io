@@ -19,7 +19,7 @@ import java.util.Random;
 
 public abstract class ServerEntity implements Collidable<ServerEntity> {
     public double x, y, angle, radius;
-    int player_id;
+    public final int player_id;
     double speed;
     private long last_moved_time;
 

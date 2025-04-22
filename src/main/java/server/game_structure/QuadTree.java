@@ -1,4 +1,4 @@
-package game_data;
+package server.game_structure;
 
 
 import server.model.ServerEntity;
@@ -61,7 +61,7 @@ import java.util.List;
  */
 public class QuadTree {
     int capacity;
-    List<ServerEntity> entities;
+    public List<ServerEntity> entities;
     QuadRectangle bounds;
     QuadTree northwest;
     QuadTree southwest;

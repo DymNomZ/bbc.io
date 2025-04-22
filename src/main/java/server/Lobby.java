@@ -1,9 +1,11 @@
 package server;
 
 import configs.DimensionConfig;
-import configs.LobbyConfig;
 import configs.SocketConfig;
 import datas.*;
+import server.game_structure.QuadRectangle;
+import server.game_structure.QuadTree;
+import server.game_structure.RangeCircle;
 import server.model.*;
 import utils.Logging;
 
@@ -16,8 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.WeakHashMap;
 
-import game_data.*;
-
 public class Lobby {
     public HashMap<UDPAddress, PlayerData> players_data = new HashMap<>();
 
@@ -26,9 +26,9 @@ public class Lobby {
 
     public LinkedList<PlayerData> spawn_queue = new LinkedList<>();
     static private int ID = 1;
-    private int id;
+    public final int id;
     private int player_id_ctr = 1;
-    QuadTree qtree;
+    public QuadTree qtree;
     public final DatagramSocket input_socket;
     public boolean running = true;
     private final Thread game_thread, input_thread;
@@ -39,10 +39,7 @@ public class Lobby {
 
     public Lobby() throws IOException {
         // TODO: Initialize Map (if required)
-        do {
-            id = ID++;
-        } while (id == 0);
-
+        id = ID++;
         input_socket = new DatagramSocket(SocketConfig.PORT);
         input_socket.setSoTimeout(10);
 
@@ -71,9 +68,11 @@ public class Lobby {
 
             handleSpawnQueue(game_clock);
 
-            constructQTree();
+            QuadTree current_tree =  constructQTree();
 
-            quadCollisionCheck();
+            quadCollisionCheck(current_tree);
+
+            qtree = current_tree;
 
             long sleep_clock = Math.max(2 - (System.currentTimeMillis() - game_clock), 0);
             try {
@@ -85,21 +84,23 @@ public class Lobby {
         }
     }
 
-    private void quadCollisionCheck(){
+    private void quadCollisionCheck(QuadTree tree){
         for (ServerEntity entity: entity_data.values()) {
             RangeCircle circle = new RangeCircle(entity.x, entity.y, entity.radius + 1);
-            List<ServerEntity> collision = qtree.query(circle);
+            List<ServerEntity> collision = tree.query(circle);
             for (ServerEntity other : collision) {
                 if (entity != other) entity.isCollidingWith(other);
             }
         }
     }
 
-    private void constructQTree(){
-        qtree.clear();
+    private QuadTree constructQTree(){
+        QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1);
         for(ServerEntity s : entity_data.values()){
-            qtree.insert(s);
+            tree.insert(s);
         }
+
+        return tree;
     }
 
     private void handleSpawnQueue(long game_clock){
@@ -170,7 +171,6 @@ public class Lobby {
         stdin.write(SerialData.convertInt(player_id_ctr));
         stdin.flush();
 
-        Logging.write(this, "getting udp");
         long time_ms = System.currentTimeMillis();
         while (awaited_player_port == 0) {
             try {
@@ -183,7 +183,6 @@ public class Lobby {
                 return true;
             }
         }
-        Logging.write(this, "found udp");
 
         stdin.write(255);
         stdin.flush();

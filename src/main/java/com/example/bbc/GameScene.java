@@ -125,12 +125,13 @@ public class GameScene extends Scene {
                 }
 
 
+                // TODO: No renders should be done in GameData listener. Only setting of the entity data must be done here.
                 //loop
                 for(EntityData e : entities){
                     //Tank
                     if(!e.is_projectile){
 
-                        // Todo: implement when lobbyData is implemented
+                        // Todo: implement color when lobbyData is implemented
                         Paint body_color = Color.BLUE;
                         Paint barrel_color = Color.BLACK;
                         Paint border_color = Color.BROWN;
@@ -140,14 +141,16 @@ public class GameScene extends Scene {
                         tank.lookAt(e.angle);
 
                         entity_list.add(tank);
-                        tank.render(root);
+                        //tank.render(root);
                     }
                     //Projectile
                     else{
                         ProjectileEntity projectile = new ProjectileEntity(e.angle, e.x, e.y);
                         entity_list.add(projectile);
-                        projectile.render(root);
+                        //projectile.render(root);
                     }
+
+                    Logging.write(this, String.valueOf(e.id));
                 }
 
             }
