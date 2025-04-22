@@ -9,6 +9,7 @@ import utils.Logging;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.*;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -18,7 +19,7 @@ import java.util.WeakHashMap;
 import game_data.*;
 
 public class Lobby {
-    public HashMap<InetAddress, PlayerData> players_data = new HashMap<>();
+    public HashMap<UDPAddress, PlayerData> players_data = new HashMap<>();
 
     // TODO: May be replaced for quad trees data struct
     public WeakHashMap<PlayerData, ServerEntity> entity_data = new WeakHashMap<>();
@@ -31,6 +32,10 @@ public class Lobby {
     public final DatagramSocket input_socket;
     public boolean running = true;
     private final Thread game_thread, input_thread;
+
+    private int awaited_player_id = 0;
+    private InetAddress awaited_player_ip = null;
+    private int awaited_player_port = 0;
 
     public Lobby() throws IOException {
         // TODO: Initialize Map (if required)
@@ -126,13 +131,16 @@ public class Lobby {
                 continue;
             }
 
-            PlayerData data = players_data.get(packet.getAddress());
+            PlayerData data = players_data.get(new UDPAddress(packet.getAddress(), packet.getPort()));
 
-            if (packet.getLength() != 9 || data == null) {
-                continue;
+            if (packet.getLength() == 9 && data != null) {
+                data.setInputs(new InputData(packet.getData()));
+            } else if (packet.getLength() == 4) {
+                int player_id = SerialData.decodeInt(packet.getData());
+                if (player_id == awaited_player_id && packet.getAddress().equals(awaited_player_ip)) {
+                    awaited_player_port = packet.getPort();
+                }
             }
-
-            data.setInputs(new InputData(packet.getData()));
         }
     }
 
@@ -152,11 +160,39 @@ public class Lobby {
 //        return false;
 
         InputStream stream = client.getInputStream();
+        OutputStream stdin = client.getOutputStream();
         AuthData authPacket = new AuthData(stream);
 
+        awaited_player_ip = client.getInetAddress();
+        awaited_player_port = 0;
+        awaited_player_id = player_id_ctr;
+
+        stdin.write(SerialData.convertInt(player_id_ctr));
+        stdin.flush();
+
+        Logging.write(this, "getting udp");
+        long time_ms = System.currentTimeMillis();
+        while (awaited_player_port == 0) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                return true;
+            }
+            if (System.currentTimeMillis() - time_ms >= 3000) {
+                awaited_player_id = 0;
+                return true;
+            }
+        }
+        Logging.write(this, "found udp");
+
+        stdin.write(255);
+        stdin.flush();
+
+        UDPAddress UDPAddr = new UDPAddress(awaited_player_ip, awaited_player_port);
+
         PlayerData player = new PlayerData(authPacket, player_id_ctr++);
-        players_data.put(client.getInetAddress(), player);
-        player.startHandler(client, this);
+        players_data.put(UDPAddr, player);
+        player.startHandler(client, UDPAddr, this);
         return true;
     }
 

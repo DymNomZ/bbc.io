@@ -50,7 +50,6 @@ public class GameScene extends Scene {
 
     public static boolean can_be_damaged = true;
 
-
     public GameScene() {
         super(root, SCREEN_WIDTH, SCREEN_HEIGHT);
         System.out.println("Screen Dimensions: " + SCREEN_WIDTH + ", " + SCREEN_HEIGHT);
@@ -130,9 +129,11 @@ public class GameScene extends Scene {
                 for(EntityData e : entities){
                     //Tank
                     if(!e.is_projectile){
-                        Paint body_color = Helpers.rgbBytesToColor(e.body_color);
-                        Paint barrel_color = Helpers.rgbBytesToColor(e.barrel_color);
-                        Paint border_color = Helpers.rgbBytesToColor(e.border_color);
+
+                        // Todo: implement when lobbyData is implemented
+                        Paint body_color = Color.BLUE;
+                        Paint barrel_color = Color.BLACK;
+                        Paint border_color = Color.BROWN;
 
                         TankEntity tank = new TankEntity(body_color, barrel_color, border_color);
                         tank.setPosition(e.x, e.y);

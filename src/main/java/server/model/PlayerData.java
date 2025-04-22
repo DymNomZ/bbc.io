@@ -33,8 +33,8 @@ public class PlayerData {
         score = 0;
     }
 
-    public void startHandler(Socket client, Lobby lobby) {
-        handler = new ClientHandler(client, lobby);
+    public void startHandler(Socket client, UDPAddress UDPAddr, Lobby lobby) {
+        handler = new ClientHandler(client, UDPAddr, lobby, id);
     }
 
     public synchronized void setInputs(InputData data) {

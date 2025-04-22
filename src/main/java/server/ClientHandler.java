@@ -4,6 +4,7 @@ import configs.SocketConfig;
 import datas.*;
 import server.model.PlayerData;
 import server.model.ServerEntity;
+import server.model.UDPAddress;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +13,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ClientHandler {
     private final Thread TCP_thread;
@@ -22,11 +22,23 @@ public class ClientHandler {
     private GameData current_data = new GameData();
     private final Lobby lobby;
     private LobbyData lobby_context;
+    private final UDPAddress UDPAddr;
 
-    public ClientHandler(Socket socket, Lobby lobby) {
+    public ClientHandler(Socket socket, UDPAddress UDPAddr, Lobby lobby, int player_id) {
         lobby_context = lobby.initialLobbyData();
+
+        for (Iterator<UserData> it = ((LinkedList<UserData>) lobby_context.users).descendingIterator(); it.hasNext(); ) {
+            UserData i = it.next();
+            if (i.id == player_id) {
+                it.remove();
+                lobby_context.users.addFirst(i);
+                break;
+            }
+        }
+
         tcp_socket = socket;
         this.lobby = lobby;
+        this.UDPAddr = UDPAddr;
 
         TCP_thread = new Thread(new Runnable() {
             @Override
@@ -60,10 +72,10 @@ public class ClientHandler {
                     int dataID = stdout.read();
                     switch (dataID) {
                         case InputData.SERIAL_ID -> {
-                            lobby.spawn_queue.add(lobby.players_data.get(tcp_socket.getInetAddress()));
+                            lobby.spawn_queue.add(lobby.players_data.get(UDPAddr));
                         }
                         case UserData.SERIAL_ID ->  {
-                            PlayerData player = lobby.players_data.get(tcp_socket.getInetAddress());
+                            PlayerData player = lobby.players_data.get(UDPAddr);
                             UserData data = new UserData(stdout);
 
                             // TODO: Propagate to db
@@ -74,7 +86,7 @@ public class ClientHandler {
                         }
                     }
                 } catch (SocketTimeoutException ignored) {}
-                // TODO: Improve sending lobby data
+                // TODO: send lobby data
             }
         } catch (IOException ignored) {}
 
@@ -82,7 +94,7 @@ public class ClientHandler {
             tcp_socket.close();
         } catch (IOException ignored) {}
         UDP_thread.interrupt();
-        PlayerData player = lobby.players_data.remove(tcp_socket.getInetAddress());
+        PlayerData player = lobby.players_data.remove(UDPAddr);
         lobby.entity_data.remove(player);
 
     }
