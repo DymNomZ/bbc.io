@@ -7,6 +7,7 @@ import entities.ProjectileEntity;
 import entities.TankEntity;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -93,6 +94,7 @@ public class GameScene extends Scene {
 
         System.out.println(root.getChildren());
         gameLoop.start();
+
     }
 
     public static void receiveGameData(){
@@ -112,7 +114,8 @@ public class GameScene extends Scene {
             @Override
             public void run(GameData data) {
 
-                Logging.write(this, String.valueOf(data.entities.size()));
+                Logging.write(this,"Rendering " + String.valueOf(data.entities.size()) + " entities");
+
 
                 List<EntityData> entities = data.entities;
 
@@ -140,7 +143,7 @@ public class GameScene extends Scene {
                         tank.setPosition(e.x, e.y);
                         tank.lookAt(e.angle);
 
-                        entity_list.add(tank);
+                        tank.render(root);
                         //tank.render(root);
                     }
                     //Projectile
@@ -152,7 +155,6 @@ public class GameScene extends Scene {
 
                     Logging.write(this, String.valueOf(e.id));
                 }
-
             }
         });
     }
@@ -307,6 +309,7 @@ public class GameScene extends Scene {
 
             double deltaTime = (now - lastUpdate) / 1_000_000_000.0; // Convert nanoseconds to seconds
             lastUpdate = now;
+            if(SERVER_API != null)receiveGameData();
         }
     };
 

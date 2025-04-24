@@ -118,6 +118,8 @@ public class Lobby {
             } else {
                 entity.move(game_clock, i.getInputs());
             }
+
+            Logging.write(this, entity.toString());
         }
     }
 

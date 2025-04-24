@@ -60,9 +60,6 @@ public class TitleScreenController {
                 Platform.runLater(() -> {
                     MAIN_STAGE.setScene(LOBBY_SCENE);
                 });
-
-                //Start receiving game data
-                GameScene.receiveGameData();
             }
 
         });

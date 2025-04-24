@@ -66,5 +66,10 @@ public abstract class ServerEntity implements Collidable<ServerEntity> {
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("[Player]\nID: %d\nx: %f, y: %f", player_id, x, y);
+    }
+
     public abstract EntityData getEntityData();
 }
