@@ -96,6 +96,7 @@ public class QuadTree {
         for (ServerEntity obj : entities) {
             insertIntoQuads(obj);
         }
+        entities.clear(); //ANIMALLLLLLLL
         divided = true;
 
     }
