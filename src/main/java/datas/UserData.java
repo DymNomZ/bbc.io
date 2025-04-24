@@ -14,7 +14,7 @@ public class UserData extends SerialData {
     public int id;
     public String name;
     public long score;
-    private byte type;
+    public final byte type;
     public byte[] border_color;
     public byte[] body_color;
     public byte[] barrel_color;

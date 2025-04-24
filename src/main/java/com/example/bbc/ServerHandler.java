@@ -3,13 +3,16 @@ package com.example.bbc;
 import configs.SocketConfig;
 import datas.*;
 import exceptions.BBCServerNotConnected;
+import server.Lobby;
 import utils.Logging;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ServerHandler {
     private static final int SERVER_ACK = 255;
@@ -28,6 +31,8 @@ public class ServerHandler {
     private int lobby_id = 0;
     private boolean is_connected = false;
     private UserData current_user = null;
+
+    public List<UserData> users_in_lobby = new ArrayList<>();
 
     private boolean player_dead = true;
 
