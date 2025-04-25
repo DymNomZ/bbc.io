@@ -41,6 +41,8 @@ public class ClientHandler {
             }
         }
 
+        Logging.write(this, "Entered player #" + lobby_context.users.getFirst().id);
+
         this.player_id = player_id;
         tcp_socket = socket;
         this.lobby = lobby;
@@ -105,6 +107,8 @@ public class ClientHandler {
             }
         } catch (IOException ignored) {}
 
+        Logging.write(this, "Player #" + player_id + " disconnected");
+
         try {
             tcp_socket.close();
         } catch (IOException ignored) {}
@@ -115,12 +119,9 @@ public class ClientHandler {
     }
 
     private void UDPOutputThread() {
-        // TODO: Send data only that the player can see (data sent must not exceed 50 entities)
-        // TODO: Sent empty packet to signify death
-
         DatagramPacket packet = new DatagramPacket(current_data.serialize(), 1, UDPAddr.ip, UDPAddr.port);
 
-        // Memoize Last player entity
+        // save the Last player entity
         ServerEntity old_player_entity = null;
 
         while (lobby.running) {
@@ -130,18 +131,19 @@ public class ClientHandler {
                 QuadTree tree = lobby.qtree;
 
                 if (old_player_entity == null) {
-                    for (ServerEntity i : tree.entities) {
+                    for (ServerEntity i : tree.root_entities) {
                         if (i.player_id == player_id) {
                             old_player_entity = i;
                             break;
                         }
                     }
+
                     if (old_player_entity == null) {
                         continue;
                     }
                 }
                 List<ServerEntity> in_range = tree.query(new RangeCircle(old_player_entity.x, old_player_entity.y, old_player_entity.radius + 50));
-                Logging.write(this,in_range.size()+"");
+                //Logging.write(this,in_range.size()+" " + player_id);
                 for (ServerEntity i : in_range) {
                     if (i.player_id == player_id) {
                         old_player_entity = i;

@@ -2,6 +2,7 @@ package com.example.bbc;
 
 import datas.EntityData;
 import datas.GameData;
+import datas.InputData;
 import datas.UserData;
 import entities.Entity;
 import entities.ProjectileEntity;
@@ -290,9 +291,21 @@ public class GameScene extends Scene {
 
     private final AnimationTimer gameLoop = new AnimationTimer() {
         private long lastUpdate = 0;
+        private final InputData packet = new InputData();
 
         @Override
         public void handle(long now) {
+            if (SERVER_API != null) {
+                packet.right_pressed = key_handler.right_pressed;
+                packet.left_pressed = key_handler.left_pressed;
+                packet.up_pressed = key_handler.up_pressed;
+                packet.down_pressed = key_handler.down_pressed;
+                packet.lShift_pressed = key_handler.lShift_pressed;
+
+                packet.lClick_pressed = mouse_handler.left_is_pressed;
+                // TODO: angle here cause eh
+                SERVER_API.sendUserInput(packet);
+            }
 
             if (lastUpdate == 0) {
                 lastUpdate = now;

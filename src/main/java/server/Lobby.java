@@ -55,7 +55,7 @@ public class Lobby {
                 gameThread();
             }
         });
-        qtree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1);
+        qtree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1, true);
         input_thread.start();
         game_thread.start();
     }
@@ -95,7 +95,7 @@ public class Lobby {
     }
 
     private QuadTree constructQTree(){
-        QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1);
+        QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1, true);
         for(ServerEntity s : entity_data.values()){
             tree.insert(s);
         }
@@ -178,6 +178,7 @@ public class Lobby {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
+                awaited_player_id = 0;
                 return true;
             }
             if (System.currentTimeMillis() - time_ms >= 3000) {
@@ -202,7 +203,6 @@ public class Lobby {
 
         for (PlayerData i : players_data.values()) {
             users.add(new UserData(i));
-            Logging.write(this, i.name);
         }
 
         return new LobbyData(id, users);

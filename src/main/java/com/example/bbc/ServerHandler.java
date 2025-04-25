@@ -23,11 +23,11 @@ public class ServerHandler {
     private ServerListener death_listener = null;
     private ServerDataListener<LobbyData> connect_listener = null;
     private ServerListener error_listener = null;
-    private Thread tcp_thread;
+    private final Thread tcp_thread;
     private DatagramSocket UDP_socket;
     private DatagramPacket input_packet = null;
     private OutputStream server_stdin = null;
-    private String name = "";
+    private final String name;
     private int lobby_id = 0;
     private boolean is_connected = false;
     private UserData current_user = null;
@@ -78,6 +78,7 @@ public class ServerHandler {
             }
         } catch (IOException e) {
             // This is scary. But for now
+            Logging.error(this, "UDP Output Thread arrested by ICC.");
             UDP_socket.close();
         }
     }

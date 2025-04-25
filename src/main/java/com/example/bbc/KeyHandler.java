@@ -8,8 +8,6 @@ import javafx.scene.input.KeyEvent;
 import static com.example.bbc.IOGame.SERVER_API;
 
 public class KeyHandler implements EventHandler<KeyEvent> {
-    private final InputData packet = new InputData();
-
     public boolean up_pressed = false;
     public boolean down_pressed = false;
     public boolean left_pressed = false;
@@ -35,23 +33,18 @@ public class KeyHandler implements EventHandler<KeyEvent> {
         switch (code){
             case W -> {
                 up_pressed = true;
-                packet.up_pressed = true;
             }
             case S -> {
                 down_pressed = true;
-                packet.down_pressed = true;
             }
             case A -> {
                 left_pressed = true;
-                packet.left_pressed = true;
             }
             case D -> {
                 right_pressed = true;
-                packet.right_pressed = true;
             }
             case SHIFT -> {
                 lShift_pressed = true;
-                packet.lShift_pressed = true;
             }
             case DIGIT1 -> one_pressed = true;
             case DIGIT2 -> two_pressed = true;
@@ -60,8 +53,6 @@ public class KeyHandler implements EventHandler<KeyEvent> {
             case DIGIT5 -> five_pressed = true;
             case F -> f_pressed = true;
         }
-
-        SERVER_API.sendUserInput(packet);
     }
 
     public void keyReleased(KeyEvent e){
@@ -70,28 +61,21 @@ public class KeyHandler implements EventHandler<KeyEvent> {
         switch (code){
             case W -> {
                 up_pressed = false;
-                packet.up_pressed = false;
             }
             case S -> {
                 down_pressed = false;
-                packet.down_pressed = false;
             }
             case A -> {
                 left_pressed = false;
-                packet.left_pressed = false;
             }
             case D -> {
                 right_pressed = false;
-                packet.right_pressed = false;
             }
             case SHIFT -> {
                 lShift_pressed = false;
-                packet.lShift_pressed = false;
             }
             case F -> f_pressed = false;
         }
-
-        SERVER_API.sendUserInput(packet);
     }
 
     public void refreshHotbarKeys(){

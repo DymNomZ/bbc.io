@@ -61,7 +61,8 @@ import java.util.List;
  */
 public class QuadTree {
     int capacity;
-    public List<ServerEntity> entities;
+    List<ServerEntity> entities;
+    public final ArrayList<ServerEntity> root_entities;
     QuadRectangle bounds;
     QuadTree northwest;
     QuadTree southwest;
@@ -69,7 +70,7 @@ public class QuadTree {
     QuadTree southeast;
     boolean divided;
 
-    public QuadTree(QuadRectangle bounds, int capacity) {
+    public QuadTree(QuadRectangle bounds, int capacity, boolean is_root) {
         entities = new ArrayList<ServerEntity>();
         this.capacity = capacity;
         this.bounds = bounds;
@@ -77,6 +78,12 @@ public class QuadTree {
         southwest = null;
         northeast = null;
         southeast = null;
+
+        if (is_root) {
+            root_entities = new ArrayList<>(69);
+        } else {
+            root_entities = null;
+        }
     }
 
     public void subdivide() {
@@ -89,14 +96,14 @@ public class QuadTree {
 
         QuadRectangle se = new QuadRectangle(bounds.x + bounds.w/2, bounds.y + bounds.h/2, bounds.w/2, bounds.h/2);
 
-        northwest = new QuadTree(nw, capacity);
-        southwest = new QuadTree(sw, capacity);
-        northeast = new QuadTree(ne, capacity);
-        southeast = new QuadTree(se, capacity);
+        northwest = new QuadTree(nw, capacity, false);
+        southwest = new QuadTree(sw, capacity, false);
+        northeast = new QuadTree(ne, capacity, false);
+        southeast = new QuadTree(se, capacity, false);
         for (ServerEntity obj : entities) {
             insertIntoQuads(obj);
         }
-        entities.clear(); //ANIMALLLLLLLL
+        entities.clear();
         divided = true;
 
     }
@@ -114,6 +121,10 @@ public class QuadTree {
     }
 
     public void insert(ServerEntity entity) {
+        if (root_entities != null) {
+            root_entities.add(entity);
+        }
+
         if(!bounds.canContain(entity)) {
             return;
         }
