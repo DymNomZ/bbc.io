@@ -4,18 +4,8 @@ import configs.DimensionConfig;
 import configs.StatsConfig;
 import datas.EntityData;
 import datas.InputData;
-import datas.SerialData;
-
 import java.util.Random;
-
-import configs.DimensionConfig;
-import configs.StatsConfig;
-import datas.EntityData;
-import datas.InputData;
-import datas.SerialData;
 import interfaces.Collidable;
-
-import java.util.Random;
 
 public abstract class ServerEntity implements Collidable<ServerEntity> {
     public double x, y, angle, radius;
@@ -23,14 +13,18 @@ public abstract class ServerEntity implements Collidable<ServerEntity> {
     double speed;
     private long last_moved_time;
 
+    private final double x_map_offset, y_map_offset;
+
     public ServerEntity(long game_clock, double radius, int player_id) {
         this.radius = radius;
         this.player_id = player_id;
+        x_map_offset = DimensionConfig.MAP_WIDTH - radius * 2;
+        y_map_offset = DimensionConfig.MAP_HEIGHT - radius * 2;
 
         this.angle = 0;
         Random rand = new Random();
-        x = rand.nextDouble() % DimensionConfig.MAP_WIDTH;
-        y = rand.nextDouble() % DimensionConfig.MAP_HEIGHT;
+        x = rand.nextDouble(0, DimensionConfig.MAP_WIDTH - radius * 2);
+        y = rand.nextDouble(0, DimensionConfig.MAP_HEIGHT - radius * 2);
         speed = StatsConfig.PLAYER_SPEED;
         last_moved_time = game_clock;
     }
@@ -63,6 +57,19 @@ public abstract class ServerEntity implements Collidable<ServerEntity> {
         }
         if (inputs.right_pressed) {
             x += delta;
+        }
+
+
+        if (x < 0) {
+            x = 0;
+        } else if (x > x_map_offset) {
+            x = x_map_offset;
+        }
+
+        if (y < 0) {
+            y = 0;
+        } else if (y > y_map_offset) {
+            y = y_map_offset;
         }
     }
 

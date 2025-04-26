@@ -123,6 +123,7 @@ public class ClientHandler {
 
         // save the Last player entity
         ServerEntity old_player_entity = null;
+        boolean player_found;
 
         while (lobby.running) {
             current_data.entities.clear();
@@ -142,25 +143,25 @@ public class ClientHandler {
                         continue;
                     }
                 }
-                List<ServerEntity> in_range = tree.query(new RangeCircle(old_player_entity.x, old_player_entity.y, old_player_entity.radius + 50));
-                //Logging.write(this,in_range.size()+" " + player_id);
+
+                List<ServerEntity> in_range = tree.query(new RangeCircle(old_player_entity.x, old_player_entity.y, old_player_entity.radius + 1500));
+                //Logging.write(this,in_range.size()+" " + old_player_entity);
+                player_found = false;
                 for (ServerEntity i : in_range) {
                     if (i.player_id == player_id) {
                         old_player_entity = i;
                         current_data.entities.addFirst(i.getEntityData());
+                        player_found = true;
                         continue;
                     }
                     current_data.entities.add(i.getEntityData());
                 }
 
-                EntityData current_player = current_data.entities.getFirst();
-
-                if (current_player == null || current_player.id != player_id) {
+                if (!player_found) {
                     player_dead = true;
+                    old_player_entity = null;
                     current_data.entities.clear();
                 }
-            } else {
-                old_player_entity = null;
             }
 
             packet.setData(current_data.serialize());
