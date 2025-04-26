@@ -23,8 +23,8 @@ public abstract class ServerEntity implements Collidable<ServerEntity> {
 
         this.angle = 0;
         Random rand = new Random();
-        x = rand.nextDouble(0, DimensionConfig.MAP_WIDTH - radius * 2);
-        y = rand.nextDouble(0, DimensionConfig.MAP_HEIGHT - radius * 2);
+        x = rand.nextDouble(0, 10);
+        y = rand.nextDouble(0, 10);
         speed = StatsConfig.PLAYER_SPEED;
         last_moved_time = game_clock;
     }
@@ -45,6 +45,9 @@ public abstract class ServerEntity implements Collidable<ServerEntity> {
         angle = inputs.angle;
 
         double delta = speed * offset;
+        if (inputs.lShift_pressed) {
+            delta *= 1.5;
+        }
 
         if (inputs.up_pressed) {
             y -= delta;

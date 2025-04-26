@@ -87,6 +87,20 @@ public abstract class Entity {
 
     }
 
+    public void setAngle(double angle) {
+        rotation.setAngle(angle);
+    }
+
+    public double getAngle() {
+        double mouse_x, mouse_y;
+        if(mouse_handler.event != null){
+            mouse_x = mouse_handler.event.getSceneX();
+            mouse_y = mouse_handler.event.getSceneY();
+            return Math.toDegrees(Math.atan2(mouse_y - entity_group.getLayoutY(), mouse_x - entity_group.getLayoutX()));
+        }
+        return 0;
+    }
+
     //will handle rendering of player on the screen
     public void setPosition(double x, double y) {
         entity_group.setTranslateX(x);

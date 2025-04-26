@@ -46,12 +46,7 @@ public class ServerHandler {
             Logging.error(this, "Unable to bind UDP socket. Is a program with UDP socket using port " + SocketConfig.PORT + "?");
             throw new RuntimeException(e);
         }
-        tcp_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TCPThread();
-            }
-        });
+        tcp_thread = new Thread(this::TCPThread);
         tcp_thread.setDaemon(true);
         tcp_thread.start();
     }

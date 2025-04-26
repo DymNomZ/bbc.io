@@ -114,46 +114,49 @@ public class GameScene extends Scene {
 
                 //Logging.write(this,"Rendering " + String.valueOf(data.entities.size()) + " entities");
 
+                synchronized (received_entities) {
+                    received_entities.clear();
 
-                received_entities.clear();
+                    List<EntityData> entities = data.entities;
+                    System.out.println(entities + " size: " + entities.size());
+                    main_player.pos_x = entities.getFirst().x;
+                    main_player.pos_y = entities.getFirst().y;
+                    main_player.setAngle(entities.getFirst().angle);
 
-                List<EntityData> entities = data.entities;
-                System.out.println(entities + " size: " + entities.size());
-                double x = entities.getFirst().x;
-                double y = entities.getFirst().y;
-
-                int i = 0;
-                for(EntityData ed : entities){
-                    //skip player
-                    if(!ed.is_projectile){
-                        if(i == 0){
-                            i++;
-                            continue;
-                        }
-                        Logging.write(this,"Found a tank entity");
-                        //find the user with the given id
-//                        for(UserData ud : SERVER_API.users_in_lobby){
-//                            if(ed.id == ud.id){
-
-                                Paint body_color = Color.BLUE;
-                                Paint barrel_color = Color.BLACK;
-                                Paint border_color = Color.BROWN;
-                                TankEntity tank = new TankEntity(body_color, barrel_color, border_color);
-                                tank.setPosition(ed.x - x, ed.y - y);
-                                received_entities.add(tank);
+//                    int i = 0;
+//                    for(EntityData ed : entities){
+//                        //skip player
+//                        if(!ed.is_projectile){
+//                            if(i == 0){
+//                                i++;
+//                                continue;
 //                            }
+//                            Logging.write(this,"Found a tank entity");
+//                            //find the user with the given id
+////                        for(UserData ud : SERVER_API.users_in_lobby){
+////                            if(ed.id == ud.id){
+//
+//                            Paint body_color = Color.BLUE;
+//                            Paint barrel_color = Color.BLACK;
+//                            Paint border_color = Color.BROWN;
+//                            TankEntity tank = new TankEntity(body_color, barrel_color, border_color);
+//                            tank.setPosition(ed.x - x, ed.y - y);
+//                            received_entities.add(tank);
+////                            }
+////                        }
 //                        }
-                    }
-                    else{
-                        Logging.write(this,"Found a projectile entity");
-                        received_entities.add(new ProjectileEntity(ed.angle, ed.x, ed.y));
-                    }
-                    i++;
-                    //Logging.write(this, String.valueOf(ed.id));
-
+//                        else{
+//                            Logging.write(this,"Found a projectile entity");
+//                            received_entities.add(new ProjectileEntity(ed.angle, ed.x, ed.y));
+//                        }
+//                        i++;
+//                        //Logging.write(this, String.valueOf(ed.id));
+//
+//                    }
                 }
 
-                Platform.runLater(GameScene::renderEntities);
+
+                //Platform.runLater(GameScene::renderEntities);
 
             }
         });
@@ -286,37 +289,48 @@ public class GameScene extends Scene {
 
     private void update(){
 
-        main_player.lookAt();
-
-        if(mouse_handler.left_is_pressed){
-            main_player.shoot(root);
-        }
-
-        //FIXME
-        if (key_handler.up_pressed) {
-            moveBackground(0,5);
-        }
-        if (key_handler.down_pressed) {
-            moveBackground(0,-5);
-        }
-        if (key_handler.left_pressed) {
-            moveBackground(5,0);
-        }
-        if (key_handler.right_pressed) {
-            moveBackground(-5,0);
-        }
-        if(key_handler.f_pressed){
-            if(can_be_damaged)onPlayerDamaged();
-        }
+//        if(mouse_handler.left_is_pressed){
+//            main_player.shoot(root);
+//        }
+//
+//        //FIXME
+//        if (key_handler.up_pressed) {
+//            moveBackground(0,5);
+//        }
+//        if (key_handler.down_pressed) {
+//            moveBackground(0,-5);
+//        }
+//        if (key_handler.left_pressed) {
+//            moveBackground(5,0);
+//        }
+//        if (key_handler.right_pressed) {
+//            moveBackground(-5,0);
+//        }
+//        if(key_handler.f_pressed){
+//            if(can_be_damaged)onPlayerDamaged();
+//        }
 
     }
 
     private final AnimationTimer gameLoop = new AnimationTimer() {
         private long lastUpdate = 0;
+        private double x = 0, y = 0;
         private final InputData packet = new InputData();
 
         @Override
         public void handle(long now) {
+            if (lastUpdate == 0) {
+                lastUpdate = now;
+                return;
+            }
+
+            synchronized (received_entities) {
+                moveBackground((main_player.pos_x - x) * -2,0);
+                moveBackground(0,(main_player.pos_y - y) * -2);
+                x = main_player.pos_x;
+                y = main_player.pos_y;
+            }
+
             if (SERVER_API != null) {
                 packet.right_pressed = key_handler.right_pressed;
                 packet.left_pressed = key_handler.left_pressed;
@@ -325,15 +339,9 @@ public class GameScene extends Scene {
                 packet.lShift_pressed = key_handler.lShift_pressed;
 
                 packet.lClick_pressed = mouse_handler.left_is_pressed;
-                // TODO: angle here cause eh
+                packet.angle = main_player.getAngle();
                 SERVER_API.sendUserInput(packet);
             }
-
-            if (lastUpdate == 0) {
-                lastUpdate = now;
-                return;
-            }
-            update();
 
             double deltaTime = (now - lastUpdate) / 1_000_000_000.0; // Convert nanoseconds to seconds
             lastUpdate = now;

@@ -48,18 +48,8 @@ public class ClientHandler {
         this.lobby = lobby;
         this.UDPAddr = UDPAddr;
 
-        TCP_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TCPThread();
-            }
-        });
-        UDP_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                UDPOutputThread();
-            }
-        });
+        TCP_thread = new Thread(this::TCPThread);
+        UDP_thread = new Thread(this::UDPOutputThread);
         TCP_thread.start();
     }
 
