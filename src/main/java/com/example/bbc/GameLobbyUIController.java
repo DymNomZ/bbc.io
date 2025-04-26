@@ -92,6 +92,7 @@ public class GameLobbyUIController {
 
         //send data to server
         SERVER_API.modifyUser(current_user);
+        SERVER_API.play();
         
         // Switch to game scene
         Stage stage = (Stage) btnReady.getScene().getWindow();

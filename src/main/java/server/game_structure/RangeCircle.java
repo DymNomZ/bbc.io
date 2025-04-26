@@ -1,4 +1,6 @@
-package game_data;
+package server.game_structure;
+
+import server.model.ServerEntity;
 
 public class RangeCircle {
     double x,y,radius;
@@ -7,11 +9,10 @@ public class RangeCircle {
         this.y = y;
         this.radius = radius;
     }
-    public boolean canContain(GameObject object) {
-        //TODO Check if GameObject is in / touching the circle
-        return true;
+    public boolean canContain(ServerEntity entity) {
+        return this.distance(entity) <= this.radius + entity.radius;
     }
-    public double distance(GameObject other) {
+    public double distance(ServerEntity other) {
         double dx = this.x - other.x;
         double dy = this.y - other.y;
         return Math.sqrt(dx * dx + dy * dy);

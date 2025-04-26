@@ -2,8 +2,12 @@ package server;
 
 import configs.SocketConfig;
 import datas.*;
+import server.game_structure.QuadTree;
+import server.game_structure.RangeCircle;
 import server.model.PlayerData;
 import server.model.ServerEntity;
+import server.model.UDPAddress;
+import utils.Logging;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +16,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ClientHandler {
     private final Thread TCP_thread;
@@ -22,11 +25,28 @@ public class ClientHandler {
     private GameData current_data = new GameData();
     private final Lobby lobby;
     private LobbyData lobby_context;
+    private final UDPAddress UDPAddr;
+    private boolean player_dead = true;
+    private final int player_id;
 
-    public ClientHandler(Socket socket, Lobby lobby) {
+    public ClientHandler(Socket socket, UDPAddress UDPAddr, Lobby lobby, int player_id) {
         lobby_context = lobby.initialLobbyData();
+
+        for (Iterator<UserData> it = ((LinkedList<UserData>) lobby_context.users).descendingIterator(); it.hasNext(); ) {
+            UserData i = it.next();
+            if (i.id == player_id) {
+                it.remove();
+                lobby_context.users.addFirst(i);
+                break;
+            }
+        }
+
+        Logging.write(this, "Entered player #" + lobby_context.users.getFirst().id);
+
+        this.player_id = player_id;
         tcp_socket = socket;
         this.lobby = lobby;
+        this.UDPAddr = UDPAddr;
 
         TCP_thread = new Thread(new Runnable() {
             @Override
@@ -48,8 +68,7 @@ public class ClientHandler {
             OutputStream stdin = tcp_socket.getOutputStream();
             InputStream stdout = tcp_socket.getInputStream();
 
-            // Initial lobby data of leaderboard with the udp port of lobby for inputs
-            stdin.write(SerialData.convertInt(lobby.input_socket.getLocalPort()));
+            // Initial lobby data of leaderboard
             stdin.write(lobby_context.serialize());
             stdin.flush();
 
@@ -61,10 +80,11 @@ public class ClientHandler {
                     int dataID = stdout.read();
                     switch (dataID) {
                         case InputData.SERIAL_ID -> {
-                            lobby.spawn_queue.add(lobby.players_data.get(tcp_socket.getInetAddress()));
+                            lobby.spawn_queue.add(lobby.players_data.get(UDPAddr));
+                            player_dead = false;
                         }
                         case UserData.SERIAL_ID ->  {
-                            PlayerData player = lobby.players_data.get(tcp_socket.getInetAddress());
+                            PlayerData player = lobby.players_data.get(UDPAddr);
                             UserData data = new UserData(stdout);
 
                             // TODO: Propagate to db
@@ -75,35 +95,72 @@ public class ClientHandler {
                         }
                     }
                 } catch (SocketTimeoutException ignored) {}
-                // TODO: Improve sending lobby data
+                // TODO: send lobby data
+                stdin.write(lobby_context.serialize());
+                stdin.flush();
+
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new IOException();
+                }
             }
         } catch (IOException ignored) {}
+
+        Logging.write(this, "Player #" + player_id + " disconnected");
 
         try {
             tcp_socket.close();
         } catch (IOException ignored) {}
         UDP_thread.interrupt();
-        PlayerData player = lobby.players_data.remove(tcp_socket.getInetAddress());
+        PlayerData player = lobby.players_data.remove(UDPAddr);
         lobby.entity_data.remove(player);
 
     }
 
     private void UDPOutputThread() {
-        // TODO: Send data only that the player can see (data sent must not exceed 50 entities)
-        // TODO: Sent empty packet to signify death
+        DatagramPacket packet = new DatagramPacket(current_data.serialize(), 1, UDPAddr.ip, UDPAddr.port);
 
-        DatagramPacket packet = new DatagramPacket(current_data.serialize(), 1, tcp_socket.getInetAddress(), SocketConfig.PORT);
+        // save the Last player entity
+        ServerEntity old_player_entity = null;
 
         while (lobby.running) {
             current_data.entities.clear();
 
-            // Todo: Change this scary shet (prone to exception by modified element while iterating)
-            try {
-                for (ServerEntity i : lobby.entity_data.values()) {
+            if (!player_dead) {
+                QuadTree tree = lobby.qtree;
+
+                if (old_player_entity == null) {
+                    for (ServerEntity i : tree.root_entities) {
+                        if (i.player_id == player_id) {
+                            old_player_entity = i;
+                            break;
+                        }
+                    }
+
+                    if (old_player_entity == null) {
+                        continue;
+                    }
+                }
+                List<ServerEntity> in_range = tree.query(new RangeCircle(old_player_entity.x, old_player_entity.y, old_player_entity.radius + 50));
+                //Logging.write(this,in_range.size()+" " + player_id);
+                for (ServerEntity i : in_range) {
+                    if (i.player_id == player_id) {
+                        old_player_entity = i;
+                        current_data.entities.addFirst(i.getEntityData());
+                        continue;
+                    }
                     current_data.entities.add(i.getEntityData());
                 }
-            } catch (Exception e) {
-                continue;
+
+                EntityData current_player = current_data.entities.getFirst();
+
+                if (current_player == null || current_player.id != player_id) {
+                    player_dead = true;
+                    current_data.entities.clear();
+                }
+            } else {
+                old_player_entity = null;
             }
 
             packet.setData(current_data.serialize());

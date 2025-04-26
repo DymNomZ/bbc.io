@@ -3,6 +3,7 @@ package entities;
 import com.example.bbc.GameScene;
 import com.example.bbc.KeyHandler;
 import com.example.bbc.MouseHandler;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.layout.StackPane;
@@ -27,8 +28,11 @@ public abstract class Entity {
         pos_y = (int)(Math.random() * 10);
     }
 
+    //FIXME boang rendering
     public void render(StackPane root) {
-        root.getChildren().add(entity_group);
+        Platform.runLater(()->{
+            root.getChildren().add(entity_group);
+        });
     }
 
     private long last_shot_time = 0;

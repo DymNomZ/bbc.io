@@ -59,10 +59,12 @@ public class TitleScreenController {
                 Logging.write(this, "Connected to Server");
                 Platform.runLater(() -> {
                     MAIN_STAGE.setScene(LOBBY_SCENE);
-                });
 
-                //Start receiving game data
-                GameScene.receiveGameData();
+                    //get users in lobby
+                    SERVER_API.users_in_lobby.addAll(data.users);
+
+                    GameScene.initializeOnGameUpdate();
+                });
             }
 
         });

@@ -2,11 +2,14 @@ package com.example.bbc;
 
 import datas.EntityData;
 import datas.GameData;
+import datas.InputData;
+import datas.UserData;
 import entities.Entity;
 import entities.ProjectileEntity;
 import entities.TankEntity;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -41,6 +44,7 @@ public class GameScene extends Scene {
     public static TankEntity main_player;
     private double center_x, center_y;
     public static List<Entity> entity_list;
+    public static List<Entity> received_entities;
 
     public static MouseHandler mouse_handler;
     public static KeyHandler key_handler;
@@ -49,7 +53,6 @@ public class GameScene extends Scene {
     public static List<Line> horizontal_bg_lines;
 
     public static boolean can_be_damaged = true;
-
 
     public GameScene() {
         super(root, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -73,6 +76,7 @@ public class GameScene extends Scene {
 
         main_player = new TankEntity();
         entity_list = new ArrayList<>();
+        received_entities = new ArrayList<>();
 
         center_x = SCREEN_WIDTH / 2;
         center_y = SCREEN_HEIGHT / 2;
@@ -93,64 +97,60 @@ public class GameScene extends Scene {
         this.setOnKeyReleased(key_handler::keyReleased);
 
         System.out.println(root.getChildren());
+
         gameLoop.start();
+
     }
 
-    public static void receiveGameData(){
-        /*
-        * Below is the theoretical implementation of plotting nodes (entities) to the screen when receiving
-        * GameData as the sending part on the server side is still being developed.
-        * It contains a list of EntityData which is where the algorithm will refer where to place the
-        * nodes. The listener as its function, constantly listens to the server for any sent GameData.
-        *
-        * If the list of entities received is empty, therefore the player is not in the lobby as it is set so
-        * that the player is constantly the first object on the list. This is how the algorithm handles instances
-        * where the match hasn't begun yet or the player has died has not yet respawned, still at the lobby screen.
-        *
-        * - Dynmes
-        * */
+    public static void initializeOnGameUpdate(){
         SERVER_API.onGameUpdate(new ServerDataListener<GameData>() {
             @Override
             public void run(GameData data) {
 
-                Logging.write(this, String.valueOf(data.entities.size()));
+                Logging.write(this,"Rendering " + String.valueOf(data.entities.size()) + " entities");
+
+                received_entities.clear();
 
                 List<EntityData> entities = data.entities;
 
-                //if empty then just don't proceed
-                if(entities.isEmpty()) return;
+                int i = 0;
+                for(EntityData ed : entities){
+                    //skip player
+                    if(i == 0) continue;
+                    if(!ed.is_projectile){
+                        //find the user with the given id
+                        for(UserData ud : SERVER_API.users_in_lobby){
+                            if(ed.id == ud.id){
 
-                //clear previous entities
-                for(Entity e : entity_list){
-                    root.getChildren().remove(e);
-                }
+                                Paint body_color = Color.BLUE;
+                                Paint barrel_color = Color.BLACK;
+                                Paint border_color = Color.BROWN;
 
-
-                //loop
-                for(EntityData e : entities){
-                    //Tank
-                    if(!e.is_projectile){
-                        Paint body_color = Helpers.rgbBytesToColor(e.body_color);
-                        Paint barrel_color = Helpers.rgbBytesToColor(e.barrel_color);
-                        Paint border_color = Helpers.rgbBytesToColor(e.border_color);
-
-                        TankEntity tank = new TankEntity(body_color, barrel_color, border_color);
-                        tank.setPosition(e.x, e.y);
-                        tank.lookAt(e.angle);
-
-                        entity_list.add(tank);
-                        tank.render(root);
+                                received_entities.add(new TankEntity(body_color, barrel_color, border_color));
+                            }
+                        }
                     }
-                    //Projectile
                     else{
-                        ProjectileEntity projectile = new ProjectileEntity(e.angle, e.x, e.y);
-                        entity_list.add(projectile);
-                        projectile.render(root);
+                        received_entities.add(new ProjectileEntity(ed.angle, ed.x, ed.y));
                     }
+                    i++;
+                    Logging.write(this, String.valueOf(ed.id));
+
                 }
 
             }
         });
+    }
+
+    public void renderEntities(){
+        //clear previous entity_list
+        for(Entity e : entity_list){
+            root.getChildren().remove(e.getEntity_group());
+        }
+        entity_list = received_entities;
+        for(Entity e : entity_list){
+            e.render(root);
+        }
     }
 
     private Color brighten(Color color){
@@ -291,9 +291,21 @@ public class GameScene extends Scene {
 
     private final AnimationTimer gameLoop = new AnimationTimer() {
         private long lastUpdate = 0;
+        private final InputData packet = new InputData();
 
         @Override
         public void handle(long now) {
+            if (SERVER_API != null) {
+                packet.right_pressed = key_handler.right_pressed;
+                packet.left_pressed = key_handler.left_pressed;
+                packet.up_pressed = key_handler.up_pressed;
+                packet.down_pressed = key_handler.down_pressed;
+                packet.lShift_pressed = key_handler.lShift_pressed;
+
+                packet.lClick_pressed = mouse_handler.left_is_pressed;
+                // TODO: angle here cause eh
+                SERVER_API.sendUserInput(packet);
+            }
 
             if (lastUpdate == 0) {
                 lastUpdate = now;
@@ -303,6 +315,8 @@ public class GameScene extends Scene {
 
             double deltaTime = (now - lastUpdate) / 1_000_000_000.0; // Convert nanoseconds to seconds
             lastUpdate = now;
+
+            renderEntities();
         }
     };
 

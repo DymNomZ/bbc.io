@@ -8,37 +8,30 @@ import datas.SerialData;
 
 import java.util.Random;
 
-public class ServerEntity {
-    double x, y, angle;
-    Region region;
-    byte[] id;
-    public final boolean is_projectile;
+import configs.DimensionConfig;
+import configs.StatsConfig;
+import datas.EntityData;
+import datas.InputData;
+import datas.SerialData;
+import interfaces.Collidable;
+
+import java.util.Random;
+
+public abstract class ServerEntity implements Collidable<ServerEntity> {
+    public double x, y, angle, radius;
+    public final int player_id;
     double speed;
     private long last_moved_time;
 
-    public ServerEntity(byte[] player_id, double angle, long game_clock) {
-        // Randomize x & y (for Player spawning)
+    public ServerEntity(long game_clock, double radius, int player_id) {
+        this.radius = radius;
+        this.player_id = player_id;
 
-        id = player_id;
-        this.angle = angle;
-
+        this.angle = 0;
         Random rand = new Random();
         x = rand.nextDouble() % DimensionConfig.MAP_WIDTH;
         y = rand.nextDouble() % DimensionConfig.MAP_HEIGHT;
-
-        is_projectile = false;
         speed = StatsConfig.PLAYER_SPEED;
-        last_moved_time = game_clock;
-    }
-
-    public ServerEntity(byte[] owner_id, double x, double y, double angle, long game_clock) {
-        id = owner_id;
-        this.angle = angle;
-        this.x = x;
-        this.y = y;
-
-        is_projectile = true;
-        speed = StatsConfig.PROJECTILE_SPEED;
         last_moved_time = game_clock;
     }
 
@@ -73,7 +66,10 @@ public class ServerEntity {
         }
     }
 
-    public EntityData getEntityData() {
-        return new EntityData(id, x, y, angle, is_projectile);
+    @Override
+    public String toString() {
+        return String.format("[Player]\nID: %d\nx: %f, y: %f", player_id, x, y);
     }
+
+    public abstract EntityData getEntityData();
 }
