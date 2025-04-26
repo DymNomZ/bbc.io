@@ -1,13 +1,17 @@
 package com.example.bbc;
 
+import classes.PictureMaker;
 import classes.Sprites;
 import datas.EntityData;
 import datas.GameData;
 import datas.LobbyData;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import utils.Logging;
 
 import java.util.List;
@@ -21,8 +25,12 @@ public class TitleScreenController {
     public TextField playerNameTF;
     public Button playBtn;
     public Button aboutDevsBtn;
+    public Label lblEmptyWarning;
+    public AnchorPane apTitleScreen;
+    public VBox vTitle;
 
     public void initialize(){
+//        new PictureMaker(titleImageView, vTitle, "titles/title", apTitleScreen, false, 1400);
 
         String style = "-fx-background-color: transparent;" +
                 "-fx-padding: 0;" +
@@ -46,7 +54,8 @@ public class TitleScreenController {
 
         if(playerNameTF.getText().isEmpty()){
             //TODO: Improve
-            playerNameTF.setText("Must enter playername!");
+//            playerNameTF.setText("Must enter playername!");
+            lblEmptyWarning.setText("Must enter playername!");
             return;
         }
 
@@ -66,8 +75,6 @@ public class TitleScreenController {
                     GameScene.initializeOnGameUpdate();
                 });
             }
-
         });
-
     }
 }

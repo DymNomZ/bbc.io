@@ -11,11 +11,11 @@ public class DevPageController {
     public VBox vDym, vSeth, vLance, vZillion, vRaymond, vDevTitle;
 
     public void initialize(){
-        new PictureMaker(ivDymSprite, vDym, "dymier", apDevScreen, true, 1264, 1.52);
-        new PictureMaker(ivSethSprite, vSeth, "seth", apDevScreen, true, 1264, 1.52);
-        new PictureMaker(ivLanceSprite, vLance, "lance", apDevScreen, true, 1264, 1.52);
-        new PictureMaker(ivZillionSprite, vZillion, "zillion", apDevScreen, true, 1264, 1.52);
-        new PictureMaker(ivRaymondSprite, vRaymond, "raymond", apDevScreen, true, 1264, 1.52);
-        new PictureMaker(ivDevTitle, vDevTitle, "titles/dev_title", apDevScreen, false, 1392, 1.0);
+        new PictureMaker(ivDymSprite, vDym, "dymier", apDevScreen, true, 1264);
+        new PictureMaker(ivSethSprite, vSeth, "seth", apDevScreen, true, 1264);
+        new PictureMaker(ivLanceSprite, vLance, "lance", apDevScreen, true, 1264);
+        new PictureMaker(ivZillionSprite, vZillion, "zillion", apDevScreen, true, 1264);
+        new PictureMaker(ivRaymondSprite, vRaymond, "raymond", apDevScreen, true, 1264);
+        new PictureMaker(ivDevTitle, vDevTitle, "titles/dev_title", apDevScreen, false, 1392);
     }
 }

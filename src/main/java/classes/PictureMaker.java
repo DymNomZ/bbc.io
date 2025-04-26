@@ -17,7 +17,7 @@ public class PictureMaker {
     ArrayList<Image> frames;
     ImageView ivSpriteHolder;
     VBox vContainer;
-    public PictureMaker(ImageView ivSpriteHolder, VBox vContainer, String name, AnchorPane apDevScreen, boolean isSprite, double divider, double max_inc){
+    public PictureMaker(ImageView ivSpriteHolder, VBox vContainer, String name, AnchorPane apDevScreen, boolean isSprite, double divider){
         this.ivSpriteHolder = ivSpriteHolder;
         this.vContainer = vContainer;
         if(isSprite){
@@ -26,7 +26,7 @@ public class PictureMaker {
             this.frames.add(new Image("file:src/main/java/assets/" + name + "_left_F1-resized.png"));
             this.frames.add(new Image("file:src/main/java/assets/" + name + "_left_F0-resized.png"));
             this.frames.add(new Image("file:src/main/java/assets/" + name + "_left_F-1-resized.png"));
-            ivSpriteHolder.setImage(frames.get(0));
+            ivSpriteHolder.setImage(frames.getFirst());
             AtomicInteger currentFrameIndex = new AtomicInteger();
             Timeline timeline;
             Duration frameDuration = Duration.millis(400);
@@ -47,17 +47,10 @@ public class PictureMaker {
         ivSpriteHolder.fitWidthProperty().bind(vContainer.widthProperty());
         apDevScreen.widthProperty().addListener(new ChangeListener<Number>() {
             @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-                System.out.println("Width: " + newSceneWidth);
-
-                if(newSceneWidth.doubleValue()/divider <= max_inc){
-                    System.out.println(name + " Width divider: " + newSceneWidth.doubleValue()/divider);
-                    ivSpriteHolder.fitHeightProperty().bind(vContainer.heightProperty().divide(newSceneWidth.doubleValue()/divider));
-                    ivSpriteHolder.fitWidthProperty().bind(vContainer.widthProperty().divide(newSceneWidth.doubleValue()/divider));
-                } else{
-                    System.out.println(name + " max size " + max_inc + " reached");
-                    ivSpriteHolder.fitHeightProperty().bind(vContainer.heightProperty().divide(newSceneWidth.doubleValue()/1264));
-                    ivSpriteHolder.fitWidthProperty().bind(vContainer.widthProperty().divide(newSceneWidth.doubleValue()/1264));
-                }
+                System.out.println(name + " Width: " + newSceneWidth);
+                System.out.println(newSceneWidth.doubleValue()/divider);
+                ivSpriteHolder.fitHeightProperty().bind(vContainer.heightProperty().divide(newSceneWidth.doubleValue()/divider));
+                ivSpriteHolder.fitWidthProperty().bind(vContainer.widthProperty().divide(newSceneWidth.doubleValue()/divider));
             }
         });
     }
