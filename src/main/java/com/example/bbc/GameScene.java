@@ -41,6 +41,8 @@ public class GameScene extends Scene {
     public static StackPane root = new StackPane();
     public static final StackPane server_entities_container = new StackPane();
 
+    private static final double player_speed = 1.5;
+
     //changed player from final to static for color change testing
     public static TankEntity main_player;
     private double center_x, center_y;
@@ -292,18 +294,17 @@ public class GameScene extends Scene {
             main_player.shoot(root);
         }
 
-        //FIXME
         if (key_handler.up_pressed) {
-            moveBackground(0,5);
+            moveBackground(0,player_speed);
         }
         if (key_handler.down_pressed) {
-            moveBackground(0,-5);
+            moveBackground(0,-player_speed);
         }
         if (key_handler.left_pressed) {
-            moveBackground(5,0);
+            moveBackground(player_speed,0);
         }
         if (key_handler.right_pressed) {
-            moveBackground(-5,0);
+            moveBackground(-player_speed,0);
         }
         if(key_handler.f_pressed){
             if(can_be_damaged)onPlayerDamaged();
