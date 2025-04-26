@@ -5,6 +5,6 @@ public class StatsConfig {
     public static final double PROJECTILE_DAMAGE = 10;
 
     // Speed per millisecond
-    public static final double PLAYER_SPEED = 0.0015;
+    public static final double PLAYER_SPEED = 0.1;
     public static final double PROJECTILE_SPEED = 0.0018;
 }

@@ -39,6 +39,7 @@ public class GameScene extends Scene {
     public static double SCREEN_WIDTH = 1280,  SCREEN_HEIGHT = 720;
 
     public static StackPane root = new StackPane();
+    public static final StackPane server_entities_container = new StackPane();
 
     //changed player from final to static for color change testing
     public static TankEntity main_player;
@@ -83,11 +84,15 @@ public class GameScene extends Scene {
 
         main_player.setPosition(0,0);
 
+        root.getChildren().add(server_entities_container);
+
         /*
         * we do not add the player to the entity list as we will be clearing the list on every GameData received
         * - Dymes
         * */
         main_player.render(root);
+
+
 
         this.setOnMouseMoved(mouse_handler);
         this.setOnMouseReleased(mouse_handler::mouseReleased);
@@ -107,49 +112,66 @@ public class GameScene extends Scene {
             @Override
             public void run(GameData data) {
 
-                Logging.write(this,"Rendering " + String.valueOf(data.entities.size()) + " entities");
+                //Logging.write(this,"Rendering " + String.valueOf(data.entities.size()) + " entities");
+
 
                 received_entities.clear();
 
                 List<EntityData> entities = data.entities;
+                System.out.println(entities + " size: " + entities.size());
+                double x = entities.getFirst().x;
+                double y = entities.getFirst().y;
 
                 int i = 0;
                 for(EntityData ed : entities){
                     //skip player
-                    if(i == 0) continue;
                     if(!ed.is_projectile){
+                        if(i == 0){
+                            i++;
+                            continue;
+                        }
+                        Logging.write(this,"Found a tank entity");
                         //find the user with the given id
-                        for(UserData ud : SERVER_API.users_in_lobby){
-                            if(ed.id == ud.id){
+//                        for(UserData ud : SERVER_API.users_in_lobby){
+//                            if(ed.id == ud.id){
 
                                 Paint body_color = Color.BLUE;
                                 Paint barrel_color = Color.BLACK;
                                 Paint border_color = Color.BROWN;
-
-                                received_entities.add(new TankEntity(body_color, barrel_color, border_color));
-                            }
-                        }
+                                TankEntity tank = new TankEntity(body_color, barrel_color, border_color);
+                                tank.setPosition(ed.x - x, ed.y - y);
+                                received_entities.add(tank);
+//                            }
+//                        }
                     }
                     else{
+                        Logging.write(this,"Found a projectile entity");
                         received_entities.add(new ProjectileEntity(ed.angle, ed.x, ed.y));
                     }
                     i++;
-                    Logging.write(this, String.valueOf(ed.id));
+                    //Logging.write(this, String.valueOf(ed.id));
 
                 }
+
+                Platform.runLater(GameScene::renderEntities);
 
             }
         });
     }
 
-    public void renderEntities(){
-        //clear previous entity_list
-        for(Entity e : entity_list){
-            root.getChildren().remove(e.getEntity_group());
-        }
-        entity_list = received_entities;
-        for(Entity e : entity_list){
-            e.render(root);
+    public static void renderEntities(){
+        synchronized (entity_list) {
+
+
+            System.out.println("Rendering " + server_entities_container.getChildren().size() + " entities");
+            //clear previous entity_list
+            server_entities_container.getChildren().clear();
+            entity_list = received_entities;
+            for (Entity e : entity_list) {
+                //e.render(root);
+
+                server_entities_container.getChildren().add(e.getEntity_group());
+            }
         }
     }
 
@@ -316,7 +338,6 @@ public class GameScene extends Scene {
             double deltaTime = (now - lastUpdate) / 1_000_000_000.0; // Convert nanoseconds to seconds
             lastUpdate = now;
 
-            renderEntities();
         }
     };
 
