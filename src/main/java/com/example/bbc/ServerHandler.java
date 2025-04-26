@@ -156,7 +156,6 @@ public class ServerHandler {
                 server_stdin.write(authPacket.serialize());
                 server_stdin.flush();
 
-                input_packet = null;
                 lobby_id = SerialData.decodeInt(stdout.readNBytes(4));
 
                 Thread udp_thread = new Thread(new Runnable() {
@@ -213,6 +212,7 @@ public class ServerHandler {
                 invokeListener(disconnect_listener);
             }
             is_connected = false;
+            input_packet = null;
 
             try {
                 Thread.sleep(5000);
@@ -266,7 +266,9 @@ public class ServerHandler {
     }
     
     public void sendUserInput(InputData data) {
-        input_packet.setData(data.serialize());
+        if (input_packet != null) {
+            input_packet.setData(data.serialize());
+        }
     }
 
     public void disconnect() {
