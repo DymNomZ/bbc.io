@@ -5,6 +5,13 @@
     -fx-font-family: "LEMON MILK";
 }
 
+.dev-names {
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-font-family: "LEMON MILK";
+}
+
 .red-bold-prompt .prompt-text {
     -fx-fill: red;
     -fx-font-weight: bold;

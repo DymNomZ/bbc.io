@@ -55,8 +55,8 @@ public class PictureMaker {
                     ivSpriteHolder.fitWidthProperty().bind(vContainer.widthProperty().divide(newSceneWidth.doubleValue()/divider));
                 } else{
                     System.out.println(name + " max size " + max_inc + " reached");
-                    ivSpriteHolder.fitHeightProperty().bind(vContainer.heightProperty().divide(max_inc));
-                    ivSpriteHolder.fitWidthProperty().bind(vContainer.widthProperty().divide(max_inc));
+                    ivSpriteHolder.fitHeightProperty().bind(vContainer.heightProperty().divide(newSceneWidth.doubleValue()/1264));
+                    ivSpriteHolder.fitWidthProperty().bind(vContainer.widthProperty().divide(newSceneWidth.doubleValue()/1264));
                 }
             }
         });

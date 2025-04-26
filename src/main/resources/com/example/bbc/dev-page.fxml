@@ -6,12 +6,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="apDevScreen" minHeight="720.0" minWidth="1264.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.DevPageController">
+<AnchorPane fx:id="apDevScreen" minHeight="720.0" minWidth="1264.0" prefHeight="720.0" prefWidth="1280.0" stylesheets="@ui-styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.DevPageController">
    <children>
       <VBox fx:id="vDym" alignment="TOP_CENTER" maxHeight="400.0" maxWidth="400.0" minWidth="-Infinity" prefHeight="230.0" prefWidth="240.0" AnchorPane.bottomAnchor="351.0" AnchorPane.leftAnchor="115.0" AnchorPane.rightAnchor="925.0" AnchorPane.topAnchor="110.0">
          <children>
             <ImageView fx:id="ivDymSprite" fitHeight="224.0" fitWidth="224.0" pickOnBounds="true" preserveRatio="true" />
-            <Label alignment="CENTER" minWidth="-Infinity" prefHeight="35.0" prefWidth="240.0" text="John Dymier Borgonia" textAlignment="CENTER" wrapText="true">
+            <Label alignment="CENTER" minWidth="-Infinity" prefHeight="35.0" prefWidth="240.0" text="John Dymier Borgonia" textAlignment="CENTER" wrapText="true" styleClass="score-value">
                <font>
                   <Font size="24.0" />
                </font>
