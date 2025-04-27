@@ -2,6 +2,7 @@ package server;
 
 import configs.SocketConfig;
 import datas.AuthData;
+import server.debug.DebugWindow;
 import utils.Logging;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 public class ServerMain {
     public static void main(String[] args) throws InterruptedException {
+        DebugWindow.initDebugWindow();
         ServerSocket listener;
         ArrayList<Lobby> lobbies = new ArrayList<>();
 
