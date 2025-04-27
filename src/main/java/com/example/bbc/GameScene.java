@@ -27,6 +27,7 @@ import java.util.*;
 import java.util.List;
 
 import static com.example.bbc.IOGame.SERVER_API;
+import static utils.Helpers.rgbBytesToColor;
 
 public class GameScene extends Scene {
 
@@ -132,19 +133,18 @@ public class GameScene extends Scene {
                             i++;
                             continue;
                         }
-                        Logging.write(this,"Found a tank entity");
                         //find the user with the given id
-//                        for(UserData ud : SERVER_API.users_in_lobby){
-//                            if(ed.id == ud.id){
-
-                                Paint body_color = Color.BLUE;
-                                Paint barrel_color = Color.BLACK;
-                                Paint border_color = Color.BROWN;
+                        for(UserData ud : SERVER_API.users_in_lobby){
+                            if(ed.id == ud.id){
+                                System.out.println("FOUND A MATCH");
+                                Paint body_color = rgbBytesToColor(ud.body_color);
+                                Paint barrel_color = rgbBytesToColor(ud.barrel_color);
+                                Paint border_color = rgbBytesToColor(ud.border_color);
                                 TankEntity tank = new TankEntity(body_color, barrel_color, border_color);
                                 tank.setPosition(ed.x - x, ed.y - y);
                                 received_entities.add(tank);
-//                            }
-//                        }
+                            }
+                        }
                     }
                     else{
                         Logging.write(this,"Found a projectile entity");
@@ -152,7 +152,6 @@ public class GameScene extends Scene {
                     }
                     i++;
                     //Logging.write(this, String.valueOf(ed.id));
-
                 }
 
                 Platform.runLater(GameScene::renderEntities);
