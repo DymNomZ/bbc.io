@@ -26,7 +26,7 @@ public class ClientHandler {
     private final Socket tcp_socket;
     private GameData current_data = new GameData();
     private final Lobby lobby;
-    private LobbyData lobby_context;
+    private final LobbyData lobby_context;
     private final UDPAddress UDPAddr;
     private boolean player_dead = true;
     private final int player_id;
@@ -52,18 +52,8 @@ public class ClientHandler {
         this.lobby = lobby;
         this.UDPAddr = UDPAddr;
 
-        TCP_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TCPThread();
-            }
-        });
-        UDP_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                UDPOutputThread();
-            }
-        });
+        TCP_thread = new Thread(this::TCPThread);
+        UDP_thread = new Thread(this::UDPOutputThread);
         TCP_thread.start();
     }
 
@@ -71,6 +61,8 @@ public class ClientHandler {
         try {
             OutputStream stdin = tcp_socket.getOutputStream();
             InputStream stdout = tcp_socket.getInputStream();
+
+            LinkedList<UserData> players_in_packet = (LinkedList<UserData>) lobby_context.users;
 
             // Initial lobby data of leaderboard
             stdin.write(lobby_context.serialize());

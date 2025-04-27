@@ -46,12 +46,7 @@ public class ServerHandler {
             Logging.error(this, "Unable to bind UDP socket. Is a program with UDP socket using port " + SocketConfig.PORT + "?");
             throw new RuntimeException(e);
         }
-        tcp_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TCPThread();
-            }
-        });
+        tcp_thread = new Thread(this::TCPThread);
         tcp_thread.setDaemon(true);
         tcp_thread.start();
     }
@@ -158,12 +153,7 @@ public class ServerHandler {
 
                 lobby_id = SerialData.decodeInt(stdout.readNBytes(4));
 
-                Thread udp_thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        UDPInputThread();
-                    }
-                });
+                Thread udp_thread = new Thread(this::UDPInputThread);
                 udp_thread.setDaemon(true);
                 udp_thread.start();
 
@@ -189,12 +179,7 @@ public class ServerHandler {
                 lobby_id = lobbyData.id;
                 invokeDataListener(connect_listener, lobbyData);
 
-                udp_thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        UDPOutputThread();
-                    }
-                });
+                udp_thread = new Thread(this::UDPOutputThread);
                 udp_thread.setDaemon(true);
                 udp_thread.start();
 

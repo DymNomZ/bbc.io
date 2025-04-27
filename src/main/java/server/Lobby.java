@@ -44,18 +44,8 @@ public class Lobby {
         input_socket = new DatagramSocket(SocketConfig.PORT);
         input_socket.setSoTimeout(10);
 
-        input_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                inputThread();
-            }
-        });
-        game_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                gameThread();
-            }
-        });
+        input_thread = new Thread(this::inputThread);
+        game_thread = new Thread(this::gameThread);
         qtree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1, true);
         input_thread.start();
         game_thread.start();
