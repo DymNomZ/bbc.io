@@ -18,6 +18,8 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.*;
 
+import static utils.Helpers.rgbBytesToColor;
+
 public class ClientHandler {
     private final Thread TCP_thread;
     private final Thread UDP_thread;
@@ -40,8 +42,6 @@ public class ClientHandler {
                 break;
             }
         }
-
-        Logging.write(this, "Entered player #" + lobby_context.users.getFirst().id);
 
         this.player_id = player_id;
         tcp_socket = socket;

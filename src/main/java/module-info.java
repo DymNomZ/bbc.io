@@ -8,5 +8,6 @@ module com.example.bbc {
     exports com.example.bbc;
     exports classes;
     exports datas;
+    exports server.debug;
     opens classes to javafx.fxml;
 }

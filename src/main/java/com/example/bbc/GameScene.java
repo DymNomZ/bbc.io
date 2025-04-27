@@ -27,6 +27,7 @@ import java.util.*;
 import java.util.List;
 
 import static com.example.bbc.IOGame.SERVER_API;
+import static utils.Helpers.rgbBytesToColor;
 
 public class GameScene extends Scene {
 
@@ -40,6 +41,8 @@ public class GameScene extends Scene {
 
     public static StackPane root = new StackPane();
     public static final StackPane server_entities_container = new StackPane();
+
+    private static final double player_speed = 1.5;
 
     //changed player from final to static for color change testing
     public static TankEntity main_player;
@@ -132,17 +135,17 @@ public class GameScene extends Scene {
                         }
                         Logging.write(this,"Found a tank entity");
                         //find the user with the given id
-//                        for(UserData ud : SERVER_API.users_in_lobby){
+                        for(UserData ud : SERVER_API.users_in_lobby){
 //                            if(ed.id == ud.id){
-
-                                Paint body_color = Color.BLUE;
-                                Paint barrel_color = Color.BLACK;
-                                Paint border_color = Color.BROWN;
+                                System.out.println(ed.id + " " + ud.id);
+                                Paint body_color = rgbBytesToColor(ud.body_color);
+                                Paint barrel_color = rgbBytesToColor(ud.barrel_color);
+                                Paint border_color = rgbBytesToColor(ud.border_color);
                                 TankEntity tank = new TankEntity(body_color, barrel_color, border_color);
                                 tank.setPosition(ed.x - x, ed.y - y);
                                 received_entities.add(tank);
 //                            }
-//                        }
+                        }
                     }
                     else{
                         Logging.write(this,"Found a projectile entity");
@@ -292,18 +295,17 @@ public class GameScene extends Scene {
             main_player.shoot(root);
         }
 
-        //FIXME
         if (key_handler.up_pressed) {
-            moveBackground(0,5);
+            moveBackground(0,player_speed);
         }
         if (key_handler.down_pressed) {
-            moveBackground(0,-5);
+            moveBackground(0,-player_speed);
         }
         if (key_handler.left_pressed) {
-            moveBackground(5,0);
+            moveBackground(player_speed,0);
         }
         if (key_handler.right_pressed) {
-            moveBackground(-5,0);
+            moveBackground(-player_speed,0);
         }
         if(key_handler.f_pressed){
             if(can_be_damaged)onPlayerDamaged();

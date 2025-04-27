@@ -8,6 +8,7 @@ import server.Lobby;
 import java.net.Socket;
 
 import static configs.DimensionConfig.*;
+import static utils.Helpers.rgbBytesToColor;
 
 public class PlayerData {
     private ClientHandler handler;
@@ -43,5 +44,11 @@ public class PlayerData {
 
     public synchronized InputData getInputs() {
         return inputs;
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerData [id=" + id + ", name=" + name + ", score=" + score + ", color " +
+                rgbBytesToColor(body_color) + " " + rgbBytesToColor(barrel_color) + " " + rgbBytesToColor(border_color);
     }
 }

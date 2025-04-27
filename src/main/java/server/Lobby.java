@@ -3,6 +3,7 @@ package server;
 import configs.DimensionConfig;
 import configs.SocketConfig;
 import datas.*;
+import server.debug.DebugWindow;
 import server.game_structure.QuadRectangle;
 import server.game_structure.QuadTree;
 import server.game_structure.RangeCircle;
@@ -63,6 +64,11 @@ public class Lobby {
     private void gameThread() {
         while (running) {
             long game_clock = System.currentTimeMillis();
+            StringBuilder sb = new StringBuilder();
+            for (PlayerData i : players_data.values()) {
+                sb.append(i.toString() + "\n");
+            }
+            DebugWindow.logPlayers(sb.toString());
 
             moveEntities(game_clock);
 
@@ -110,6 +116,7 @@ public class Lobby {
         }
     }
     private void moveEntities(long game_clock){
+        StringBuilder location_sb = new StringBuilder();
         for (PlayerData i : entity_data.keySet()) {
             ServerEntity entity = entity_data.get(i);
 
@@ -119,8 +126,9 @@ public class Lobby {
                 entity.move(game_clock, i.getInputs());
             }
 
-            Logging.write(this, entity.toString());
+            location_sb.append(entity.toString());
         }
+        DebugWindow.log(location_sb.toString());
     }
 
     private void inputThread() {

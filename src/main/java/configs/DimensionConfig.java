@@ -1,8 +1,8 @@
 package configs;
 
 public class DimensionConfig {
-    public static final double MAP_WIDTH = 5000;
-    public static final double MAP_HEIGHT = 5000;
+    public static final double MAP_WIDTH = 500;
+    public static final double MAP_HEIGHT = 500;
     public static final double PLAYER_RADIUS = 20;
     public static final double PROJECTILE_RADIUS = 5;
 
