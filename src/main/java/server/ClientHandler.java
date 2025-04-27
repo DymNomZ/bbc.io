@@ -43,6 +43,10 @@ public class ClientHandler {
             }
         }
 
+        if (!ServerMain.DEBUG_WINDOW) {
+            Logging.write(this, "Entered player #" + lobby_context.users.getFirst().id);
+        }
+
         this.player_id = player_id;
         tcp_socket = socket;
         this.lobby = lobby;

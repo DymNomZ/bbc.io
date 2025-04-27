@@ -64,11 +64,15 @@ public class Lobby {
     private void gameThread() {
         while (running) {
             long game_clock = System.currentTimeMillis();
-            StringBuilder sb = new StringBuilder();
-            for (PlayerData i : players_data.values()) {
-                sb.append(i.toString() + "\n");
+
+            // TODO: Logging in every loop will greatly hinder the game thread (Remove at production)
+            if (ServerMain.DEBUG_WINDOW) {
+                StringBuilder sb = new StringBuilder();
+                for (PlayerData i : players_data.values()) {
+                    sb.append(i.toString()).append("\n");
+                }
+                DebugWindow.logPlayers(sb.toString());
             }
-            DebugWindow.logPlayers(sb.toString());
 
             moveEntities(game_clock);
 
@@ -126,7 +130,14 @@ public class Lobby {
                 entity.move(game_clock, i.getInputs());
             }
 
+            // TODO: Logging in every loop will greatly hinder the game thread (Remove at production)
             location_sb.append(entity.toString());
+        }
+
+        if (ServerMain.DEBUG_WINDOW) {
+
+        } else {
+            Logging.write(this, location_sb.toString());
         }
         DebugWindow.log(location_sb.toString());
     }
