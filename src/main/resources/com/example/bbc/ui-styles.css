@@ -16,6 +16,7 @@
 .red-bold-prompt .prompt-text {
     -fx-fill: red;
     -fx-font-weight: bold;
+    -fx-font-family: "LEMON MILK";
 }
 
 .player-name {
