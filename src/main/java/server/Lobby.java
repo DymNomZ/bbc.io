@@ -2,6 +2,7 @@ package server;
 
 import configs.DimensionConfig;
 import configs.SocketConfig;
+import configs.StatsConfig;
 import datas.*;
 import server.debug.DebugWindow;
 import server.game_structure.QuadRectangle;
@@ -14,16 +15,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.WeakHashMap;
+import java.util.*;
 
 public class Lobby {
     public HashMap<UDPAddress, PlayerData> players_data = new HashMap<>();
 
     // TODO: May be replaced for quad trees data struct
-    public WeakHashMap<PlayerData, ServerEntity> entity_data = new WeakHashMap<>();
+    public WeakHashMap<PlayerData, ArrayList<ServerEntity>> entity_data = new WeakHashMap<>();
 
     public LinkedList<PlayerData> spawn_queue = new LinkedList<>();
     static private int ID = 1;
@@ -64,6 +62,8 @@ public class Lobby {
                 DebugWindow.logPlayers(sb.toString());
             }
 
+            spawnProjectiles(game_clock);
+
             moveEntities(game_clock);
 
             handleSpawnQueue(game_clock);
@@ -84,20 +84,40 @@ public class Lobby {
         }
     }
 
+    private void spawnProjectiles(long game_clock) {
+        for(PlayerData i : players_data.values()) {
+            InputData inputData = i.getInputs();
+            if(inputData.lClick_pressed){
+                shoot(i, game_clock);
+            }
+        }
+    }
+
+    private void shoot(PlayerData playerData, long game_clock){
+        if(game_clock - playerData.last_shoot >= StatsConfig.PLAYER_SHOOT_COOLDOWN) {
+            entity_data.get(playerData).add(new ProjectileEntity(game_clock, playerData.id, playerData.getInputs().angle));
+            playerData.last_shoot = game_clock;
+        }
+    }
+
     private void quadCollisionCheck(QuadTree tree){
-        for (ServerEntity entity: entity_data.values()) {
-            RangeCircle circle = new RangeCircle(entity.x, entity.y, entity.radius + 1);
-            List<ServerEntity> collision = tree.query(circle);
-            for (ServerEntity other : collision) {
-                if (entity != other) entity.isCollidingWith(other);
+        for(ArrayList<ServerEntity> i : entity_data.values()) {
+            for(ServerEntity entity : i) {
+                RangeCircle circle = new RangeCircle(entity.x, entity.y, entity.radius + 1);
+                List<ServerEntity> collision = tree.query(circle);
+                for (ServerEntity other : collision) {
+                    if (entity != other) entity.isCollidingWith(other);
+                }
             }
         }
     }
 
     private QuadTree constructQTree(){
-        QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1, true);
-        for(ServerEntity s : entity_data.values()){
-            tree.insert(s);
+        QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),2, true);
+        for(ArrayList<ServerEntity> i : entity_data.values()) {
+            for(ServerEntity s : i) {
+                tree.insert(s);
+            }
         }
 
         return tree;
@@ -106,22 +126,21 @@ public class Lobby {
     private void handleSpawnQueue(long game_clock){
         while (!spawn_queue.isEmpty()) {
             PlayerData player = spawn_queue.remove();
-            entity_data.put(player, new PlayerEntity(game_clock,player.id));
+            ArrayList<ServerEntity> entities = new ArrayList<>();
+            entities.add(new PlayerEntity(game_clock,player.id));
+            entity_data.put(player, entities);
         }
     }
     private void moveEntities(long game_clock){
         StringBuilder location_sb = new StringBuilder();
         for (PlayerData i : entity_data.keySet()) {
-            ServerEntity entity = entity_data.get(i);
+            for(ServerEntity entity : entity_data.get(i)) {
 
-            if (entity instanceof ProjectileEntity) {
-                entity.move(game_clock);
-            } else {
-                entity.move(game_clock, i.getInputs());
+                entity.move(game_clock, i);
+
+                // TODO: Logging in every loop will greatly hinder the game thread (Remove at production)
+                location_sb.append(entity.toString());
             }
-
-            // TODO: Logging in every loop will greatly hinder the game thread (Remove at production)
-            location_sb.append(entity.toString());
         }
 
         if (ServerMain.DEBUG_WINDOW) {
