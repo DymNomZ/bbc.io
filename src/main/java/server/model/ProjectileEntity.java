@@ -27,19 +27,24 @@ public class ProjectileEntity extends ServerEntity{
         last_moved_time = game_clock;
 
         double velocity = StatsConfig.PROJECTILE_SPEED * offset;
-        double vx = velocity * Math.cos(angle);
-        double vy = velocity * Math.sin(angle);
-        double deltax = vx;
-        double deltay = vy;
+        double delta_x = velocity * Math.cos(angle);
+        double delta_y = velocity * Math.sin(angle);
 
+        x += delta_x;
+        y += delta_y;
 
+        // TODO: bounds collision
+        if (x < 0) {
+            x = 0;
+        } else if (x > x_map_offset) {
+            x = x_map_offset;
+        }
 
-
-
-
-        x += deltax;
-        y += deltay;
-
+        if (y < 0) {
+            y = 0;
+        } else if (y > y_map_offset) {
+            y = y_map_offset;
+        }
     }
 
     @Override

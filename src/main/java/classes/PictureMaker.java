@@ -26,7 +26,7 @@ public class PictureMaker {
             this.frames.add(new Image("file:src/main/java/assets/" + name + "_left_F1-resized.png"));
             this.frames.add(new Image("file:src/main/java/assets/" + name + "_left_F0-resized.png"));
             this.frames.add(new Image("file:src/main/java/assets/" + name + "_left_F-1-resized.png"));
-            ivSpriteHolder.setImage(frames.getFirst());
+            ivSpriteHolder.setImage(frames.get(0));
             AtomicInteger currentFrameIndex = new AtomicInteger();
             Timeline timeline;
             Duration frameDuration = Duration.millis(400);

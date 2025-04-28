@@ -5,6 +5,7 @@ import datas.*;
 import server.game_structure.QuadTree;
 import server.game_structure.RangeCircle;
 import server.model.PlayerData;
+import server.model.PlayerEntity;
 import server.model.ServerEntity;
 import server.model.UDPAddress;
 import utils.Logging;
@@ -38,13 +39,13 @@ public class ClientHandler {
             UserData i = it.next();
             if (i.id == player_id) {
                 it.remove();
-                lobby_context.users.addFirst(i);
+                lobby_context.users.add(0, i);
                 break;
             }
         }
 
         if (!ServerMain.DEBUG_WINDOW) {
-            Logging.write(this, "Entered player #" + lobby_context.users.getFirst().id);
+            Logging.write(this, "Entered player #" + lobby_context.users.get(0).id);
         }
 
         this.player_id = player_id;
@@ -187,7 +188,7 @@ public class ClientHandler {
 
                 if (old_player_entity == null) {
                     for (ServerEntity i : tree.root_entities) {
-                        if (i.player_id == player_id) {
+                        if (i.player_id == player_id && i instanceof PlayerEntity) {
                             old_player_entity = i;
                             break;
                         }
@@ -202,9 +203,9 @@ public class ClientHandler {
                 //Logging.write(this,in_range.size()+" " + old_player_entity);
                 player_found = false;
                 for (ServerEntity i : in_range) {
-                    if (i.player_id == player_id) {
+                    if (i.player_id == player_id && i instanceof PlayerEntity) {
                         old_player_entity = i;
-                        current_data.entities.addFirst(i.getEntityData());
+                        current_data.entities.add(0, i.getEntityData());
                         player_found = true;
                         continue;
                     }

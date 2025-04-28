@@ -150,11 +150,11 @@ public class GameScene extends Scene {
                     received_entities.clear();
 
                     List<EntityData> entities = data.entities;
-                    double x = entities.getFirst().x;
-                    double y = entities.getFirst().y;
+                    double x = entities.get(0).x;
+                    double y = entities.get(0).y;
                     main_player.pos_x = x;
                     main_player.pos_y = y;
-                    main_player.setAngle(entities.getFirst().angle);
+                    main_player.setAngle(entities.get(0).angle);
 
                     int i = 0;
                     for(EntityData ed : entities){
@@ -178,7 +178,9 @@ public class GameScene extends Scene {
                             }
                         }
                         else{
-                            received_entities.add(new ProjectileEntity(ed.angle, ed.x, ed.y));
+                            ProjectileEntity p = new ProjectileEntity(ed.angle, ed.x, ed.y);
+                            p.setPosition(ed.x,ed.y);
+                            received_entities.add(p);
                         }
                         i++;
                         //Logging.write(this, String.valueOf(ed.id));
