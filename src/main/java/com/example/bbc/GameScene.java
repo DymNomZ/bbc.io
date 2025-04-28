@@ -178,8 +178,8 @@ public class GameScene extends Scene {
                             }
                         }
                         else{
-                            ProjectileEntity p = new ProjectileEntity(ed.angle, ed.x, ed.y);
-                            p.setPosition(ed.x,ed.y);
+                            ProjectileEntity p = new ProjectileEntity(ed.angle, ed.x - x, ed.y - y);
+                            p.setPosition(ed.x - x,ed.y - y);
                             received_entities.add(p);
                         }
                         i++;
@@ -337,6 +337,8 @@ public class GameScene extends Scene {
                 packet.angle = main_player.getAngle();
                 SERVER_API.sendUserInput(packet);
             }
+
+            Logging.write(this,"Player is looking at: " + main_player.getAngle());
 
             if (lastUpdate == 0) {
                 lastUpdate = now;

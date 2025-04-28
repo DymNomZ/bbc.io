@@ -95,8 +95,16 @@ public class Lobby {
 
     private void shoot(PlayerData playerData, long game_clock){
         if(game_clock - playerData.last_shoot >= StatsConfig.PLAYER_SHOOT_COOLDOWN) {
-            entity_data.get(playerData).add(new ProjectileEntity(game_clock, playerData.id, playerData.getInputs().angle));
-            playerData.last_shoot = game_clock;
+            ArrayList<ServerEntity> chain = entity_data.get(playerData);
+
+            if (chain != null) {
+                ProjectileEntity p = new ProjectileEntity(game_clock, playerData.id, playerData.getInputs().angle);
+                p.x = chain.getFirst().x;
+                p.y = chain.getFirst().y;
+                entity_data.get(playerData).add(p);
+                playerData.last_shoot = game_clock;
+            }
+
         }
     }
 
