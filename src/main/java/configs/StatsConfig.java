@@ -9,4 +9,5 @@ public class StatsConfig {
     public static final double PROJECTILE_SPEED = 0.50;
 
     public static final long PLAYER_SHOOT_COOLDOWN = 500;
+    public static final long PROJECTILE_LIFETIME = 5000;
 }

@@ -98,7 +98,7 @@ public class ClientHandler {
                 // NOTE: Data sent here does not take to account those who reconnected
                 for (PlayerData player : lobby.players_data.values()) {
                     if (player.id == player_id) {
-                        UserData current = players_in_packet.getFirst();
+                        UserData current = players_in_packet.get(0);
                         current.score = player.score;
                         // add name if name is changed when player is in lobby (currently we dont)
 

@@ -99,8 +99,8 @@ public class Lobby {
 
             if (chain != null) {
                 ProjectileEntity p = new ProjectileEntity(game_clock, playerData.id, playerData.getInputs().angle);
-                p.x = chain.getFirst().x;
-                p.y = chain.getFirst().y;
+                p.x = chain.get(0).x;
+                p.y = chain.get(0).y;
                 entity_data.get(playerData).add(p);
                 playerData.last_shoot = game_clock;
             }

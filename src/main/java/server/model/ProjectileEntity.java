@@ -7,17 +7,21 @@ import datas.InputData;
 import utils.Logging;
 
 public class ProjectileEntity extends ServerEntity{
+    private long spawn_time;
 
     public ProjectileEntity(long game_clock, int owner_id, double angle) {
         super(game_clock, DimensionConfig.PROJECTILE_RADIUS, owner_id,angle);
 
         this.angle = -angle;
+        spawn_time = game_clock;
 
-        if (angle >= 0) {
+        if (this.angle < 0) {
             this.angle = 360 - angle;
         }
+    }
 
-        Logging.write(this, this.angle + " angle");
+    public boolean isAlive(long game_clock) {
+        return game_clock - spawn_time < StatsConfig.PROJECTILE_LIFETIME;
     }
 
     @Override
@@ -38,11 +42,11 @@ public class ProjectileEntity extends ServerEntity{
         //Logging.write(this,"Moving towards" + angle);
 
         double velocity = StatsConfig.PROJECTILE_SPEED * offset;
-        double delta_x = velocity * Math.cos(angle);
-        double delta_y = velocity * Math.sin(angle);
+        double delta_x = velocity * Math.cos(Math.toRadians(angle));
+        double delta_y = velocity * Math.sin(Math.toRadians(angle));
 
         x += delta_x;
-        y += delta_y;
+        y -= delta_y;
 
         // TODO: bounds collision
         if (x < 0) {
