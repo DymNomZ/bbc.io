@@ -66,11 +66,12 @@ public class TitleScreenController {
             public void run(LobbyData data) {
 
                 Logging.write(this, "Connected to Server");
+
+                //get users in lobby
+                SERVER_API.users_in_lobby.addAll(data.users);
+
                 Platform.runLater(() -> {
                     MAIN_STAGE.setScene(LOBBY_SCENE);
-
-                    //get users in lobby
-                    SERVER_API.users_in_lobby.addAll(data.users);
 
                     GameScene.initializeOnGameUpdate();
                 });

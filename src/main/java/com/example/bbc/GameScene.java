@@ -1,9 +1,6 @@
 package com.example.bbc;
 
-import datas.EntityData;
-import datas.GameData;
-import datas.InputData;
-import datas.UserData;
+import datas.*;
 import entities.Entity;
 import entities.ProjectileEntity;
 import entities.TankEntity;
@@ -11,6 +8,7 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -79,7 +77,7 @@ public class GameScene extends Scene {
         key_handler = new KeyHandler();
 
         main_player = new TankEntity();
-        entity_list = new ArrayList<>();
+        entity_list = new LinkedList<>();
         received_entities = new ArrayList<>();
 
         center_x = SCREEN_WIDTH / 2;
@@ -111,6 +109,36 @@ public class GameScene extends Scene {
     }
 
     public static void initializeOnGameUpdate(){
+        SERVER_API.onLobbyUpdate(new ServerDataListener<LobbyData>() {
+            @Override
+            public void run(LobbyData data) {
+                ListIterator<UserData> iter = SERVER_API.users_in_lobby.listIterator();
+
+                for (UserData i : data.users) {
+                    if (iter.hasNext()) {
+                        UserData cur = iter.next();
+
+                        while (cur != null && cur.id != i.id) {
+                            iter.remove();
+                            cur = iter.hasNext() ? iter.next() : null;
+                        }
+
+                        if (cur == null) {
+                            iter.add(i);
+                        } else {
+                            cur.score = i.score;
+                            if (i.type == UserData.USER_FULL) {
+                                cur.barrel_color = i.barrel_color;
+                                cur.border_color = i.border_color;
+                                cur.body_color = i.body_color;
+                            }
+                        }
+                    } else {
+                        iter.add(i);
+                    }
+                }
+            }
+        });
         SERVER_API.onGameUpdate(new ServerDataListener<GameData>() {
             @Override
             public void run(GameData data) {
@@ -118,45 +146,45 @@ public class GameScene extends Scene {
                 //Logging.write(this,"Rendering " + String.valueOf(data.entities.size()) + " entities");
 
 
-                received_entities.clear();
+                synchronized (received_entities) {
+                    received_entities.clear();
 
-                List<EntityData> entities = data.entities;
-                System.out.println(entities + " size: " + entities.size());
-                double x = entities.getFirst().x;
-                double y = entities.getFirst().y;
+                    List<EntityData> entities = data.entities;
+                    double x = entities.getFirst().x;
+                    double y = entities.getFirst().y;
+                    main_player.pos_x = x;
+                    main_player.pos_y = y;
+                    main_player.setAngle(entities.getFirst().angle);
 
-                int i = 0;
-                for(EntityData ed : entities){
-                    //skip player
-                    if(!ed.is_projectile){
-                        if(i == 0){
-                            i++;
-                            continue;
-                        }
-                        Logging.write(this,"Found a tank entity");
-                        //find the user with the given id
-                        for(UserData ud : SERVER_API.users_in_lobby){
+                    int i = 0;
+                    for(EntityData ed : entities){
+                        //skip player
+                        if(!ed.is_projectile){
+                            if(i == 0){
+                                i++;
+                                continue;
+                            }
+                            //find the user with the given id
+                            for(UserData ud : SERVER_API.users_in_lobby){
 //                            if(ed.id == ud.id){
-                                System.out.println(ed.id + " " + ud.id);
                                 Paint body_color = rgbBytesToColor(ud.body_color);
                                 Paint barrel_color = rgbBytesToColor(ud.barrel_color);
                                 Paint border_color = rgbBytesToColor(ud.border_color);
                                 TankEntity tank = new TankEntity(body_color, barrel_color, border_color);
                                 tank.setPosition(ed.x - x, ed.y - y);
+                                tank.setAngle(ed.angle);
                                 received_entities.add(tank);
 //                            }
+                            }
                         }
+                        else{
+                            received_entities.add(new ProjectileEntity(ed.angle, ed.x, ed.y));
+                        }
+                        i++;
+                        //Logging.write(this, String.valueOf(ed.id));
                     }
-                    else{
-                        Logging.write(this,"Found a projectile entity");
-                        received_entities.add(new ProjectileEntity(ed.angle, ed.x, ed.y));
-                    }
-                    i++;
-                    //Logging.write(this, String.valueOf(ed.id));
-
                 }
 
-                Platform.runLater(GameScene::renderEntities);
 
             }
         });
@@ -164,17 +192,10 @@ public class GameScene extends Scene {
 
     public static void renderEntities(){
         synchronized (entity_list) {
-
-
             System.out.println("Rendering " + server_entities_container.getChildren().size() + " entities");
             //clear previous entity_list
             server_entities_container.getChildren().clear();
             entity_list = received_entities;
-            for (Entity e : entity_list) {
-                //e.render(root);
-
-                server_entities_container.getChildren().add(e.getEntity_group());
-            }
         }
     }
 
@@ -287,30 +308,14 @@ public class GameScene extends Scene {
         SCREEN_HEIGHT = HEIGHT_PROPERTY.get();
     }
 
+    private double last_x = 0, last_y = 0;
+
     private void update(){
+        moveBackground((main_player.pos_x - last_x) * -1, 0);
+        moveBackground(0, (main_player.pos_y - last_y) * -1);
 
-        main_player.lookAt();
-
-        if(mouse_handler.left_is_pressed){
-            main_player.shoot(root);
-        }
-
-        if (key_handler.up_pressed) {
-            moveBackground(0,player_speed);
-        }
-        if (key_handler.down_pressed) {
-            moveBackground(0,-player_speed);
-        }
-        if (key_handler.left_pressed) {
-            moveBackground(player_speed,0);
-        }
-        if (key_handler.right_pressed) {
-            moveBackground(-player_speed,0);
-        }
-        if(key_handler.f_pressed){
-            if(can_be_damaged)onPlayerDamaged();
-        }
-
+        last_x = main_player.pos_x;
+        last_y = main_player.pos_y;
     }
 
     private final AnimationTimer gameLoop = new AnimationTimer() {
@@ -327,7 +332,7 @@ public class GameScene extends Scene {
                 packet.lShift_pressed = key_handler.lShift_pressed;
 
                 packet.lClick_pressed = mouse_handler.left_is_pressed;
-                // TODO: angle here cause eh
+                packet.angle = main_player.getAngle();
                 SERVER_API.sendUserInput(packet);
             }
 
@@ -335,7 +340,27 @@ public class GameScene extends Scene {
                 lastUpdate = now;
                 return;
             }
-            update();
+
+            root.getChildren().removeIf((Node e) -> {
+                ListIterator<Entity> iter = entity_list.listIterator();
+                while (iter.hasNext()) {
+                    Entity cur = iter.next();
+                    if (cur.getEntity_group() == e) {
+                        iter.remove();
+                        return true;
+                    }
+                }
+                return false;
+            });
+            entity_list.clear();
+
+            synchronized (received_entities) {
+                update();
+                for (Entity e : received_entities) {
+                    entity_list.add(e);
+                    e.render(root);
+                }
+            }
 
             double deltaTime = (now - lastUpdate) / 1_000_000_000.0; // Convert nanoseconds to seconds
             lastUpdate = now;

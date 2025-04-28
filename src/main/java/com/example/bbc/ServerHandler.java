@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ServerHandler {
@@ -32,7 +33,7 @@ public class ServerHandler {
     private boolean is_connected = false;
     private UserData current_user = null;
 
-    public List<UserData> users_in_lobby = new ArrayList<>();
+    public List<UserData> users_in_lobby = new LinkedList<>();
 
     private boolean player_dead = true;
 
@@ -185,6 +186,7 @@ public class ServerHandler {
 
                 while (server.isConnected()) {
                     try {
+                        stdout.read(); // ignore SerialData Type
                         lobbyData = new LobbyData(stdout);
                         invokeDataListener(lobby_listener, lobbyData);
                     } catch (SocketTimeoutException ignored) {}

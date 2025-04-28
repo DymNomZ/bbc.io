@@ -91,14 +91,72 @@ public class ClientHandler {
                         }
                     }
                 } catch (SocketTimeoutException ignored) {}
-                // TODO: send lobby data
+
+                ListIterator<UserData> context_iter = players_in_packet.listIterator(1);
+
+                // NOTE: Data sent here does not take to account those who reconnected
+                for (PlayerData player : lobby.players_data.values()) {
+                    if (player.id == player_id) {
+                        UserData current = players_in_packet.getFirst();
+                        current.score = player.score;
+                        // add name if name is changed when player is in lobby (currently we dont)
+
+                        current.type = UserData.USER_PARTIAL;
+
+                        if (!Arrays.equals(current.barrel_color, player.barrel_color)) {
+                            current.type = UserData.USER_FULL;
+                            current.barrel_color = player.barrel_color.clone();
+                        }
+                        if (!Arrays.equals(current.body_color, player.body_color)) {
+                            current.type = UserData.USER_FULL;
+                            current.body_color = player.body_color.clone();
+                        }
+                        if (!Arrays.equals(current.border_color, player.border_color)) {
+                            current.type = UserData.USER_FULL;
+                            current.border_color = player.border_color.clone();
+                        }
+                    } else {
+                        UserData cur = context_iter.hasNext() ? context_iter.next() : null;
+
+                        while (cur != null && cur.id < player.id) {
+                            context_iter.remove();
+                            cur = context_iter.hasNext() ? context_iter.next() : null;
+                        }
+
+                        if (cur == null) {
+                            context_iter.add(new UserData(player));
+                        } else {
+                            cur.score = player.score;
+                            cur.type = UserData.USER_PARTIAL;
+
+                            if (!Arrays.equals(cur.barrel_color, player.barrel_color)) {
+                                cur.type = UserData.USER_FULL;
+                                cur.barrel_color = player.barrel_color.clone();
+                            }
+                            if (!Arrays.equals(cur.body_color, player.body_color)) {
+                                cur.type = UserData.USER_FULL;
+                                cur.body_color = player.body_color.clone();
+                            }
+                            if (!Arrays.equals(cur.border_color, player.border_color)) {
+                                cur.type = UserData.USER_FULL;
+                                cur.border_color = player.border_color.clone();
+                            }
+                        }
+                    }
+                }
+
+                while (context_iter.hasNext()) {
+                    context_iter.next();
+                    context_iter.remove();
+                }
+
                 stdin.write(lobby_context.serialize());
                 stdin.flush();
 
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    throw new IOException();
+                    break;
                 }
             }
         } catch (IOException ignored) {}

@@ -46,6 +46,10 @@ public abstract class ServerEntity implements Collidable<ServerEntity> {
 
         double delta = speed * offset;
 
+        if (inputs.lShift_pressed) {
+            delta *= 1.5;
+        }
+
         if (inputs.up_pressed) {
             y -= delta;
         }
