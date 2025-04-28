@@ -6,5 +6,7 @@ public class StatsConfig {
 
     // Speed per millisecond
     public static final double PLAYER_SPEED = 0.1;
-    public static final double PROJECTILE_SPEED = 0.0018;
+    public static final double PROJECTILE_SPEED = 0.50;
+
+    public static final long PLAYER_SHOOT_COOLDOWN = 500;
 }

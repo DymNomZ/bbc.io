@@ -5,6 +5,7 @@ import datas.*;
 import server.game_structure.QuadTree;
 import server.game_structure.RangeCircle;
 import server.model.PlayerData;
+import server.model.PlayerEntity;
 import server.model.ServerEntity;
 import server.model.UDPAddress;
 import utils.Logging;
@@ -97,7 +98,7 @@ public class ClientHandler {
                 // NOTE: Data sent here does not take to account those who reconnected
                 for (PlayerData player : lobby.players_data.values()) {
                     if (player.id == player_id) {
-                        UserData current = players_in_packet.get(0);
+                        UserData current = players_in_packet.getFirst();
                         current.score = player.score;
                         // add name if name is changed when player is in lobby (currently we dont)
 
@@ -187,7 +188,7 @@ public class ClientHandler {
 
                 if (old_player_entity == null) {
                     for (ServerEntity i : tree.root_entities) {
-                        if (i.player_id == player_id) {
+                        if (i.player_id == player_id && i instanceof PlayerEntity) {
                             old_player_entity = i;
                             break;
                         }
@@ -202,9 +203,9 @@ public class ClientHandler {
                 //Logging.write(this,in_range.size()+" " + old_player_entity);
                 player_found = false;
                 for (ServerEntity i : in_range) {
-                    if (i.player_id == player_id) {
+                    if (i.player_id == player_id && i instanceof PlayerEntity) {
                         old_player_entity = i;
-                        current_data.entities.add(0, (i.getEntityData()));
+                        current_data.entities.add(0, i.getEntityData());
                         player_found = true;
                         continue;
                     }

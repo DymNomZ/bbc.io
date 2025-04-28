@@ -16,7 +16,8 @@ public class PlayerData {
     public String name;
     public int score;
     public boolean playing = false;
-    private InputData inputs;
+    private InputData inputs = new InputData();
+    public long last_shoot = 0;
 
     public byte[] border_color;
     public byte[] body_color;

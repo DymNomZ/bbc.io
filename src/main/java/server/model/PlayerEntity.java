@@ -3,6 +3,7 @@ package server.model;
 import configs.DimensionConfig;
 import configs.StatsConfig;
 import datas.EntityData;
+import datas.InputData;
 
 public class PlayerEntity extends ServerEntity{
     public int health;
@@ -25,6 +26,48 @@ public class PlayerEntity extends ServerEntity{
     @Override
     public void handleCollision(ServerEntity other) {
 
+    }
+
+    @Override
+    public void move(long game_clock, PlayerData playerData) {
+        InputData inputs = playerData.getInputs();
+
+        long offset = game_clock - last_moved_time;
+        last_moved_time = game_clock;
+
+        angle = inputs.angle;
+
+        double delta = speed * offset;
+
+        if (inputs.lShift_pressed) {
+            delta *= 1.5;
+        }
+
+        if (inputs.up_pressed) {
+            y -= delta;
+        }
+        if (inputs.down_pressed) {
+            y += delta;
+        }
+        if (inputs.left_pressed) {
+            x -= delta;
+        }
+        if (inputs.right_pressed) {
+            x += delta;
+        }
+
+
+        if (x < 0) {
+            x = 0;
+        } else if (x > x_map_offset) {
+            x = x_map_offset;
+        }
+
+        if (y < 0) {
+            y = 0;
+        } else if (y > y_map_offset) {
+            y = y_map_offset;
+        }
     }
 
     @Override
