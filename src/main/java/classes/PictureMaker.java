@@ -26,7 +26,7 @@ public class PictureMaker {
             this.frames.add(new Image("file:src/main/java/assets/" + name + "_left_F1-resized.png"));
             this.frames.add(new Image("file:src/main/java/assets/" + name + "_left_F0-resized.png"));
             this.frames.add(new Image("file:src/main/java/assets/" + name + "_left_F-1-resized.png"));
-            ivSpriteHolder.setImage(frames.getFirst());
+            ivSpriteHolder.setImage(frames.get(0));
             AtomicInteger currentFrameIndex = new AtomicInteger();
             Timeline timeline;
             Duration frameDuration = Duration.millis(400);
@@ -47,8 +47,8 @@ public class PictureMaker {
         ivSpriteHolder.fitWidthProperty().bind(vContainer.widthProperty());
         apDevScreen.widthProperty().addListener(new ChangeListener<Number>() {
             @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-                System.out.println(name + " Width: " + newSceneWidth);
-                System.out.println(newSceneWidth.doubleValue()/divider);
+//                System.out.println(name + " Width: " + newSceneWidth);
+//                System.out.println(newSceneWidth.doubleValue()/divider);
                 ivSpriteHolder.fitHeightProperty().bind(vContainer.heightProperty().divide(newSceneWidth.doubleValue()/divider));
                 ivSpriteHolder.fitWidthProperty().bind(vContainer.widthProperty().divide(newSceneWidth.doubleValue()/divider));
             }

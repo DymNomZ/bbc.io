@@ -38,13 +38,13 @@ public class ClientHandler {
             UserData i = it.next();
             if (i.id == player_id) {
                 it.remove();
-                lobby_context.users.addFirst(i);
+                lobby_context.users.add(0, i);
                 break;
             }
         }
 
         if (!ServerMain.DEBUG_WINDOW) {
-            Logging.write(this, "Entered player #" + lobby_context.users.getFirst().id);
+            Logging.write(this, "Entered player #" + lobby_context.users.get(0).id);
         }
 
         this.player_id = player_id;
@@ -97,7 +97,7 @@ public class ClientHandler {
                 // NOTE: Data sent here does not take to account those who reconnected
                 for (PlayerData player : lobby.players_data.values()) {
                     if (player.id == player_id) {
-                        UserData current = players_in_packet.getFirst();
+                        UserData current = players_in_packet.get(0);
                         current.score = player.score;
                         // add name if name is changed when player is in lobby (currently we dont)
 
@@ -204,7 +204,7 @@ public class ClientHandler {
                 for (ServerEntity i : in_range) {
                     if (i.player_id == player_id) {
                         old_player_entity = i;
-                        current_data.entities.addFirst(i.getEntityData());
+                        current_data.entities.add(0, (i.getEntityData()));
                         player_found = true;
                         continue;
                     }

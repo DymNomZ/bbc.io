@@ -173,7 +173,7 @@ public class ServerHandler {
                 stdout.read(); // ignore SerialData Type
                 LobbyData lobbyData = new LobbyData(stdout);
 
-                current_user = lobbyData.users.getFirst();
+                current_user = lobbyData.users.get(0);
 
                 is_connected = true;
                 input_packet = new DatagramPacket(new byte[9], 9, server.getInetAddress(), SocketConfig.PORT);
