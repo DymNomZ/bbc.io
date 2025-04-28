@@ -44,7 +44,7 @@ public class Lobby {
 
         input_thread = new Thread(this::inputThread);
         game_thread = new Thread(this::gameThread);
-        qtree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1, true);
+        qtree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1, true, 0);
         input_thread.start();
         game_thread.start();
     }
@@ -121,7 +121,7 @@ public class Lobby {
     }
 
     private QuadTree constructQTree(){
-        QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),2, true);
+        QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),2, true,0);
         for(ArrayList<ServerEntity> i : entity_data.values()) {
             for(ServerEntity s : i) {
                 tree.insert(s);

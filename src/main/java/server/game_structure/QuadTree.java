@@ -69,8 +69,10 @@ public class QuadTree {
     QuadTree northeast;
     QuadTree southeast;
     boolean divided;
+    int depth;
+    private static final int MAX_DEPTH = 10;
 
-    public QuadTree(QuadRectangle bounds, int capacity, boolean is_root) {
+    public QuadTree(QuadRectangle bounds, int capacity, boolean is_root, int depth) {
         entities = new ArrayList<ServerEntity>();
         this.capacity = capacity;
         this.bounds = bounds;
@@ -84,6 +86,7 @@ public class QuadTree {
         } else {
             root_entities = null;
         }
+        this.depth = depth;
     }
 
     public void subdivide() {
@@ -96,10 +99,10 @@ public class QuadTree {
 
         QuadRectangle se = new QuadRectangle(bounds.x + bounds.w/2, bounds.y + bounds.h/2, bounds.w/2, bounds.h/2);
 
-        northwest = new QuadTree(nw, capacity, false);
-        southwest = new QuadTree(sw, capacity, false);
-        northeast = new QuadTree(ne, capacity, false);
-        southeast = new QuadTree(se, capacity, false);
+        northwest = new QuadTree(nw, capacity, false,depth+1);
+        southwest = new QuadTree(sw, capacity, false,depth+1);
+        northeast = new QuadTree(ne, capacity, false,depth+1);
+        southeast = new QuadTree(se, capacity, false,depth+1);
         for (ServerEntity obj : entities) {
             insertIntoQuads(obj);
         }
@@ -128,7 +131,7 @@ public class QuadTree {
         if(!bounds.canContain(entity)) {
             return;
         }
-        if(entities.size() < capacity && !divided) {
+        if((entities.size() < capacity && !divided) || (depth >= MAX_DEPTH)) {
             entities.add(entity);
         } else {
             if(!divided) {
