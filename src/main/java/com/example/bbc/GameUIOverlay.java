@@ -16,7 +16,8 @@ public class GameUIOverlay {
 
     private Parent uiRoot;
     private GameUIController controller;
-    
+
+
     public GameUIOverlay() throws IOException {
         FXMLLoader uiLoader = new FXMLLoader(getClass().getResource("game-ui.fxml"));
         uiRoot = uiLoader.load();

@@ -6,6 +6,7 @@ import datas.EntityData;
 import datas.InputData;
 import java.util.Random;
 import interfaces.Collidable;
+import javafx.scene.shape.Circle;
 
 public abstract class ServerEntity implements Collidable<ServerEntity> {
     public double x, y, angle, radius;
@@ -28,6 +29,8 @@ public abstract class ServerEntity implements Collidable<ServerEntity> {
         speed = StatsConfig.PLAYER_SPEED;
         last_moved_time = game_clock;
     }
+
+    public abstract Circle getHitbox();
 
 
     public ServerEntity(long game_clock, double radius, int player_id, double angle) {

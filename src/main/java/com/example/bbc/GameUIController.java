@@ -84,6 +84,7 @@ public class GameUIController {
         }
     }
 
+
     public void onUpgradeSpeed(ActionEvent actionEvent) {
         speed.set(speed.get() + 3);
         xp.set(xp.get() - 10);
@@ -143,6 +144,14 @@ public class GameUIController {
         if (healthBar != null) {
             // Decrease by 10%, ensure it doesn't go below 0
             healthBar.setProgress(Math.max(0, healthBar.getProgress() - 0.1));
+            //TODO: Damage logic
+        }
+    }
+
+    public void setProgressBar(double progress, double max){
+        if (healthBar != null) {
+            // Decrease by 10%, ensure it doesn't go below 0
+            healthBar.setProgress(Math.max(0, max / progress));
             //TODO: Damage logic
         }
     }

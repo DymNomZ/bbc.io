@@ -70,7 +70,7 @@ public class QuadTree {
     QuadTree southeast;
     boolean divided;
     int depth;
-    private static final int MAX_DEPTH = 10;
+    private static final int MAX_DEPTH = 50;
 
     public QuadTree(QuadRectangle bounds, int capacity, boolean is_root, int depth) {
         entities = new ArrayList<ServerEntity>();

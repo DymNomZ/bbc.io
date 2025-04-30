@@ -4,6 +4,8 @@ import configs.DimensionConfig;
 import configs.StatsConfig;
 import datas.EntityData;
 import datas.InputData;
+import javafx.scene.shape.Circle;
+import utils.Logging;
 
 public class PlayerEntity extends ServerEntity{
     public int health;
@@ -17,6 +19,11 @@ public class PlayerEntity extends ServerEntity{
         time_damaged = 0;
     }
 
+    public void damage(double amount){
+        Logging.write(this,"I GOT DAMAGED");
+        health -= (int) amount;
+    }
+
     @Override
     public boolean isCollidingWith(ServerEntity other) {
 
@@ -26,6 +33,11 @@ public class PlayerEntity extends ServerEntity{
     @Override
     public void handleCollision(ServerEntity other) {
 
+    }
+
+    @Override
+    public Circle getHitbox() {
+        return new Circle(DimensionConfig.PLAYER_RADIUS);
     }
 
     @Override

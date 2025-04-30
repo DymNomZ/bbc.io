@@ -114,18 +114,34 @@ public class Lobby {
                 RangeCircle circle = new RangeCircle(entity.x, entity.y, entity.radius + 1);
                 List<ServerEntity> collision = tree.query(circle);
                 for (ServerEntity other : collision) {
-                    if (entity != other) entity.isCollidingWith(other);
+                    if (entity != other) {
+                        handleCollision(entity, other);
+                    }
                 }
             }
         }
     }
 
+    private void handleCollision(ServerEntity entity, ServerEntity other_entity){
+        if(entity.isCollidingWith(other_entity)){
+            entity.handleCollision(other_entity);
+        }
+    }
+
     private QuadTree constructQTree(){
         QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),2, true,0);
+
         for(ArrayList<ServerEntity> i : entity_data.values()) {
-            for(ServerEntity s : i) {
+            Iterator<ServerEntity> iterator = i.iterator();
+            while(iterator.hasNext()){
+                ServerEntity s = iterator.next();
+                if(s instanceof ProjectileEntity && ((ProjectileEntity)s).has_collided){
+                    iterator.remove();
+                    continue;
+                }
                 tree.insert(s);
             }
+
         }
 
         return tree;
@@ -142,21 +158,28 @@ public class Lobby {
     private void moveEntities(long game_clock){
         StringBuilder location_sb = new StringBuilder();
         for (PlayerData i : entity_data.keySet()) {
-            for(ServerEntity entity : entity_data.get(i)) {
 
-                entity.move(game_clock, i);
+            // TODO: possible that .get may return null
+            for (Iterator<ServerEntity> iter = entity_data.get(i).iterator(); iter.hasNext();) {
+                ServerEntity e = iter.next();
+
+                if (e instanceof ProjectileEntity p && !p.isAlive(game_clock)) {
+                    iter.remove();
+                    continue;
+                }
+
+                e.move(game_clock, i);
 
                 // TODO: Logging in every loop will greatly hinder the game thread (Remove at production)
-                location_sb.append(entity.toString());
+                location_sb.append(e.toString());
             }
         }
 
         if (ServerMain.DEBUG_WINDOW) {
-
+            DebugWindow.log(location_sb.toString());
         } else {
             Logging.write(this, location_sb.toString());
         }
-        DebugWindow.log(location_sb.toString());
     }
 
     private void inputThread() {

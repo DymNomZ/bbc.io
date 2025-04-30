@@ -1,5 +1,6 @@
 package com.example.bbc;
 
+import configs.StatsConfig;
 import datas.*;
 import entities.Entity;
 import entities.ProjectileEntity;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Helpers.rgbBytesToColor;
+import static utils.Scenes.UI_OVERLAY;
 
 public class GameScene extends Scene {
 
@@ -55,6 +57,9 @@ public class GameScene extends Scene {
     public static List<Line> horizontal_bg_lines;
 
     public static boolean can_be_damaged = true;
+    public static GameUIController game_ui_controller;
+
+
 
     public GameScene() {
         super(root, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -62,6 +67,11 @@ public class GameScene extends Scene {
 
         vertical_bg_lines = new ArrayList<>();
         horizontal_bg_lines = new ArrayList<>();
+
+        Platform.runLater(() -> {
+            game_ui_controller = UI_OVERLAY.getController();
+        });
+
 
         HEIGHT_PROPERTY.addListener((observable, oldValue, newValue) -> {
             recalculate();
@@ -152,6 +162,7 @@ public class GameScene extends Scene {
                     List<EntityData> entities = data.entities;
                     double x = entities.get(0).x;
                     double y = entities.get(0).y;
+                    game_ui_controller.setProgressBar(StatsConfig.PLAYER_HEALTH,entities.getFirst().health);
                     main_player.pos_x = x;
                     main_player.pos_y = y;
                     main_player.setAngle(entities.get(0).angle);
