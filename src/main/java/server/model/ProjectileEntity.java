@@ -45,6 +45,7 @@ public class ProjectileEntity extends ServerEntity implements Collidable<ServerE
     public void handleCollision(ServerEntity other) {
         if(other instanceof PlayerEntity && other.player_id != this.player_id && !has_collided) {
             has_collided = true;
+            ((PlayerEntity)other).last_hit_player_id = player_id;
             ((PlayerEntity)other).damage(StatsConfig.PROJECTILE_DAMAGE);
         }
     }

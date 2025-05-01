@@ -9,6 +9,7 @@ import utils.Logging;
 
 public class PlayerEntity extends ServerEntity{
     public int health;
+    public int last_hit_player_id;
 
     // Last player got damaged time in millisecond (Used to render damage animations in client)
     public long time_damaged;

@@ -104,7 +104,6 @@ public class Lobby {
                 entity_data.get(playerData).add(p);
                 playerData.last_shoot = game_clock;
             }
-
         }
     }
 
@@ -139,12 +138,36 @@ public class Lobby {
                     iterator.remove();
                     continue;
                 }
+                if(s instanceof PlayerEntity && ((PlayerEntity)s).health <= 0){
+                    handleDeath((PlayerEntity)s);
+                }
                 tree.insert(s);
             }
 
         }
 
         return tree;
+    }
+
+    private void handleDeath(PlayerEntity s) {
+        PlayerData killer_data = getPlayerDataWithId(s.last_hit_player_id);
+        PlayerData victim_data = getPlayerDataWithId(s.player_id);
+
+        assert killer_data != null;
+        assert victim_data != null;
+
+        String death_message = DeathMessageGenerator.getRandomDeathMessage(victim_data.name,killer_data.name);
+        //TODO DEATH HANDLING
+        s.health = 100;
+        System.out.println(death_message);
+    }
+    private PlayerData getPlayerDataWithId(int id){
+        for(PlayerData p : players_data.values()) {
+            if(p.id == id){
+                return p;
+            }
+        }
+        return null;
     }
 
     private void handleSpawnQueue(long game_clock){
