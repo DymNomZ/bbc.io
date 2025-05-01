@@ -10,14 +10,17 @@ public class TankEntity extends Entity {
     Circle main_body;
     Rectangle turret;
 
+    public double health;
+    public double max_health;
+
     // constructor for base colors
     // - Lance
     public TankEntity() {
-        this(Color.BLUE, Color.RED, Color.BLACK);
+        this(Color.BLUE, Color.RED, Color.BLACK,100,100);
     }
     
     // adjustments for user-chosen color options to apply
-    public TankEntity(Paint bodyColor, Paint barrelColor, Paint borderColor) {
+    public TankEntity(Paint bodyColor, Paint barrelColor, Paint borderColor, double health, double max_health) {
         Circle circle = new Circle();
         circle.setRadius(20);
         circle.setFill(bodyColor);
@@ -30,6 +33,9 @@ public class TankEntity extends Entity {
         rectangle.setFill(barrelColor);
         rectangle.setStroke(borderColor);
         rectangle.setStrokeWidth(2.0);
+
+        this.health = health;
+        this.max_health = max_health;
 
         //rectangle skews to the right initially, this aligns it to the center of the circle
         //Credits Seth - Dymes

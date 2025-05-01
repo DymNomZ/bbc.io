@@ -1,5 +1,6 @@
 package com.example.bbc;
 
+import classes.EnemyHPBar;
 import configs.StatsConfig;
 import datas.*;
 import entities.Entity;
@@ -177,15 +178,15 @@ public class GameScene extends Scene {
                             }
                             //find the user with the given id
                             for(UserData ud : SERVER_API.users_in_lobby){
-//                            if(ed.id == ud.id){
                                 Paint body_color = rgbBytesToColor(ud.body_color);
                                 Paint barrel_color = rgbBytesToColor(ud.barrel_color);
                                 Paint border_color = rgbBytesToColor(ud.border_color);
-                                TankEntity tank = new TankEntity(body_color, barrel_color, border_color);
+                                TankEntity tank = new TankEntity(body_color, barrel_color, border_color,ed.health,StatsConfig.PLAYER_HEALTH);
                                 tank.setPosition(ed.x - x, ed.y - y);
+                                tank.pos_x = ed.x - x;
+                                tank.pos_y = ed.y - y;
                                 tank.setAngle(ed.angle);
                                 received_entities.add(tank);
-//                            }
                             }
                         }
                         else{
@@ -368,12 +369,18 @@ public class GameScene extends Scene {
                 return false;
             });
             entity_list.clear();
+            server_entities_container.getChildren().clear();
 
             synchronized (received_entities) {
                 update();
                 for (Entity e : received_entities) {
                     entity_list.add(e);
                     e.render(root);
+                    if(e instanceof TankEntity) {
+                        EnemyHPBar hpBar = new EnemyHPBar(((TankEntity)e).health,((TankEntity)e).max_health);
+                        hpBar.setPosition(e.pos_x - 5, e.pos_y - 30);
+                        server_entities_container.getChildren().add((hpBar.group));
+                    }
                 }
             }
 
