@@ -10,6 +10,7 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -38,7 +39,7 @@ public class GameScene extends Scene {
 
     public static ReadOnlyDoubleProperty WIDTH_PROPERTY = IOGame.MAIN_STAGE.widthProperty();
     public static ReadOnlyDoubleProperty HEIGHT_PROPERTY = IOGame.MAIN_STAGE.heightProperty();
-    public static double SCREEN_WIDTH = 1280,  SCREEN_HEIGHT = 720;
+    public static double SCREEN_WIDTH = IOGame.MAIN_STAGE.widthProperty().doubleValue(),  SCREEN_HEIGHT = IOGame.MAIN_STAGE.heightProperty().doubleValue();
 
     public static StackPane root = new StackPane();
     public static final StackPane server_entities_container = new StackPane();
@@ -65,6 +66,8 @@ public class GameScene extends Scene {
     public GameScene() {
         super(root, SCREEN_WIDTH, SCREEN_HEIGHT);
         System.out.println("Screen Dimensions: " + SCREEN_WIDTH + ", " + SCREEN_HEIGHT);
+
+        root.setAlignment(Pos.CENTER);
 
         vertical_bg_lines = new ArrayList<>();
         horizontal_bg_lines = new ArrayList<>();
@@ -270,7 +273,7 @@ public class GameScene extends Scene {
 
     private void adjustBackground(){
         clearBackground();
-        for(int i = 0 - (int)SCREEN_WIDTH;i < SCREEN_WIDTH;i += 80){
+        for(int i = 0 - (int)SCREEN_WIDTH - 100;i < SCREEN_WIDTH + 100;i += 80){
             Line l = new Line(0,0,0,SCREEN_HEIGHT);
             l.setStrokeWidth(2.0);
             l.setTranslateX(i);
@@ -279,7 +282,7 @@ public class GameScene extends Scene {
             root.getChildren().add(l);
             l.toBack();
         }
-        for(int i = 0 - (int)SCREEN_HEIGHT;i < SCREEN_HEIGHT;i += 80){
+        for(int i = 0 - (int)SCREEN_HEIGHT - 100;i < SCREEN_HEIGHT + 100;i += 80){
             Line l = new Line(0,0,SCREEN_WIDTH,0);
             l.setStrokeWidth(2.0);
             l.setTranslateY(i);

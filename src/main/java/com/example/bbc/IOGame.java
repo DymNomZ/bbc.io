@@ -1,6 +1,8 @@
 package com.example.bbc;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import utils.FontLoader;
 import utils.Scenes;
@@ -19,6 +21,12 @@ public class IOGame extends Application {
         MAIN_STAGE.setMinWidth(1280);
         MAIN_STAGE.setMinHeight(720);
         MAIN_STAGE.setScene(Scenes.TITLE_SCENE);
+        Platform.runLater(() -> {
+            Region root = (Region) IOGame.MAIN_STAGE.getScene().getRoot();
+            root.applyCss();
+            root.layout();
+        });
+
         MAIN_STAGE.setWidth(1280);
         MAIN_STAGE.setHeight(720);
         // Maximize window by default

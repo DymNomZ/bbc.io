@@ -17,14 +17,15 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-color: #2C3E50;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.GameLobbyUIController">
+
+<VBox alignment="CENTER" style="-fx-background-color: #2C3E50;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.GameLobbyUIController">
    <children>
-      <Label alignment="CENTER" layoutX="0.0" layoutY="40.0" prefHeight="60.0" prefWidth="1280.0" text="CUSTOMIZE YOUR TANK" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <Label alignment="CENTER" prefHeight="60.0" prefWidth="1280.0" text="CUSTOMIZE YOUR TANK" textFill="WHITE">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutX="244.8000030517578" layoutY="145.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.leftAnchor="245.0" AnchorPane.rightAnchor="245.0">
+      <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>
             <VBox alignment="CENTER" spacing="40.0">
                <HBox alignment="CENTER" spacing="100.0">
@@ -133,10 +134,10 @@
             </VBox>
          </children>
       </HBox>
-      <Label alignment="CENTER" layoutX="0.0" layoutY="620.0" prefWidth="1280.0" text="Choose your tank colors and press READY when you're finished" textFill="#bdc3c7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <Label alignment="CENTER" prefWidth="1280.0" text="Choose your tank colors and press READY when you're finished" textFill="#bdc3c7">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
    </children>
-</AnchorPane>
+</VBox>
