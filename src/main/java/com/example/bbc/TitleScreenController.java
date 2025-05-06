@@ -21,8 +21,7 @@ import java.util.List;
 
 import static com.example.bbc.IOGame.MAIN_STAGE;
 import static com.example.bbc.IOGame.SERVER_API;
-import static utils.Scenes.LOBBY_SCENE;
-import static utils.Scenes.titleSceneFXML;
+import static utils.Scenes.*;
 
 public class TitleScreenController {
     public ImageView titleImageView;
@@ -77,10 +76,15 @@ public class TitleScreenController {
                 SERVER_API.users_in_lobby.addAll(data.users);
 
                 Platform.runLater(() -> {
-                    MAIN_STAGE.setScene(LOBBY_SCENE);
+                    try {
+                        IOGame.changeScene(lobbySceneFXMLResource);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     Region root = (Region) IOGame.MAIN_STAGE.getScene().getRoot();
                     root.applyCss();
                     root.layout();
+                    MAIN_STAGE.centerOnScreen();
 
                     GameScene.initializeOnGameUpdate();
                 });

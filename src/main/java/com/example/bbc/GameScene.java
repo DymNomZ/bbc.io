@@ -353,7 +353,6 @@ public class GameScene extends Scene {
                 SERVER_API.sendUserInput(packet);
             }
 
-            Logging.write(this,"Player is looking at: " + main_player.getAngle());
 
             if (lastUpdate == 0) {
                 lastUpdate = now;

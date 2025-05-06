@@ -2,6 +2,9 @@ package com.example.bbc;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import utils.FontLoader;
@@ -40,5 +43,22 @@ public class IOGame extends Application {
     public static void main(String[] args) {
         FontLoader.loadGameFonts();
         launch();
+    }
+    public static void changeScene(String sceneFXML) throws IOException {
+        double w = MAIN_STAGE.getWidth();
+        double h = MAIN_STAGE.getHeight();
+
+        FXMLLoader loader = new FXMLLoader(IOGame.class.getResource(sceneFXML));
+        Parent root = loader.load();
+        Scene scene = new Scene(root, w, h);
+        MAIN_STAGE.setScene(scene);
+
+        // Force layout fix
+        Platform.runLater(() -> {
+            System.out.println("Bounds: " + root.getLayoutBounds());
+            System.out.println("Width: " + root.getScene().getWidth());
+            root.applyCss();
+            root.layout();
+        });
     }
 }

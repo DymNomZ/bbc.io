@@ -158,8 +158,8 @@ public class Lobby {
 
         String death_message = DeathMessageGenerator.getRandomDeathMessage(victim_data.name,killer_data.name);
         //TODO DEATH HANDLING
-        s.health = 100;
-        System.out.println(death_message);
+        entity_data.remove(victim_data);
+        spawn_queue.add(victim_data);
     }
     private PlayerData getPlayerDataWithId(int id){
         for(PlayerData p : players_data.values()) {

@@ -22,6 +22,10 @@ public class Scenes {
     public static FXMLLoader titleSceneFXML = new FXMLLoader(IOGame.class.getResource("title-scene.fxml"));
     public static FXMLLoader lobbySceneFXML = new FXMLLoader(IOGame.class.getResource("game-lobby-ui.fxml"));
     public static FXMLLoader devsFXML = new FXMLLoader(Scenes.class.getResource("dev-page.fxml"));
+
+    public static String titleSceneFXMLResource = "title-scene.fxml";
+    public static String lobbySceneFXMLResource = "game-lobby-ui.fxml";
+    public static String devsSceneFXMLResource = "dev-page.fxml";
     
     static {
         try {

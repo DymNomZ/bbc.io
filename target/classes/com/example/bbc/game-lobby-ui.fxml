@@ -17,14 +17,14 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-color: #2C3E50;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.GameLobbyUIController">
+<VBox fx:id="root" alignment="CENTER" style="-fx-background-color: #2C3E50;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.GameLobbyUIController">
    <children>
-      <Label alignment="CENTER" layoutX="0.0" layoutY="40.0" prefHeight="60.0" prefWidth="1280.0" text="CUSTOMIZE YOUR TANK" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <Label alignment="CENTER" prefHeight="60.0" prefWidth="1280.0" text="CUSTOMIZE YOUR TANK" textFill="WHITE">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutX="244.8000030517578" layoutY="145.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.leftAnchor="245.0" AnchorPane.rightAnchor="245.0">
+      <HBox alignment="CENTER">
          <children>
             <VBox alignment="CENTER" spacing="40.0">
                <HBox alignment="CENTER" spacing="100.0">
@@ -41,12 +41,16 @@
                                     <Insets bottom="20.0" />
                                  </VBox.margin>
                               </Label>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                              <StackPane>
                                  <children>
-                                    <Rectangle fx:id="spTankBarrel" arcHeight="5.0" arcWidth="5.0" fill="#5b6bff" height="30.0" layoutX="147.0" layoutY="85.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" width="100.0" />
-                                    <Circle fx:id="spTankBody" fill="#fa7579" layoutX="117.0" layoutY="100.0" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" />
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <Rectangle fx:id="spTankBarrel" arcHeight="5.0" arcWidth="5.0" fill="#5b6bff" height="30.0" layoutX="147.0" layoutY="85.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" width="100.0" />
+                                          <Circle fx:id="spTankBody" fill="#fa7579" layoutX="117.0" layoutY="100.0" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" />
+                                       </children>
+                                    </AnchorPane>
                                  </children>
-                              </AnchorPane>
+                              </StackPane>
                            </children>
                         </VBox>
                      </children>
@@ -133,10 +137,13 @@
             </VBox>
          </children>
       </HBox>
-      <Label alignment="CENTER" layoutX="0.0" layoutY="620.0" prefWidth="1280.0" text="Choose your tank colors and press READY when you're finished" textFill="#bdc3c7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <Label alignment="CENTER" prefWidth="1280.0" text="Choose your tank colors and press READY when you're finished" textFill="#bdc3c7">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
    </children>
-</AnchorPane>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>
