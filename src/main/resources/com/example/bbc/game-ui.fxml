@@ -63,6 +63,9 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
         <children>
+         <ProgressBar fx:id="upgradesHealthBarBehind" prefHeight="20.0" prefWidth="180.0" progress="1.0" styleClass="upgrades-bar-health-behind" GridPane.columnSpan="4" />
+         <ProgressBar fx:id="upgradesSpeedBarBehind" prefHeight="20.0" prefWidth="180.0" progress="1.0" styleClass="upgrades-bar-speed-behind" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+         <ProgressBar fx:id="upgradesDamageBarBehind" prefHeight="20.0" prefWidth="180.0" progress="1.0" styleClass="upgrades-bar-damage-behind" GridPane.columnSpan="4" GridPane.rowIndex="2" />
             <ProgressBar fx:id="upgradesHealthBar" prefHeight="20.0" prefWidth="180.0" progress="1.0" styleClass="upgrades-bar-health" GridPane.columnSpan="4" />
             <ProgressBar fx:id="upgradesSpeedBar" prefHeight="20.0" prefWidth="180.0" progress="1.0" styleClass="upgrades-bar-speed" GridPane.columnSpan="4" GridPane.rowIndex="1" />
             <ProgressBar fx:id="upgradesDamageBar" prefHeight="20.0" prefWidth="180.0" progress="1.0" styleClass="upgrades-bar-damage" GridPane.columnSpan="4" GridPane.rowIndex="2" />

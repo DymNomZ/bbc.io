@@ -58,6 +58,16 @@
 }
 
 .upgrades-bar-health .track {
+    -fx-background-color: transparent;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-bar-health-behind .bar {
+    -fx-background-color: #8c4648;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-bar-health-behind .track {
     -fx-background-color: #2e2b27;
     -fx-background-radius: 30px;
 }
@@ -68,6 +78,16 @@
 }
 
 .upgrades-bar-speed .track {
+    -fx-background-color: transparent;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-bar-speed-behind .bar {
+    -fx-background-color: #8a7f50;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-bar-speed-behind .track {
     -fx-background-color: #2e2b27;
     -fx-background-radius: 30px;
 }
@@ -78,6 +98,16 @@
 }
 
 .upgrades-bar-damage .track {
+    -fx-background-color: transparent;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-bar-damage-behind .bar {
+    -fx-background-color: #4c5e85;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-bar-damage-behind .track {
     -fx-background-color: #2e2b27;
     -fx-background-radius: 30px;
 }
