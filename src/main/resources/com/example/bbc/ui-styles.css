@@ -52,6 +52,50 @@
     -fx-background-radius: 30px;
 }
 
+.upgrades-bar-health .bar {
+    -fx-background-color: #FA7579;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-bar-health .track {
+    -fx-background-color: #2e2b27;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-bar-speed .bar {
+    -fx-background-color: #F8E693;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-bar-speed .track {
+    -fx-background-color: #2e2b27;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-bar-damage .bar {
+    -fx-background-color: #8EB2FE;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-bar-damage .track {
+    -fx-background-color: #2e2b27;
+    -fx-background-radius: 30px;
+}
+
+.upgrades-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2e2b27;
+    -fx-font-family: "Coolvetica";
+    -fx-font-weight: bold;
+}
+
+.upgrades-label {
+    -fx-background-color: transparent;
+    -fx-text-fill: #000000;
+    -fx-font-family: "Coolvetica";
+    -fx-font-weight: bold;
+}
+
 #bottomPanel {
     -fx-background-color: rgba(0, 0, 0, 0.0);
     -fx-background-radius: 5;

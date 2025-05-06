@@ -24,7 +24,8 @@ public class ProjectileEntity extends Entity {
         circle.setRadius(5);
         this.angle = angle;
         entity_group.getChildren().add(circle);
-        this.original_position = new Point2D(x, y);
+        entity_group.setLayoutX(x);
+        entity_group.setLayoutY(y);
     }
 
     public double distanceFromOriginalPosition(){

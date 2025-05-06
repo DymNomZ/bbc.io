@@ -28,11 +28,8 @@ public abstract class Entity {
         pos_y = (int)(Math.random() * 10);
     }
 
-    //FIXME boang rendering
     public void render(StackPane root) {
-        Platform.runLater(()->{
-            root.getChildren().add(entity_group);
-        });
+        root.getChildren().add(entity_group);
     }
 
     private long last_shot_time = 0;
@@ -67,6 +64,24 @@ public abstract class Entity {
     //FOR ENTITY DATA READING
     public void lookAt(double angle){
         // Apply rotation
+        rotation.setAngle(angle);
+    }
+
+    public double getAngle() {
+        double mouse_x, mouse_y, angle = 0;
+
+        if(mouse_handler.event != null){
+
+            mouse_x = mouse_handler.event.getSceneX();
+            mouse_y = mouse_handler.event.getSceneY();
+            // Calculate angle to target (x, y)
+            angle = Math.toDegrees(Math.atan2(mouse_y - entity_group.getLayoutY(), mouse_x - entity_group.getLayoutX()));
+        }
+
+        return angle;
+    }
+
+    public void setAngle(double angle) {
         rotation.setAngle(angle);
     }
 

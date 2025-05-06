@@ -2,6 +2,7 @@ package server;
 
 import configs.DimensionConfig;
 import configs.SocketConfig;
+import configs.StatsConfig;
 import datas.*;
 import server.debug.DebugWindow;
 import server.game_structure.QuadRectangle;
@@ -14,16 +15,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.WeakHashMap;
+import java.util.*;
 
 public class Lobby {
     public HashMap<UDPAddress, PlayerData> players_data = new HashMap<>();
 
     // TODO: May be replaced for quad trees data struct
-    public WeakHashMap<PlayerData, ServerEntity> entity_data = new WeakHashMap<>();
+    public WeakHashMap<PlayerData, ArrayList<ServerEntity>> entity_data = new WeakHashMap<>();
 
     public LinkedList<PlayerData> spawn_queue = new LinkedList<>();
     static private int ID = 1;
@@ -44,19 +42,9 @@ public class Lobby {
         input_socket = new DatagramSocket(SocketConfig.PORT);
         input_socket.setSoTimeout(10);
 
-        input_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                inputThread();
-            }
-        });
-        game_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                gameThread();
-            }
-        });
-        qtree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1, true);
+        input_thread = new Thread(this::inputThread);
+        game_thread = new Thread(this::gameThread);
+        qtree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1, true, 0);
         input_thread.start();
         game_thread.start();
     }
@@ -64,11 +52,17 @@ public class Lobby {
     private void gameThread() {
         while (running) {
             long game_clock = System.currentTimeMillis();
-            StringBuilder sb = new StringBuilder();
-            for (PlayerData i : players_data.values()) {
-                sb.append(i.toString() + "\n");
+
+            // TODO: Logging in every loop will greatly hinder the game thread (Remove at production)
+            if (ServerMain.DEBUG_WINDOW) {
+                StringBuilder sb = new StringBuilder();
+                for (PlayerData i : players_data.values()) {
+                    sb.append(i.toString()).append("\n");
+                }
+                DebugWindow.logPlayers(sb.toString());
             }
-            DebugWindow.logPlayers(sb.toString());
+
+            spawnProjectiles(game_clock);
 
             moveEntities(game_clock);
 
@@ -90,45 +84,125 @@ public class Lobby {
         }
     }
 
-    private void quadCollisionCheck(QuadTree tree){
-        for (ServerEntity entity: entity_data.values()) {
-            RangeCircle circle = new RangeCircle(entity.x, entity.y, entity.radius + 1);
-            List<ServerEntity> collision = tree.query(circle);
-            for (ServerEntity other : collision) {
-                if (entity != other) entity.isCollidingWith(other);
+    private void spawnProjectiles(long game_clock) {
+        for(PlayerData i : players_data.values()) {
+            InputData inputData = i.getInputs();
+            if(inputData.lClick_pressed){
+                shoot(i, game_clock);
             }
         }
     }
 
+    private void shoot(PlayerData playerData, long game_clock){
+        if(game_clock - playerData.last_shoot >= StatsConfig.PLAYER_SHOOT_COOLDOWN) {
+            ArrayList<ServerEntity> chain = entity_data.get(playerData);
+
+            if (chain != null) {
+                ProjectileEntity p = new ProjectileEntity(game_clock, playerData.id, playerData.getInputs().angle);
+                p.x = chain.get(0).x;
+                p.y = chain.get(0).y;
+                entity_data.get(playerData).add(p);
+                playerData.last_shoot = game_clock;
+            }
+        }
+    }
+
+    private void quadCollisionCheck(QuadTree tree){
+        for(ArrayList<ServerEntity> i : entity_data.values()) {
+            for(ServerEntity entity : i) {
+                RangeCircle circle = new RangeCircle(entity.x, entity.y, entity.radius + 1);
+                List<ServerEntity> collision = tree.query(circle);
+                for (ServerEntity other : collision) {
+                    if (entity != other) {
+                        handleCollision(entity, other);
+                    }
+                }
+            }
+        }
+    }
+
+    private void handleCollision(ServerEntity entity, ServerEntity other_entity){
+        if(entity.isCollidingWith(other_entity)){
+            entity.handleCollision(other_entity);
+        }
+    }
+
     private QuadTree constructQTree(){
-        QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),1, true);
-        for(ServerEntity s : entity_data.values()){
-            tree.insert(s);
+        QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),2, true,0);
+
+        for(ArrayList<ServerEntity> i : entity_data.values()) {
+            Iterator<ServerEntity> iterator = i.iterator();
+            while(iterator.hasNext()){
+                ServerEntity s = iterator.next();
+                if(s instanceof ProjectileEntity && ((ProjectileEntity)s).has_collided){
+                    iterator.remove();
+                    continue;
+                }
+                if(s instanceof PlayerEntity && ((PlayerEntity)s).health <= 0){
+                    handleDeath((PlayerEntity)s);
+                }
+                tree.insert(s);
+            }
+
         }
 
         return tree;
     }
 
+    private void handleDeath(PlayerEntity s) {
+        PlayerData killer_data = getPlayerDataWithId(s.last_hit_player_id);
+        PlayerData victim_data = getPlayerDataWithId(s.player_id);
+
+        assert killer_data != null;
+        assert victim_data != null;
+
+        String death_message = DeathMessageGenerator.getRandomDeathMessage(victim_data.name,killer_data.name);
+        //TODO DEATH HANDLING
+        s.health = 100;
+        System.out.println(death_message);
+    }
+    private PlayerData getPlayerDataWithId(int id){
+        for(PlayerData p : players_data.values()) {
+            if(p.id == id){
+                return p;
+            }
+        }
+        return null;
+    }
+
     private void handleSpawnQueue(long game_clock){
         while (!spawn_queue.isEmpty()) {
             PlayerData player = spawn_queue.remove();
-            entity_data.put(player, new PlayerEntity(game_clock,player.id));
+            ArrayList<ServerEntity> entities = new ArrayList<>();
+            entities.add(new PlayerEntity(game_clock,player.id));
+            entity_data.put(player, entities);
         }
     }
     private void moveEntities(long game_clock){
         StringBuilder location_sb = new StringBuilder();
         for (PlayerData i : entity_data.keySet()) {
-            ServerEntity entity = entity_data.get(i);
 
-            if (entity instanceof ProjectileEntity) {
-                entity.move(game_clock);
-            } else {
-                entity.move(game_clock, i.getInputs());
+            // TODO: possible that .get may return null
+            for (Iterator<ServerEntity> iter = entity_data.get(i).iterator(); iter.hasNext();) {
+                ServerEntity e = iter.next();
+
+                if (e instanceof ProjectileEntity p && !p.isAlive(game_clock)) {
+                    iter.remove();
+                    continue;
+                }
+
+                e.move(game_clock, i);
+
+                // TODO: Logging in every loop will greatly hinder the game thread (Remove at production)
+                location_sb.append(e.toString());
             }
-
-            location_sb.append(entity.toString());
         }
-        DebugWindow.log(location_sb.toString());
+
+        if (ServerMain.DEBUG_WINDOW) {
+            DebugWindow.log(location_sb.toString());
+        } else {
+            Logging.write(this, location_sb.toString());
+        }
     }
 
     private void inputThread() {

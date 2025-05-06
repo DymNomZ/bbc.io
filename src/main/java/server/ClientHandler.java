@@ -5,6 +5,7 @@ import datas.*;
 import server.game_structure.QuadTree;
 import server.game_structure.RangeCircle;
 import server.model.PlayerData;
+import server.model.PlayerEntity;
 import server.model.ServerEntity;
 import server.model.UDPAddress;
 import utils.Logging;
@@ -26,7 +27,7 @@ public class ClientHandler {
     private final Socket tcp_socket;
     private GameData current_data = new GameData();
     private final Lobby lobby;
-    private LobbyData lobby_context;
+    private final LobbyData lobby_context;
     private final UDPAddress UDPAddr;
     private boolean player_dead = true;
     private final int player_id;
@@ -38,9 +39,13 @@ public class ClientHandler {
             UserData i = it.next();
             if (i.id == player_id) {
                 it.remove();
-                lobby_context.users.addFirst(i);
+                lobby_context.users.add(0, i);
                 break;
             }
+        }
+
+        if (!ServerMain.DEBUG_WINDOW) {
+            Logging.write(this, "Entered player #" + lobby_context.users.get(0).id);
         }
 
         this.player_id = player_id;
@@ -48,18 +53,8 @@ public class ClientHandler {
         this.lobby = lobby;
         this.UDPAddr = UDPAddr;
 
-        TCP_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TCPThread();
-            }
-        });
-        UDP_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                UDPOutputThread();
-            }
-        });
+        TCP_thread = new Thread(this::TCPThread);
+        UDP_thread = new Thread(this::UDPOutputThread);
         TCP_thread.start();
     }
 
@@ -67,6 +62,8 @@ public class ClientHandler {
         try {
             OutputStream stdin = tcp_socket.getOutputStream();
             InputStream stdout = tcp_socket.getInputStream();
+
+            LinkedList<UserData> players_in_packet = (LinkedList<UserData>) lobby_context.users;
 
             // Initial lobby data of leaderboard
             stdin.write(lobby_context.serialize());
@@ -95,14 +92,72 @@ public class ClientHandler {
                         }
                     }
                 } catch (SocketTimeoutException ignored) {}
-                // TODO: send lobby data
+
+                ListIterator<UserData> context_iter = players_in_packet.listIterator(1);
+
+                // NOTE: Data sent here does not take to account those who reconnected
+                for (PlayerData player : lobby.players_data.values()) {
+                    if (player.id == player_id) {
+                        UserData current = players_in_packet.get(0);
+                        current.score = player.score;
+                        // add name if name is changed when player is in lobby (currently we dont)
+
+                        current.type = UserData.USER_PARTIAL;
+
+                        if (!Arrays.equals(current.barrel_color, player.barrel_color)) {
+                            current.type = UserData.USER_FULL;
+                            current.barrel_color = player.barrel_color.clone();
+                        }
+                        if (!Arrays.equals(current.body_color, player.body_color)) {
+                            current.type = UserData.USER_FULL;
+                            current.body_color = player.body_color.clone();
+                        }
+                        if (!Arrays.equals(current.border_color, player.border_color)) {
+                            current.type = UserData.USER_FULL;
+                            current.border_color = player.border_color.clone();
+                        }
+                    } else {
+                        UserData cur = context_iter.hasNext() ? context_iter.next() : null;
+
+                        while (cur != null && cur.id < player.id) {
+                            context_iter.remove();
+                            cur = context_iter.hasNext() ? context_iter.next() : null;
+                        }
+
+                        if (cur == null) {
+                            context_iter.add(new UserData(player));
+                        } else {
+                            cur.score = player.score;
+                            cur.type = UserData.USER_PARTIAL;
+
+                            if (!Arrays.equals(cur.barrel_color, player.barrel_color)) {
+                                cur.type = UserData.USER_FULL;
+                                cur.barrel_color = player.barrel_color.clone();
+                            }
+                            if (!Arrays.equals(cur.body_color, player.body_color)) {
+                                cur.type = UserData.USER_FULL;
+                                cur.body_color = player.body_color.clone();
+                            }
+                            if (!Arrays.equals(cur.border_color, player.border_color)) {
+                                cur.type = UserData.USER_FULL;
+                                cur.border_color = player.border_color.clone();
+                            }
+                        }
+                    }
+                }
+
+                while (context_iter.hasNext()) {
+                    context_iter.next();
+                    context_iter.remove();
+                }
+
                 stdin.write(lobby_context.serialize());
                 stdin.flush();
 
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    throw new IOException();
+                    break;
                 }
             }
         } catch (IOException ignored) {}
@@ -133,7 +188,7 @@ public class ClientHandler {
 
                 if (old_player_entity == null) {
                     for (ServerEntity i : tree.root_entities) {
-                        if (i.player_id == player_id) {
+                        if (i.player_id == player_id && i instanceof PlayerEntity) {
                             old_player_entity = i;
                             break;
                         }
@@ -148,9 +203,9 @@ public class ClientHandler {
                 //Logging.write(this,in_range.size()+" " + old_player_entity);
                 player_found = false;
                 for (ServerEntity i : in_range) {
-                    if (i.player_id == player_id) {
+                    if (i.player_id == player_id && i instanceof PlayerEntity) {
                         old_player_entity = i;
-                        current_data.entities.addFirst(i.getEntityData());
+                        current_data.entities.add(0, i.getEntityData());
                         player_found = true;
                         continue;
                     }

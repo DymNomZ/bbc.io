@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ServerHandler {
@@ -32,7 +33,7 @@ public class ServerHandler {
     private boolean is_connected = false;
     private UserData current_user = null;
 
-    public List<UserData> users_in_lobby = new ArrayList<>();
+    public List<UserData> users_in_lobby = new LinkedList<>();
 
     private boolean player_dead = true;
 
@@ -46,12 +47,7 @@ public class ServerHandler {
             Logging.error(this, "Unable to bind UDP socket. Is a program with UDP socket using port " + SocketConfig.PORT + "?");
             throw new RuntimeException(e);
         }
-        tcp_thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TCPThread();
-            }
-        });
+        tcp_thread = new Thread(this::TCPThread);
         tcp_thread.setDaemon(true);
         tcp_thread.start();
     }
@@ -158,12 +154,7 @@ public class ServerHandler {
 
                 lobby_id = SerialData.decodeInt(stdout.readNBytes(4));
 
-                Thread udp_thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        UDPInputThread();
-                    }
-                });
+                Thread udp_thread = new Thread(this::UDPInputThread);
                 udp_thread.setDaemon(true);
                 udp_thread.start();
 
@@ -182,24 +173,20 @@ public class ServerHandler {
                 stdout.read(); // ignore SerialData Type
                 LobbyData lobbyData = new LobbyData(stdout);
 
-                current_user = lobbyData.users.getFirst();
+                current_user = lobbyData.users.get(0);
 
                 is_connected = true;
                 input_packet = new DatagramPacket(new byte[9], 9, server.getInetAddress(), SocketConfig.PORT);
                 lobby_id = lobbyData.id;
                 invokeDataListener(connect_listener, lobbyData);
 
-                udp_thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        UDPOutputThread();
-                    }
-                });
+                udp_thread = new Thread(this::UDPOutputThread);
                 udp_thread.setDaemon(true);
                 udp_thread.start();
 
                 while (server.isConnected()) {
                     try {
+                        stdout.read(); // ignore SerialData Type
                         lobbyData = new LobbyData(stdout);
                         invokeDataListener(lobby_listener, lobbyData);
                     } catch (SocketTimeoutException ignored) {}

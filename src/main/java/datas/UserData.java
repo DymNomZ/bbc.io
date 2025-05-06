@@ -9,12 +9,12 @@ import java.nio.charset.StandardCharsets;
 
 public class UserData extends SerialData {
     static public final byte SERIAL_ID = 6;
-    static private final byte USER_FULL = 1, USER_PARTIAL = 2;
+    static public final byte USER_FULL = 1, USER_PARTIAL = 2;
 
     public int id;
     public String name;
     public long score;
-    public final byte type;
+    public byte type;
     public byte[] border_color;
     public byte[] body_color;
     public byte[] barrel_color;

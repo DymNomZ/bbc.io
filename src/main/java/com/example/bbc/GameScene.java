@@ -1,9 +1,8 @@
 package com.example.bbc;
 
-import datas.EntityData;
-import datas.GameData;
-import datas.InputData;
-import datas.UserData;
+import classes.EnemyHPBar;
+import configs.StatsConfig;
+import datas.*;
 import entities.Entity;
 import entities.ProjectileEntity;
 import entities.TankEntity;
@@ -11,6 +10,8 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Helpers.rgbBytesToColor;
+import static utils.Scenes.UI_OVERLAY;
 
 public class GameScene extends Scene {
 
@@ -37,7 +39,7 @@ public class GameScene extends Scene {
 
     public static ReadOnlyDoubleProperty WIDTH_PROPERTY = IOGame.MAIN_STAGE.widthProperty();
     public static ReadOnlyDoubleProperty HEIGHT_PROPERTY = IOGame.MAIN_STAGE.heightProperty();
-    public static double SCREEN_WIDTH = 1280,  SCREEN_HEIGHT = 720;
+    public static double SCREEN_WIDTH = IOGame.MAIN_STAGE.widthProperty().doubleValue(),  SCREEN_HEIGHT = IOGame.MAIN_STAGE.heightProperty().doubleValue();
 
     public static StackPane root = new StackPane();
     public static final StackPane server_entities_container = new StackPane();
@@ -57,13 +59,23 @@ public class GameScene extends Scene {
     public static List<Line> horizontal_bg_lines;
 
     public static boolean can_be_damaged = true;
+    public static GameUIController game_ui_controller;
+
+
 
     public GameScene() {
         super(root, SCREEN_WIDTH, SCREEN_HEIGHT);
         System.out.println("Screen Dimensions: " + SCREEN_WIDTH + ", " + SCREEN_HEIGHT);
 
+        root.setAlignment(Pos.CENTER);
+
         vertical_bg_lines = new ArrayList<>();
         horizontal_bg_lines = new ArrayList<>();
+
+        Platform.runLater(() -> {
+            game_ui_controller = UI_OVERLAY.getController();
+        });
+
 
         HEIGHT_PROPERTY.addListener((observable, oldValue, newValue) -> {
             recalculate();
@@ -79,7 +91,7 @@ public class GameScene extends Scene {
         key_handler = new KeyHandler();
 
         main_player = new TankEntity();
-        entity_list = new ArrayList<>();
+        entity_list = new LinkedList<>();
         received_entities = new ArrayList<>();
 
         center_x = SCREEN_WIDTH / 2;
@@ -111,6 +123,36 @@ public class GameScene extends Scene {
     }
 
     public static void initializeOnGameUpdate(){
+        SERVER_API.onLobbyUpdate(new ServerDataListener<LobbyData>() {
+            @Override
+            public void run(LobbyData data) {
+                ListIterator<UserData> iter = SERVER_API.users_in_lobby.listIterator();
+
+                for (UserData i : data.users) {
+                    if (iter.hasNext()) {
+                        UserData cur = iter.next();
+
+                        while (cur != null && cur.id != i.id) {
+                            iter.remove();
+                            cur = iter.hasNext() ? iter.next() : null;
+                        }
+
+                        if (cur == null) {
+                            iter.add(i);
+                        } else {
+                            cur.score = i.score;
+                            if (i.type == UserData.USER_FULL) {
+                                cur.barrel_color = i.barrel_color;
+                                cur.border_color = i.border_color;
+                                cur.body_color = i.body_color;
+                            }
+                        }
+                    } else {
+                        iter.add(i);
+                    }
+                }
+            }
+        });
         SERVER_API.onGameUpdate(new ServerDataListener<GameData>() {
             @Override
             public void run(GameData data) {
@@ -118,45 +160,48 @@ public class GameScene extends Scene {
                 //Logging.write(this,"Rendering " + String.valueOf(data.entities.size()) + " entities");
 
 
-                received_entities.clear();
+                synchronized (received_entities) {
+                    received_entities.clear();
 
-                List<EntityData> entities = data.entities;
-                System.out.println(entities + " size: " + entities.size());
-                double x = entities.getFirst().x;
-                double y = entities.getFirst().y;
+                    List<EntityData> entities = data.entities;
+                    double x = entities.get(0).x;
+                    double y = entities.get(0).y;
+                    game_ui_controller.setProgressBar(StatsConfig.PLAYER_HEALTH,entities.getFirst().health);
+                    main_player.pos_x = x;
+                    main_player.pos_y = y;
+                    main_player.setAngle(entities.get(0).angle);
 
-                int i = 0;
-                for(EntityData ed : entities){
-                    //skip player
-                    if(!ed.is_projectile){
-                        if(i == 0){
-                            i++;
-                            continue;
-                        }
-                        Logging.write(this,"Found a tank entity");
-                        //find the user with the given id
-                        for(UserData ud : SERVER_API.users_in_lobby){
-//                            if(ed.id == ud.id){
-                                System.out.println(ed.id + " " + ud.id);
+                    int i = 0;
+                    for(EntityData ed : entities){
+                        //skip player
+                        if(!ed.is_projectile){
+                            if(i == 0){
+                                i++;
+                                continue;
+                            }
+                            //find the user with the given id
+                            for(UserData ud : SERVER_API.users_in_lobby){
                                 Paint body_color = rgbBytesToColor(ud.body_color);
                                 Paint barrel_color = rgbBytesToColor(ud.barrel_color);
                                 Paint border_color = rgbBytesToColor(ud.border_color);
-                                TankEntity tank = new TankEntity(body_color, barrel_color, border_color);
+                                TankEntity tank = new TankEntity(body_color, barrel_color, border_color,ed.health,StatsConfig.PLAYER_HEALTH);
                                 tank.setPosition(ed.x - x, ed.y - y);
+                                tank.pos_x = ed.x - x;
+                                tank.pos_y = ed.y - y;
+                                tank.setAngle(ed.angle);
                                 received_entities.add(tank);
-//                            }
+                            }
                         }
+                        else{
+                            ProjectileEntity p = new ProjectileEntity(ed.angle, ed.x - x, ed.y - y);
+                            p.setPosition(ed.x - x,ed.y - y);
+                            received_entities.add(p);
+                        }
+                        i++;
+                        //Logging.write(this, String.valueOf(ed.id));
                     }
-                    else{
-                        Logging.write(this,"Found a projectile entity");
-                        received_entities.add(new ProjectileEntity(ed.angle, ed.x, ed.y));
-                    }
-                    i++;
-                    //Logging.write(this, String.valueOf(ed.id));
-
                 }
 
-                Platform.runLater(GameScene::renderEntities);
 
             }
         });
@@ -164,17 +209,10 @@ public class GameScene extends Scene {
 
     public static void renderEntities(){
         synchronized (entity_list) {
-
-
             System.out.println("Rendering " + server_entities_container.getChildren().size() + " entities");
             //clear previous entity_list
             server_entities_container.getChildren().clear();
             entity_list = received_entities;
-            for (Entity e : entity_list) {
-                //e.render(root);
-
-                server_entities_container.getChildren().add(e.getEntity_group());
-            }
         }
     }
 
@@ -235,7 +273,7 @@ public class GameScene extends Scene {
 
     private void adjustBackground(){
         clearBackground();
-        for(int i = 0 - (int)SCREEN_WIDTH;i < SCREEN_WIDTH;i += 80){
+        for(int i = 0 - (int)SCREEN_WIDTH - 100;i < SCREEN_WIDTH + 100;i += 80){
             Line l = new Line(0,0,0,SCREEN_HEIGHT);
             l.setStrokeWidth(2.0);
             l.setTranslateX(i);
@@ -244,7 +282,7 @@ public class GameScene extends Scene {
             root.getChildren().add(l);
             l.toBack();
         }
-        for(int i = 0 - (int)SCREEN_HEIGHT;i < SCREEN_HEIGHT;i += 80){
+        for(int i = 0 - (int)SCREEN_HEIGHT - 100;i < SCREEN_HEIGHT + 100;i += 80){
             Line l = new Line(0,0,SCREEN_WIDTH,0);
             l.setStrokeWidth(2.0);
             l.setTranslateY(i);
@@ -287,30 +325,14 @@ public class GameScene extends Scene {
         SCREEN_HEIGHT = HEIGHT_PROPERTY.get();
     }
 
+    private double last_x = 0, last_y = 0;
+
     private void update(){
+        moveBackground((main_player.pos_x - last_x) * -1, 0);
+        moveBackground(0, (main_player.pos_y - last_y) * -1);
 
-        main_player.lookAt();
-
-        if(mouse_handler.left_is_pressed){
-            main_player.shoot(root);
-        }
-
-        if (key_handler.up_pressed) {
-            moveBackground(0,player_speed);
-        }
-        if (key_handler.down_pressed) {
-            moveBackground(0,-player_speed);
-        }
-        if (key_handler.left_pressed) {
-            moveBackground(player_speed,0);
-        }
-        if (key_handler.right_pressed) {
-            moveBackground(-player_speed,0);
-        }
-        if(key_handler.f_pressed){
-            if(can_be_damaged)onPlayerDamaged();
-        }
-
+        last_x = main_player.pos_x;
+        last_y = main_player.pos_y;
     }
 
     private final AnimationTimer gameLoop = new AnimationTimer() {
@@ -327,15 +349,43 @@ public class GameScene extends Scene {
                 packet.lShift_pressed = key_handler.lShift_pressed;
 
                 packet.lClick_pressed = mouse_handler.left_is_pressed;
-                // TODO: angle here cause eh
+                packet.angle = main_player.getAngle();
                 SERVER_API.sendUserInput(packet);
             }
+
+            Logging.write(this,"Player is looking at: " + main_player.getAngle());
 
             if (lastUpdate == 0) {
                 lastUpdate = now;
                 return;
             }
-            update();
+
+            root.getChildren().removeIf((Node e) -> {
+                ListIterator<Entity> iter = entity_list.listIterator();
+                while (iter.hasNext()) {
+                    Entity cur = iter.next();
+                    if (cur.getEntity_group() == e) {
+                        iter.remove();
+                        return true;
+                    }
+                }
+                return false;
+            });
+            entity_list.clear();
+            server_entities_container.getChildren().clear();
+
+            synchronized (received_entities) {
+                update();
+                for (Entity e : received_entities) {
+                    entity_list.add(e);
+                    e.render(root);
+                    if(e instanceof TankEntity) {
+                        EnemyHPBar hpBar = new EnemyHPBar(((TankEntity)e).health,((TankEntity)e).max_health);
+                        hpBar.setPosition(e.pos_x - 5, e.pos_y - 30);
+                        server_entities_container.getChildren().add((hpBar.group));
+                    }
+                }
+            }
 
             double deltaTime = (now - lastUpdate) / 1_000_000_000.0; // Convert nanoseconds to seconds
             lastUpdate = now;

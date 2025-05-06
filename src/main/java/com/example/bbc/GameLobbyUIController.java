@@ -43,6 +43,10 @@ public class GameLobbyUIController {
     
     @FXML
     public void initialize() {
+
+
+
+
         btnSelectBody.setOnAction(event -> buttonSelect = 1);
         btnSelectBarrel.setOnAction(event -> buttonSelect = 2);
         btnSelectBorder.setOnAction(event -> buttonSelect = 3);

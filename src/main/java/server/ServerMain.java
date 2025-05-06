@@ -16,11 +16,14 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class ServerMain {
+    public static final boolean DEBUG_WINDOW = true;
+
     public static void main(String[] args) throws InterruptedException {
-        DebugWindow.initDebugWindow();
+        if (DEBUG_WINDOW) {
+            DebugWindow.initDebugWindow();
+        }
         ServerSocket listener;
         ArrayList<Lobby> lobbies = new ArrayList<>();
-
 
         while (true) {
             try  {

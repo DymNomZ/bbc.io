@@ -24,6 +24,7 @@ public class GameUIController {
     public AnchorPane root;
     public Button TEMPbtnDevPage;
     public Button TEMPbtnLobbyPage;
+    public ProgressBar upgradesHealthBar, upgradesSpeedBar, upgradesDamageBar;
     IntegerProperty xp = new SimpleIntegerProperty(0);      //using IntegerProperty allows labels to react to changes to the integer
     IntegerProperty health = new SimpleIntegerProperty(100);
     IntegerProperty speed = new SimpleIntegerProperty(5);
@@ -52,6 +53,16 @@ public class GameUIController {
         btnUpgradeHealth.disableProperty().bind(upgrade_buttons_enabled.not());   //binds to changes to upgradeButtonsEnabled variable
         btnUpgradeSpeed.disableProperty().bind(upgrade_buttons_enabled.not());
         btnUpgradeBulletDamage.disableProperty().bind(upgrade_buttons_enabled.not());
+
+        if(!upgrade_buttons_enabled.get()){
+            upgradesHealthBar.setProgress(0.84);
+            upgradesSpeedBar.setProgress(0.84);
+            upgradesDamageBar.setProgress(0.84);
+        } else{
+            upgradesHealthBar.setProgress(1);
+            upgradesSpeedBar.setProgress(1);
+            upgradesDamageBar.setProgress(1);
+        }
     }
     
     public void toggleDebugInfo() {
@@ -62,23 +73,60 @@ public class GameUIController {
         health.set(health.get() + 5);
         xp.set(xp.get() - 10);
         upgrade_buttons_enabled.set(xp.get() >= 10);
+        if(!upgrade_buttons_enabled.get()){
+            upgradesHealthBar.setProgress(0.84);
+            upgradesSpeedBar.setProgress(0.84);
+            upgradesDamageBar.setProgress(0.84);
+        } else{
+            upgradesHealthBar.setProgress(1);
+            upgradesSpeedBar.setProgress(1);
+            upgradesDamageBar.setProgress(1);
+        }
     }
+
 
     public void onUpgradeSpeed(ActionEvent actionEvent) {
         speed.set(speed.get() + 3);
         xp.set(xp.get() - 10);
         upgrade_buttons_enabled.set(xp.get() >= 10);
+        if(!upgrade_buttons_enabled.get()){
+            upgradesHealthBar.setProgress(0.84);
+            upgradesSpeedBar.setProgress(0.84);
+            upgradesDamageBar.setProgress(0.84);
+        } else{
+            upgradesHealthBar.setProgress(1);
+            upgradesSpeedBar.setProgress(1);
+            upgradesDamageBar.setProgress(1);
+        }
     }
 
     public void onUpgradeDamage(ActionEvent actionEvent) {
         damage.set(damage.get() + 5);
         xp.set(xp.get() - 10);
         upgrade_buttons_enabled.set(xp.get() >= 10);
+        if(!upgrade_buttons_enabled.get()){
+            upgradesHealthBar.setProgress(0.84);
+            upgradesSpeedBar.setProgress(0.84);
+            upgradesDamageBar.setProgress(0.84);
+        } else{
+            upgradesHealthBar.setProgress(1);
+            upgradesSpeedBar.setProgress(1);
+            upgradesDamageBar.setProgress(1);
+        }
     }
 
     public void TEMP_manualAddXP(ActionEvent actionEvent) {
         xp.set(xp.get() + 5);
         upgrade_buttons_enabled.set(xp.get() >= 10);
+        if(!upgrade_buttons_enabled.get()){
+            upgradesHealthBar.setProgress(0.84);
+            upgradesSpeedBar.setProgress(0.84);
+            upgradesDamageBar.setProgress(0.84);
+        } else{
+            upgradesHealthBar.setProgress(1);
+            upgradesSpeedBar.setProgress(1);
+            upgradesDamageBar.setProgress(1);
+        }
     }
 
     public void handleKeyPressed(KeyEvent e) {
@@ -96,6 +144,14 @@ public class GameUIController {
         if (healthBar != null) {
             // Decrease by 10%, ensure it doesn't go below 0
             healthBar.setProgress(Math.max(0, healthBar.getProgress() - 0.1));
+            //TODO: Damage logic
+        }
+    }
+
+    public void setProgressBar(double progress, double max){
+        if (healthBar != null) {
+            // Decrease by 10%, ensure it doesn't go below 0
+            healthBar.setProgress(Math.max(0, max / progress));
             //TODO: Damage logic
         }
     }
