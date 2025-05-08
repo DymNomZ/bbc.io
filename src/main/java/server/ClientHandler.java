@@ -169,7 +169,9 @@ public class ClientHandler {
         } catch (IOException ignored) {}
         UDP_thread.interrupt();
         PlayerData player = lobby.players_data.remove(UDPAddr);
-        lobby.entity_data.remove(player);
+        synchronized (lobby.entity_data) {
+            lobby.entity_data.remove(player);
+        }
 
     }
 
