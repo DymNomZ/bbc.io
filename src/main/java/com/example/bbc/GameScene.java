@@ -67,19 +67,19 @@ public class GameScene extends Scene {
 
 
     protected static void toLobbyRespawn(){
-        Platform.runLater(() -> {
-            try {
-                IOGame.changeScene(lobbySceneFXMLResource);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Region root = (Region) IOGame.MAIN_STAGE.getScene().getRoot();
-            root.applyCss();
-            root.layout();
-            MAIN_STAGE.centerOnScreen();
-
-            GameScene.initializeOnGameUpdate();
-        });
+//        Platform.runLater(() -> {
+//            try {
+//                IOGame.changeScene(lobbySceneFXMLResource);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//            Region root = (Region) IOGame.MAIN_STAGE.getScene().getRoot();
+//            root.applyCss();
+//            root.layout();
+//            MAIN_STAGE.centerOnScreen();
+//
+//            GameScene.initializeOnGameUpdate();
+//        });
     }
 
 

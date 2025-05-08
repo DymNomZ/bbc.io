@@ -6,6 +6,7 @@ import datas.EntityData;
 import datas.GameData;
 import datas.LobbyData;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -55,7 +56,7 @@ public class TitleScreenController {
         titleImageView.setPreserveRatio(true);
     }
 
-    public void onPlay(){
+    public void onPlay(ActionEvent event){
 
         if(playerNameTF.getText().isEmpty()){
             //TODO: Improve
@@ -77,7 +78,7 @@ public class TitleScreenController {
 
                 Platform.runLater(() -> {
                     try {
-                        IOGame.changeScene(lobbySceneFXMLResource);
+                        IOGame.changeScene(event, lobbySceneFXMLResource);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
