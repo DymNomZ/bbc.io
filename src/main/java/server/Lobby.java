@@ -131,20 +131,19 @@ public class Lobby {
     private QuadTree constructQTree(){
         QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),2, true,0);
 
-            for (ArrayList<ServerEntity> i : entity_data.values()) {
-                Iterator<ServerEntity> iterator = i.iterator();
-                while (iterator.hasNext()) {
-                    ServerEntity s = iterator.next();
-                    if (s instanceof ProjectileEntity && ((ProjectileEntity) s).has_collided) {
-                        iterator.remove();
-                        continue;
-                    }
-                    if (s instanceof PlayerEntity && ((PlayerEntity) s).health <= 0) {
-                        handleDeath((PlayerEntity) s);
-                    }
-                    tree.insert(s);
+        for(ArrayList<ServerEntity> i : entity_data.values()) {
+            Iterator<ServerEntity> iterator = i.iterator();
+            while(iterator.hasNext()){
+                ServerEntity s = iterator.next();
+                if(s instanceof ProjectileEntity && ((ProjectileEntity)s).has_collided){
+                    iterator.remove();
+                    continue;
                 }
-
+                if(s instanceof PlayerEntity && ((PlayerEntity)s).health <= 0){
+                    handleDeath((PlayerEntity)s);
+                }
+                tree.insert(s);
+            }
 
         }
 
@@ -174,32 +173,31 @@ public class Lobby {
     }
 
     private void handleSpawnQueue(long game_clock){
-            while (!spawn_queue.isEmpty()) {
-                PlayerData player = spawn_queue.remove();
-                ArrayList<ServerEntity> entities = new ArrayList<>();
-                entities.add(new PlayerEntity(game_clock, player.id));
-                entity_data.put(player, entities);
-            }
+        while (!spawn_queue.isEmpty()) {
+            PlayerData player = spawn_queue.remove();
+            ArrayList<ServerEntity> entities = new ArrayList<>();
+            entities.add(new PlayerEntity(game_clock,player.id));
+            entity_data.put(player, entities);
+        }
     }
     private void moveEntities(long game_clock){
         StringBuilder location_sb = new StringBuilder();
+        for (PlayerData i : entity_data.keySet()) {
 
-            for (PlayerData i : entity_data.keySet()) {
+            // TODO: possible that .get may return null
+            for (Iterator<ServerEntity> iter = entity_data.get(i).iterator(); iter.hasNext();) {
+                ServerEntity e = iter.next();
 
-                // TODO: possible that .get may return null
-                for (Iterator<ServerEntity> iter = entity_data.get(i).iterator(); iter.hasNext(); ) {
-                    ServerEntity e = iter.next();
-
-                    if (e instanceof ProjectileEntity p && !p.isAlive(game_clock)) {
-                        iter.remove();
-                        continue;
-                    }
-
-                    e.move(game_clock, i);
-
-                    // TODO: Logging in every loop will greatly hinder the game thread (Remove at production)
-                    location_sb.append(e.toString());
+                if (e instanceof ProjectileEntity p && !p.isAlive(game_clock)) {
+                    iter.remove();
+                    continue;
                 }
+
+                e.move(game_clock, i);
+
+                // TODO: Logging in every loop will greatly hinder the game thread (Remove at production)
+                location_sb.append(e.toString());
+            }
         }
 
         if (ServerMain.DEBUG_WINDOW) {
