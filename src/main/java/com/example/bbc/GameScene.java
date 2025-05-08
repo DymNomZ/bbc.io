@@ -13,6 +13,7 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -24,12 +25,15 @@ import javafx.util.Duration;
 import utils.Helpers;
 import utils.Logging;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+import static com.example.bbc.IOGame.MAIN_STAGE;
 import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Helpers.rgbBytesToColor;
 import static utils.Scenes.UI_OVERLAY;
+import static utils.Scenes.lobbySceneFXMLResource;
 
 public class GameScene extends Scene {
 
@@ -60,6 +64,23 @@ public class GameScene extends Scene {
 
     public static boolean can_be_damaged = true;
     public static GameUIController game_ui_controller;
+
+
+    protected static void toLobbyRespawn(){
+        Platform.runLater(() -> {
+            try {
+                IOGame.changeScene(lobbySceneFXMLResource);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Region root = (Region) IOGame.MAIN_STAGE.getScene().getRoot();
+            root.applyCss();
+            root.layout();
+            MAIN_STAGE.centerOnScreen();
+
+            GameScene.initializeOnGameUpdate();
+        });
+    }
 
 
 
@@ -161,11 +182,17 @@ public class GameScene extends Scene {
 
 
                 synchronized (received_entities) {
+
                     received_entities.clear();
 
                     List<EntityData> entities = data.entities;
+                    if(entities.get(0).health <= 0){
+                        toLobbyRespawn();
+                        return;
+                    }
                     double x = entities.get(0).x;
                     double y = entities.get(0).y;
+
                     game_ui_controller.setProgressBar(StatsConfig.PLAYER_HEALTH,entities.getFirst().health);
                     main_player.pos_x = x;
                     main_player.pos_y = y;
