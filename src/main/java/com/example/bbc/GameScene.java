@@ -33,7 +33,6 @@ import static com.example.bbc.IOGame.MAIN_STAGE;
 import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Helpers.rgbBytesToColor;
 import static utils.Scenes.UI_OVERLAY;
-import static utils.Scenes.lobbySceneFXMLResource;
 
 public class GameScene extends Scene {
 
@@ -66,6 +65,8 @@ public class GameScene extends Scene {
     public static GameUIController game_ui_controller;
 
 
+
+
     protected static void toLobbyRespawn(){
 //        Platform.runLater(() -> {
 //            try {
@@ -93,9 +94,8 @@ public class GameScene extends Scene {
         vertical_bg_lines = new ArrayList<>();
         horizontal_bg_lines = new ArrayList<>();
 
-        Platform.runLater(() -> {
-            game_ui_controller = UI_OVERLAY.getController();
-        });
+        //game_ui_controller = UI_OVERLAY.getController();
+
 
 
         HEIGHT_PROPERTY.addListener((observable, oldValue, newValue) -> {
@@ -193,7 +193,12 @@ public class GameScene extends Scene {
                     double x = entities.get(0).x;
                     double y = entities.get(0).y;
 
-                    game_ui_controller.setProgressBar(StatsConfig.PLAYER_HEALTH,entities.getFirst().health);
+                    try {
+                        game_ui_controller.setProgressBar(StatsConfig.PLAYER_HEALTH, entities.getFirst().health);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+
                     main_player.pos_x = x;
                     main_player.pos_y = y;
                     main_player.setAngle(entities.get(0).angle);

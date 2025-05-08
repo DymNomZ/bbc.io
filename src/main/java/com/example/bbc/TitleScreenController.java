@@ -2,6 +2,7 @@ package com.example.bbc;
 
 import classes.PictureMaker;
 import classes.Sprites;
+import com.sun.tools.javac.Main;
 import datas.EntityData;
 import datas.GameData;
 import datas.LobbyData;
@@ -32,6 +33,7 @@ public class TitleScreenController {
     public Label lblEmptyWarning;
     public AnchorPane apTitleScreen;
     public VBox vTitle;
+    MainController mainController;
 
     public void initialize(){
 //        new PictureMaker(titleImageView, vTitle, "titles/title", apTitleScreen, false, 1400);
@@ -39,6 +41,9 @@ public class TitleScreenController {
         String style = "-fx-background-color: transparent;" +
                 "-fx-padding: 0;" +
                 "-fx-background-radius: 0;";
+
+        Platform.runLater(() -> mainController = IOGame.getMainController());
+
 
 
 
@@ -77,16 +82,7 @@ public class TitleScreenController {
                 SERVER_API.users_in_lobby.addAll(data.users);
 
                 Platform.runLater(() -> {
-                    try {
-                        IOGame.changeScene(event, lobbySceneFXMLResource);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    Region root = (Region) IOGame.MAIN_STAGE.getScene().getRoot();
-                    root.applyCss();
-                    root.layout();
-                    MAIN_STAGE.centerOnScreen();
-
+                    mainController.switchView("game-lobby-ui.fxml");
                     GameScene.initializeOnGameUpdate();
                 });
             }

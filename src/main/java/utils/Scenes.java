@@ -3,6 +3,7 @@ package utils;
 import com.example.bbc.GameScene;
 import com.example.bbc.GameUIOverlay;
 import com.example.bbc.IOGame;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -32,6 +33,8 @@ public class Scenes {
             GameScene gameScene = new GameScene();
             UI_OVERLAY = new GameUIOverlay();
             GAME_SCENE = UI_OVERLAY.applyToScene(gameScene);
+            Platform.runLater(() -> gameScene.game_ui_controller = UI_OVERLAY.getController());
+
 
             Parent titleRoot = titleSceneFXML.load();
             TITLE_SCENE = new Scene(titleRoot);

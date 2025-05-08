@@ -18,50 +18,42 @@ public class IOGame extends Application {
 
     static Stage MAIN_STAGE;
     static ServerHandler SERVER_API = null;
+    public Parent main_root;
+
+    private static MainController mainController;
+    public static MainController getMainController() {
+        return mainController;
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
-        MAIN_STAGE = stage;
-        MAIN_STAGE.setTitle("bbc.io");
-        MAIN_STAGE.setMinWidth(1280);
-        MAIN_STAGE.setMinHeight(720);
-        MAIN_STAGE.setScene(Scenes.TITLE_SCENE);
-        Platform.runLater(() -> {
-            Region root = (Region) IOGame.MAIN_STAGE.getScene().getRoot();
-            root.applyCss();
-            root.layout();
+
+        Platform.runLater(()-> {
+            try {
+                Class.forName("utils.Scenes");
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         });
 
-        MAIN_STAGE.setWidth(1280);
-        MAIN_STAGE.setHeight(720);
-        // Maximize window by default
-        MAIN_STAGE.setMaximized(false);
-        // Set fullscreen
-        MAIN_STAGE.setFullScreen(false);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("iogame-main.fxml"));
+        main_root = loader.load();
+        mainController = loader.getController();
+        System.out.println(mainController);
 
-        MAIN_STAGE.show();
+        stage.setMinHeight(720);
+        stage.setMinWidth(1280);
+
+        Scene scene = new Scene(main_root);
+        stage.setScene(scene);
+        stage.setTitle("IO Game");
+        stage.show();
+        MAIN_STAGE = stage;
     }
 
     public static void main(String[] args) {
         FontLoader.loadGameFonts();
         launch();
     }
-    public static void changeScene(ActionEvent event, String sceneFXML) throws IOException {
-        double w = MAIN_STAGE.getWidth();
-        double h = MAIN_STAGE.getHeight();
 
-        FXMLLoader loader = new FXMLLoader(IOGame.class.getResource(sceneFXML));
-        Parent root = loader.load();
-        Scene scene = new Scene(root, w, h);
-        MAIN_STAGE = (Stage)((Node)event.getSource()).getScene().getWindow();
-        MAIN_STAGE.setScene(scene);
-
-        // Force layout fix
-        Platform.runLater(() -> {
-            System.out.println("Bounds: " + root.getLayoutBounds());
-            System.out.println("Width: " + root.getScene().getWidth());
-            root.applyCss();
-            root.layout();
-        });
-    }
 }
