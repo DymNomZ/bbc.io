@@ -109,6 +109,7 @@ public class GameLobbyUIController {
         // Switch to game scene
         Stage stage = (Stage) btnReady.getScene().getWindow();
         stage.setScene(Scenes.GAME_SCENE);
+        stage.setFullScreen(IOGameSettings.getInstance().is_fullscreen);
         stage.setTitle("Battle Game");
     }
     

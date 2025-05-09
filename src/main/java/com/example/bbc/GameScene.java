@@ -21,6 +21,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import utils.Helpers;
 import utils.Logging;
@@ -213,15 +214,19 @@ public class GameScene extends Scene {
                             }
                             //find the user with the given id
                             for(UserData ud : SERVER_API.users_in_lobby){
-                                Paint body_color = rgbBytesToColor(ud.body_color);
-                                Paint barrel_color = rgbBytesToColor(ud.barrel_color);
-                                Paint border_color = rgbBytesToColor(ud.border_color);
-                                TankEntity tank = new TankEntity(body_color, barrel_color, border_color,ed.health,StatsConfig.PLAYER_HEALTH);
-                                tank.setPosition(ed.x - x, ed.y - y);
-                                tank.pos_x = ed.x - x;
-                                tank.pos_y = ed.y - y;
-                                tank.setAngle(ed.angle);
-                                received_entities.add(tank);
+
+                                if(ud.id == ed.id) {
+                                    Paint body_color = rgbBytesToColor(ud.body_color);
+                                    Paint barrel_color = rgbBytesToColor(ud.barrel_color);
+                                    Paint border_color = rgbBytesToColor(ud.border_color);
+                                    String name = ud.name;
+                                    TankEntity tank = new TankEntity(body_color, barrel_color, border_color, ed.health, StatsConfig.PLAYER_HEALTH, name);
+                                    tank.setPosition(ed.x - x, ed.y - y);
+                                    tank.pos_x = ed.x - x;
+                                    tank.pos_y = ed.y - y;
+                                    tank.setAngle(ed.angle);
+                                    received_entities.add(tank);
+                                }
                             }
                         }
                         else{
@@ -407,13 +412,22 @@ public class GameScene extends Scene {
 
             synchronized (received_entities) {
                 update();
+                System.out.println(received_entities.size());
                 for (Entity e : received_entities) {
                     entity_list.add(e);
                     e.render(root);
                     if(e instanceof TankEntity) {
                         EnemyHPBar hpBar = new EnemyHPBar(((TankEntity)e).health,((TankEntity)e).max_health);
                         hpBar.setPosition(e.pos_x - 5, e.pos_y - 30);
+
+                        Text player_name = new Text(((TankEntity)e).player_name);
+                        player_name.setTranslateY(e.pos_y + 30);
+                        player_name.setTranslateX(e.pos_x - 10);
+
+
                         server_entities_container.getChildren().add((hpBar.group));
+                        server_entities_container.getChildren().add(player_name);
+
                     }
                 }
             }
