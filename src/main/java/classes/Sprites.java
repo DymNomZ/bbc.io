@@ -24,9 +24,13 @@ public class Sprites {
 
         static final Image PLAY_BUTTON_SPRITE;
         static final Image ABOUT_DEVS_BUTTON_SPRITE;
+        static final Image BACK_TITLE_BUTTON_SPRITE;
+        static final Image SETTINGS_BUTTON_SPRITE;
 
         public static final ImageView PLAY_BUTTON;
         public static final ImageView ABOUT_DEVS;
+        public static final ImageView BACK_TITLE_BUTTON;
+        public static final ImageView SETTINGS_BUTTON;
 
         static {
 
@@ -43,6 +47,17 @@ public class Sprites {
             ABOUT_DEVS.setFitHeight(100);
             ABOUT_DEVS.setPreserveRatio(true);
 
+            BACK_TITLE_BUTTON_SPRITE = new Image("file:src/main/java/assets/buttons/back_button.png");
+            BACK_TITLE_BUTTON = new ImageView(BACK_TITLE_BUTTON_SPRITE);
+            BACK_TITLE_BUTTON.setFitWidth(100);
+            BACK_TITLE_BUTTON.setFitHeight(100);
+            BACK_TITLE_BUTTON.setPreserveRatio(true);
+
+            SETTINGS_BUTTON_SPRITE = new Image("file:src/main/java/assets/buttons/settings_button.png");
+            SETTINGS_BUTTON = new ImageView(SETTINGS_BUTTON_SPRITE);
+            SETTINGS_BUTTON.setFitWidth(100);
+            SETTINGS_BUTTON.setFitHeight(100);
+            SETTINGS_BUTTON.setPreserveRatio(true);
         }
 
     }

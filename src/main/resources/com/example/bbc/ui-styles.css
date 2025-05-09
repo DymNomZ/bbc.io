@@ -1,3 +1,9 @@
+.general-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+}
+
 .score-value {
     -fx-text-fill: #000000;
     -fx-font-weight: bold;

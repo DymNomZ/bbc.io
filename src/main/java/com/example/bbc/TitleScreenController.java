@@ -33,15 +33,15 @@ public class TitleScreenController {
     public Label lblEmptyWarning;
     public AnchorPane apTitleScreen;
     public VBox vTitle;
-    public Button btn_settings;
+    public Button settingsBtn;
     MainController mainController;
 
     public void initialize(){
 //        new PictureMaker(titleImageView, vTitle, "titles/title", apTitleScreen, false, 1400);
 
-        String style = "-fx-background-color: transparent;" +
-                "-fx-padding: 0;" +
-                "-fx-background-radius: 0;";
+//        String style = "-fx-background-color: transparent;" +
+//                "-fx-padding: 0;" +
+//                "-fx-background-radius: 0;";
 
         Platform.runLater(() -> mainController = IOGame.getMainController());
 
@@ -50,16 +50,25 @@ public class TitleScreenController {
 
         playBtn.setGraphic(Sprites.Buttons.PLAY_BUTTON);
         playBtn.setFocusTraversable(false);
-        playBtn.setStyle(style);
+//        playBtn.setStyle(style);
 
         aboutDevsBtn.setGraphic(Sprites.Buttons.ABOUT_DEVS);
         aboutDevsBtn.setFocusTraversable(false);
-        aboutDevsBtn.setStyle(style);
+//        aboutDevsBtn.setStyle(style);
+
+        settingsBtn.setGraphic(Sprites.Buttons.SETTINGS_BUTTON);
+        settingsBtn.setFocusTraversable(false);
 
         titleImageView.setImage(Sprites.Titles.TITLE.getImage());
         titleImageView.setFitWidth(500);
         titleImageView.setFitHeight(300);
         titleImageView.setPreserveRatio(true);
+    }
+
+    public void onDevsClicked(ActionEvent actionEvent) {
+        Platform.runLater(()->{
+            mainController.switchView("dev-page.fxml");
+        });
     }
 
     public void onSettingsClicked(ActionEvent actionEvent) {
