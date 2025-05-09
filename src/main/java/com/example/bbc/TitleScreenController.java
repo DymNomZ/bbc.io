@@ -33,6 +33,7 @@ public class TitleScreenController {
     public Label lblEmptyWarning;
     public AnchorPane apTitleScreen;
     public VBox vTitle;
+    public Button btn_settings;
     MainController mainController;
 
     public void initialize(){
@@ -59,6 +60,12 @@ public class TitleScreenController {
         titleImageView.setFitWidth(500);
         titleImageView.setFitHeight(300);
         titleImageView.setPreserveRatio(true);
+    }
+
+    public void onSettingsClicked(ActionEvent actionEvent) {
+        Platform.runLater(()->{
+            mainController.switchView("settings-ui.fxml");
+        });
     }
 
     public void onPlay(ActionEvent event){
