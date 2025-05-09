@@ -2,6 +2,7 @@ module com.example.bbc {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
+    requires jdk.compiler;
 
 
     opens com.example.bbc to javafx.fxml;

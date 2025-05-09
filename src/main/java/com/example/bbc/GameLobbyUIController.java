@@ -2,8 +2,10 @@ package com.example.bbc;
 
 import datas.UserData;
 import entities.TankEntity;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -33,7 +35,8 @@ public class GameLobbyUIController {
     public Rectangle spTankBarrel;
     @FXML
     public Circle spTankBody;
-    
+    public VBox root;
+
     // Store selected colors for transferring to game
     private Paint bodyColor;
     private Paint barrelColor;
@@ -45,6 +48,11 @@ public class GameLobbyUIController {
     public void initialize() {
 
 
+        Platform.runLater(() -> {
+            // Force layout updates
+            root.applyCss();
+            root.layout();
+        });
 
 
         btnSelectBody.setOnAction(event -> buttonSelect = 1);
@@ -101,6 +109,7 @@ public class GameLobbyUIController {
         // Switch to game scene
         Stage stage = (Stage) btnReady.getScene().getWindow();
         stage.setScene(Scenes.GAME_SCENE);
+        stage.setFullScreen(IOGameSettings.getInstance().is_fullscreen);
         stage.setTitle("Battle Game");
     }
     

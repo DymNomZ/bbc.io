@@ -13,6 +13,7 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -20,13 +21,16 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import utils.Helpers;
 import utils.Logging;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+import static com.example.bbc.IOGame.MAIN_STAGE;
 import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Helpers.rgbBytesToColor;
 import static utils.Scenes.UI_OVERLAY;
@@ -63,6 +67,25 @@ public class GameScene extends Scene {
 
 
 
+
+    protected static void toLobbyRespawn(){
+//        Platform.runLater(() -> {
+//            try {
+//                IOGame.changeScene(lobbySceneFXMLResource);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//            Region root = (Region) IOGame.MAIN_STAGE.getScene().getRoot();
+//            root.applyCss();
+//            root.layout();
+//            MAIN_STAGE.centerOnScreen();
+//
+//            GameScene.initializeOnGameUpdate();
+//        });
+    }
+
+
+
     public GameScene() {
         super(root, SCREEN_WIDTH, SCREEN_HEIGHT);
         System.out.println("Screen Dimensions: " + SCREEN_WIDTH + ", " + SCREEN_HEIGHT);
@@ -72,9 +95,8 @@ public class GameScene extends Scene {
         vertical_bg_lines = new ArrayList<>();
         horizontal_bg_lines = new ArrayList<>();
 
-        Platform.runLater(() -> {
-            game_ui_controller = UI_OVERLAY.getController();
-        });
+        //game_ui_controller = UI_OVERLAY.getController();
+
 
 
         HEIGHT_PROPERTY.addListener((observable, oldValue, newValue) -> {
@@ -161,12 +183,23 @@ public class GameScene extends Scene {
 
 
                 synchronized (received_entities) {
+
                     received_entities.clear();
 
                     List<EntityData> entities = data.entities;
+                    if(entities.get(0).health <= 0){
+                        toLobbyRespawn();
+                        return;
+                    }
                     double x = entities.get(0).x;
                     double y = entities.get(0).y;
-                    game_ui_controller.setProgressBar(StatsConfig.PLAYER_HEALTH,entities.getFirst().health);
+
+                    try {
+                        game_ui_controller.setProgressBar(StatsConfig.PLAYER_HEALTH, entities.getFirst().health);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+
                     main_player.pos_x = x;
                     main_player.pos_y = y;
                     main_player.setAngle(entities.get(0).angle);
@@ -181,15 +214,19 @@ public class GameScene extends Scene {
                             }
                             //find the user with the given id
                             for(UserData ud : SERVER_API.users_in_lobby){
-                                Paint body_color = rgbBytesToColor(ud.body_color);
-                                Paint barrel_color = rgbBytesToColor(ud.barrel_color);
-                                Paint border_color = rgbBytesToColor(ud.border_color);
-                                TankEntity tank = new TankEntity(body_color, barrel_color, border_color,ed.health,StatsConfig.PLAYER_HEALTH);
-                                tank.setPosition(ed.x - x, ed.y - y);
-                                tank.pos_x = ed.x - x;
-                                tank.pos_y = ed.y - y;
-                                tank.setAngle(ed.angle);
-                                received_entities.add(tank);
+
+                                if(ud.id == ed.id) {
+                                    Paint body_color = rgbBytesToColor(ud.body_color);
+                                    Paint barrel_color = rgbBytesToColor(ud.barrel_color);
+                                    Paint border_color = rgbBytesToColor(ud.border_color);
+                                    String name = ud.name;
+                                    TankEntity tank = new TankEntity(body_color, barrel_color, border_color, ed.health, StatsConfig.PLAYER_HEALTH, name);
+                                    tank.setPosition(ed.x - x, ed.y - y);
+                                    tank.pos_x = ed.x - x;
+                                    tank.pos_y = ed.y - y;
+                                    tank.setAngle(ed.angle);
+                                    received_entities.add(tank);
+                                }
                             }
                         }
                         else{
@@ -353,7 +390,6 @@ public class GameScene extends Scene {
                 SERVER_API.sendUserInput(packet);
             }
 
-            Logging.write(this,"Player is looking at: " + main_player.getAngle());
 
             if (lastUpdate == 0) {
                 lastUpdate = now;
@@ -376,13 +412,22 @@ public class GameScene extends Scene {
 
             synchronized (received_entities) {
                 update();
+                System.out.println(received_entities.size());
                 for (Entity e : received_entities) {
                     entity_list.add(e);
                     e.render(root);
                     if(e instanceof TankEntity) {
                         EnemyHPBar hpBar = new EnemyHPBar(((TankEntity)e).health,((TankEntity)e).max_health);
                         hpBar.setPosition(e.pos_x - 5, e.pos_y - 30);
+
+                        Text player_name = new Text(((TankEntity)e).player_name);
+                        player_name.setTranslateY(e.pos_y + 30);
+                        player_name.setTranslateX(e.pos_x - 10);
+
+
                         server_entities_container.getChildren().add((hpBar.group));
+                        server_entities_container.getChildren().add(player_name);
+
                     }
                 }
             }

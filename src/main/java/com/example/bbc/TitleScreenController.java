@@ -2,10 +2,12 @@ package com.example.bbc;
 
 import classes.PictureMaker;
 import classes.Sprites;
+import com.sun.tools.javac.Main;
 import datas.EntityData;
 import datas.GameData;
 import datas.LobbyData;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,8 +23,7 @@ import java.util.List;
 
 import static com.example.bbc.IOGame.MAIN_STAGE;
 import static com.example.bbc.IOGame.SERVER_API;
-import static utils.Scenes.LOBBY_SCENE;
-import static utils.Scenes.titleSceneFXML;
+import static utils.Scenes.*;
 
 public class TitleScreenController {
     public ImageView titleImageView;
@@ -32,6 +33,8 @@ public class TitleScreenController {
     public Label lblEmptyWarning;
     public AnchorPane apTitleScreen;
     public VBox vTitle;
+    public Button btn_settings;
+    MainController mainController;
 
     public void initialize(){
 //        new PictureMaker(titleImageView, vTitle, "titles/title", apTitleScreen, false, 1400);
@@ -39,6 +42,9 @@ public class TitleScreenController {
         String style = "-fx-background-color: transparent;" +
                 "-fx-padding: 0;" +
                 "-fx-background-radius: 0;";
+
+        Platform.runLater(() -> mainController = IOGame.getMainController());
+
 
 
 
@@ -56,7 +62,13 @@ public class TitleScreenController {
         titleImageView.setPreserveRatio(true);
     }
 
-    public void onPlay(){
+    public void onSettingsClicked(ActionEvent actionEvent) {
+        Platform.runLater(()->{
+            mainController.switchView("settings-ui.fxml");
+        });
+    }
+
+    public void onPlay(ActionEvent event){
 
         if(playerNameTF.getText().isEmpty()){
             //TODO: Improve
@@ -77,11 +89,7 @@ public class TitleScreenController {
                 SERVER_API.users_in_lobby.addAll(data.users);
 
                 Platform.runLater(() -> {
-                    MAIN_STAGE.setScene(LOBBY_SCENE);
-                    Region root = (Region) IOGame.MAIN_STAGE.getScene().getRoot();
-                    root.applyCss();
-                    root.layout();
-
+                    mainController.switchView("game-lobby-ui.fxml");
                     GameScene.initializeOnGameUpdate();
                 });
             }

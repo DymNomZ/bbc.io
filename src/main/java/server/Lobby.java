@@ -16,12 +16,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Lobby {
-    public HashMap<UDPAddress, PlayerData> players_data = new HashMap<>();
+    public ConcurrentHashMap<UDPAddress, PlayerData> players_data = new ConcurrentHashMap<>();
 
     // TODO: May be replaced for quad trees data struct
-    public WeakHashMap<PlayerData, ArrayList<ServerEntity>> entity_data = new WeakHashMap<>();
+    public ConcurrentHashMap<PlayerData, ArrayList<ServerEntity>> entity_data = new ConcurrentHashMap<>();
 
     public LinkedList<PlayerData> spawn_queue = new LinkedList<>();
     static private int ID = 1;
@@ -85,40 +86,40 @@ public class Lobby {
     }
 
     private void spawnProjectiles(long game_clock) {
-        for(PlayerData i : players_data.values()) {
-            InputData inputData = i.getInputs();
-            if(inputData.lClick_pressed){
-                shoot(i, game_clock);
+            for (PlayerData i : players_data.values()) {
+                InputData inputData = i.getInputs();
+                if (inputData.lClick_pressed) {
+                    shoot(i, game_clock);
+                }
             }
-        }
     }
 
     private void shoot(PlayerData playerData, long game_clock){
-        if(game_clock - playerData.last_shoot >= StatsConfig.PLAYER_SHOOT_COOLDOWN) {
-            ArrayList<ServerEntity> chain = entity_data.get(playerData);
+            if (game_clock - playerData.last_shoot >= StatsConfig.PLAYER_SHOOT_COOLDOWN) {
+                ArrayList<ServerEntity> chain = entity_data.get(playerData);
 
-            if (chain != null) {
-                ProjectileEntity p = new ProjectileEntity(game_clock, playerData.id, playerData.getInputs().angle);
-                p.x = chain.get(0).x;
-                p.y = chain.get(0).y;
-                entity_data.get(playerData).add(p);
-                playerData.last_shoot = game_clock;
+                if (chain != null) {
+                    ProjectileEntity p = new ProjectileEntity(game_clock, playerData.id, playerData.getInputs().angle);
+                    p.x = chain.get(0).x;
+                    p.y = chain.get(0).y;
+                    entity_data.get(playerData).add(p);
+                    playerData.last_shoot = game_clock;
+                }
             }
-        }
     }
 
     private void quadCollisionCheck(QuadTree tree){
-        for(ArrayList<ServerEntity> i : entity_data.values()) {
-            for(ServerEntity entity : i) {
-                RangeCircle circle = new RangeCircle(entity.x, entity.y, entity.radius + 1);
-                List<ServerEntity> collision = tree.query(circle);
-                for (ServerEntity other : collision) {
-                    if (entity != other) {
-                        handleCollision(entity, other);
+            for (ArrayList<ServerEntity> i : entity_data.values()) {
+                for (ServerEntity entity : i) {
+                    RangeCircle circle = new RangeCircle(entity.x, entity.y, entity.radius + 1);
+                    List<ServerEntity> collision = tree.query(circle);
+                    for (ServerEntity other : collision) {
+                        if (entity != other) {
+                            handleCollision(entity, other);
+                        }
                     }
                 }
             }
-        }
     }
 
     private void handleCollision(ServerEntity entity, ServerEntity other_entity){
@@ -158,8 +159,9 @@ public class Lobby {
 
         String death_message = DeathMessageGenerator.getRandomDeathMessage(victim_data.name,killer_data.name);
         //TODO DEATH HANDLING
-        s.health = 100;
-        System.out.println(death_message);
+            entity_data.remove(victim_data);
+
+
     }
     private PlayerData getPlayerDataWithId(int id){
         for(PlayerData p : players_data.values()) {
