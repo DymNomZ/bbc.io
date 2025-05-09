@@ -6,78 +6,63 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToggleButton;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
+import static com.example.bbc.IOGame.getMainController;
+
 public class SettingsController {
-    public ComboBox combobox_resolution;
     public ComboBox combobox_screen_mode;
     public ToggleButton toggle_player_names;
     public Button btn_apply;
+    public Button btn_back;
     private boolean has_applied_changes = true;
 
     public void initialize() {
+        IOGameSettings settings = IOGameSettings.getInstance();
+
         Platform.runLater(() -> {
-            combobox_resolution.getItems().add("1280 x 720");
-            combobox_resolution.getItems().add("1366 x 768");
-            combobox_resolution.getItems().add("1920 x 1080");
 
             combobox_screen_mode.getItems().add("Fullscreen");
-            combobox_screen_mode.getItems().add("Windowed Fullscreen");
             combobox_screen_mode.getItems().add("Windowed");
 
-            combobox_resolution.setValue("1280 x 720");
             combobox_screen_mode.setValue("Windowed");
+            if(settings.is_fullscreen) combobox_screen_mode.setValue("Fullscreen");
+            else combobox_screen_mode.setValue("Windowed");
+
         });
 
         combobox_screen_mode.setOnAction((event)->{
-            onScreenModeChanged();
+            has_applied_changes = false;
         });
-        combobox_resolution.setOnAction((event)->{
-            onResolutionChanged();
+        btn_back.setOnAction((event)->{
+            getMainController().switchView("title-scene.fxml");
         });
     }
 
-    public void onResolutionChanged() {
-        switch((String)combobox_resolution.getValue()){
-            case "1280 x 720":
-                IOGameSettings.width = 1280;
-                IOGameSettings.height = 720;
-                break;
-            case "1366 x 768":
-                IOGameSettings.width = 1366;
-                IOGameSettings.height = 768;
-                break;
-            case "1920 x 1080-Fullscreen":
-                IOGameSettings.width = 1920;
-                IOGameSettings.height = 1080;
-                break;
-
-            default:
-                throw new IllegalStateException("Unexpected value: " + combobox_screen_mode.getValue());
-        }
-        has_applied_changes = false;
-    }
-    public void onScreenModeChanged() {
-        switch((String)combobox_screen_mode.getValue()){
-            case "Fullscreen":
-                IOGameSettings.screenMode = IOGameSettings.ScreenMode.FULLSCREEN;
-                combobox_resolution.setDisable(true);
-                break;
-            case "Windowed":
-                IOGameSettings.screenMode = IOGameSettings.ScreenMode.WINDOW_DEFAULT;
-                break;
-            case "Windowed-Fullscreen":
-                IOGameSettings.screenMode = IOGameSettings.ScreenMode.WINDOW_FULLSCREEN;
-                combobox_resolution.setDisable(true);
-                break;
-
-            default:
-                throw new IllegalStateException("Unexpected value: " + combobox_screen_mode.getValue());
-        }
-        has_applied_changes = false;
-    }
 
     @FXML
     private void onApply(){
+        IOGameSettings instance = IOGameSettings.getInstance();
         has_applied_changes = true;
+        switch((String)combobox_screen_mode.getValue()){
+            case "Fullscreen":
+                instance.is_fullscreen = true;
+                break;
+            case "Windowed":
+                instance.is_fullscreen = false;
+                break;
+        }
+
+        IOGame.applySettings();
+        try{
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("settings.ser"));
+            oos.writeObject(instance);
+            oos.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
     }
 }

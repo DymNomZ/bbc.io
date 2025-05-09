@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import utils.FontLoader;
 import utils.Scenes;
 
@@ -36,6 +37,9 @@ public class IOGame extends Application {
             }
         });
 
+        IOGameSettings.setInstance();
+        applySettings();
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("iogame-main.fxml"));
         main_root = loader.load();
         mainController = loader.getController();
@@ -44,7 +48,9 @@ public class IOGame extends Application {
         stage.setMinHeight(720);
         stage.setMinWidth(1280);
 
+
         Scene scene = new Scene(main_root);
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.setTitle("IO Game");
         stage.show();
@@ -54,6 +60,13 @@ public class IOGame extends Application {
     public static void main(String[] args) {
         FontLoader.loadGameFonts();
         launch();
+    }
+
+    public static void applySettings(){
+        Platform.runLater(()->{
+        IOGameSettings instance = IOGameSettings.getInstance();
+        MAIN_STAGE.setFullScreen(instance.is_fullscreen);
+        });
     }
 
 }
