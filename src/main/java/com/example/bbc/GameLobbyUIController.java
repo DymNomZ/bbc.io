@@ -38,10 +38,13 @@ public class GameLobbyUIController {
     public VBox root;
 
     // Store selected colors for transferring to game
-    private Paint bodyColor;
-    private Paint barrelColor;
-    private Paint borderColor;
-    
+    public static Paint bodyColor;
+    public static Paint barrelColor;
+    public static Paint borderColor;
+
+    private static Rectangle tankBarrel;
+    private static Circle tankBody;
+
     int buttonSelect = 1; // Default to body
     
     @FXML
@@ -58,11 +61,27 @@ public class GameLobbyUIController {
         btnSelectBody.setOnAction(event -> buttonSelect = 1);
         btnSelectBarrel.setOnAction(event -> buttonSelect = 2);
         btnSelectBorder.setOnAction(event -> buttonSelect = 3);
-        
+
         // Set default colors
         bodyColor = spTankBody.getFill();
         barrelColor = spTankBarrel.getFill();
         borderColor = spTankBody.getStroke();
+
+        tankBarrel = spTankBarrel;
+        tankBody = spTankBody;
+    }
+
+    public static void initializeTank() {
+        UserData user = SERVER_API.getUser();
+
+        bodyColor = Helpers.rgbBytesToColor(user.body_color);
+        barrelColor = Helpers.rgbBytesToColor(user.barrel_color);
+        borderColor = Helpers.rgbBytesToColor(user.border_color);
+
+        tankBody.setFill(bodyColor);
+        tankBarrel.setFill(barrelColor);
+        tankBody.setStroke(borderColor);
+        tankBarrel.setStroke(borderColor);
     }
 
     public void onChangeColorClick(javafx.scene.input.MouseEvent mouseEvent) {

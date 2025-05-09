@@ -2,6 +2,7 @@ package server;
 
 import configs.SocketConfig;
 import datas.*;
+import exceptions.BBCSQLError;
 import server.game_structure.QuadTree;
 import server.game_structure.RangeCircle;
 import server.model.PlayerData;
@@ -77,18 +78,35 @@ public class ClientHandler {
                     int dataID = stdout.read();
                     switch (dataID) {
                         case InputData.SERIAL_ID -> {
-                            lobby.spawn_queue.add(lobby.players_data.get(UDPAddr));
-                            player_dead = false;
+                            if (player_dead) {
+                                lobby.spawn_queue.add(lobby.players_data.get(UDPAddr));
+                                player_dead = false;
+                            }
                         }
                         case UserData.SERIAL_ID ->  {
                             PlayerData player = lobby.players_data.get(UDPAddr);
                             UserData data = new UserData(stdout);
 
-                            // TODO: Propagate to db
-                            player.barrel_color = data.barrel_color;
-                            player.body_color = data.body_color;
-                            player.border_color = data.border_color;
-                            player.name = data.name;
+                            if (!Objects.equals(player.name, data.name)) {
+                                try {
+                                    SQLDatabase.setName(player.SQLPlayer, data.name);
+                                } catch (BBCSQLError e) {
+                                    Logging.error(this, "Error saving player name");
+                                }
+                            }
+
+                            player.SQLPlayer.barrel_color = data.barrel_color;
+                            player.SQLPlayer.body_color = data.body_color;
+                            player.SQLPlayer.border_color = data.border_color;
+
+                            try {
+                                SQLDatabase.setColors(player.SQLPlayer);
+                            } catch (BBCSQLError e) {
+                                player.SQLPlayer.barrel_color = player.barrel_color;
+                                player.SQLPlayer.body_color = player.body_color;
+                                player.SQLPlayer.border_color = player.border_color;
+                                Logging.error(this, "Error saving player colors");
+                            }
                         }
                     }
                 } catch (SocketTimeoutException ignored) {}
@@ -173,6 +191,9 @@ public class ClientHandler {
             lobby.entity_data.remove(player);
         }
 
+        try {
+            SQLDatabase.closePlayer(player.SQLPlayer, player.score);
+        } catch (BBCSQLError ignored) {}
     }
 
     private void UDPOutputThread() {

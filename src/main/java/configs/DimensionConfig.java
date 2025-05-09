@@ -7,7 +7,7 @@ public class DimensionConfig {
     public static final double PROJECTILE_RADIUS = 5;
 
     public static final byte[] DEFAULT_COLOR_BORDER = new byte[]{0, 0, 0};
-    public static final byte[] DEFAULT_COLOR_BODY = new byte[]{0, 0, 0};
-    public static final byte[] DEFAULT_COLOR_BARREL = new byte[]{0, 0, 0};
+    public static final byte[] DEFAULT_COLOR_BODY = new byte[]{(byte) 250, 117, 121};
+    public static final byte[] DEFAULT_COLOR_BARREL = new byte[]{91, 107, (byte) 255};
 
 }

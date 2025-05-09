@@ -2,8 +2,11 @@ package server.model;
 
 import datas.AuthData;
 import datas.InputData;
+import exceptions.BBCSQLError;
 import server.ClientHandler;
 import server.Lobby;
+import server.SQLDatabase;
+import utils.Logging;
 
 import java.net.Socket;
 
@@ -12,10 +15,10 @@ import static utils.Helpers.rgbBytesToColor;
 
 public class PlayerData {
     private ClientHandler handler;
+    public SQLDatabase.SQLPlayer SQLPlayer;
     public int id;
     public String name;
     public int score;
-    public boolean playing = false;
     private InputData inputs = new InputData();
     public long last_shoot = 0;
 
@@ -23,15 +26,15 @@ public class PlayerData {
     public byte[] body_color;
     public byte[] barrel_color;
 
-    public PlayerData(AuthData auth, int player_id) {
+    public PlayerData(AuthData auth, int player_id, int lobby_id) throws BBCSQLError {
         id = player_id;
         name = auth.name;
 
-        // TODO: get score & color from db
-        // Dummy data of user
-        border_color = DEFAULT_COLOR_BORDER.clone();
-        body_color = DEFAULT_COLOR_BODY.clone();
-        barrel_color = DEFAULT_COLOR_BARREL.clone();
+        SQLPlayer = SQLDatabase.getPlayerData(auth, lobby_id);
+
+        border_color = SQLPlayer.border_color;
+        body_color = SQLPlayer.body_color;
+        barrel_color = SQLPlayer.barrel_color;
         score = 0;
     }
 

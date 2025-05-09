@@ -73,9 +73,9 @@ public class UserData extends SerialData {
             array.write(type);
 
             if (type == USER_FULL) {
-                array.write(border_color);
-                array.write(body_color);
-                array.write(barrel_color);
+                array.write(border_color, 0, 3);
+                array.write(body_color, 0, 3);
+                array.write(barrel_color, 0, 3);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

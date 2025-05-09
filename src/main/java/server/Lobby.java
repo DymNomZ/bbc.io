@@ -4,6 +4,7 @@ import configs.DimensionConfig;
 import configs.SocketConfig;
 import configs.StatsConfig;
 import datas.*;
+import exceptions.BBCSQLError;
 import server.debug.DebugWindow;
 import server.game_structure.QuadRectangle;
 import server.game_structure.QuadTree;
@@ -276,9 +277,16 @@ public class Lobby {
 
         UDPAddress UDPAddr = new UDPAddress(awaited_player_ip, awaited_player_port);
 
-        PlayerData player = new PlayerData(authPacket, player_id_ctr++);
-        players_data.put(UDPAddr, player);
-        player.startHandler(client, UDPAddr, this);
+        try {
+            PlayerData player = new PlayerData(authPacket, player_id_ctr++, id);
+            players_data.put(UDPAddr, player);
+            player.startHandler(client, UDPAddr, this);
+        } catch (BBCSQLError e) {
+            player_id_ctr--;
+            Logging.error(this, e.getMessage());
+            throw new IOException();
+        }
+
         return true;
     }
 

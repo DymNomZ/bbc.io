@@ -100,6 +100,7 @@ public class TitleScreenController {
                 Platform.runLater(() -> {
                     mainController.switchView("game-lobby-ui.fxml");
                     GameScene.initializeOnGameUpdate();
+                    GameLobbyUIController.initializeTank();
                 });
             }
         });
