@@ -50,6 +50,7 @@ public class GameUIController {
     private Circle player;
 
 
+
     public void addMessage(String message) {
         chatlog_list.getItems().add(message);
     }
