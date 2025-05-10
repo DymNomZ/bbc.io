@@ -26,9 +26,13 @@ public class PlayerEntity extends ServerEntity{
         stat_upgradable = 0;
     }
 
-    public void damage(double amount){
-        Logging.write(this,"I GOT DAMAGED");
-        health -= (int) amount;
+    // if Killed, return true
+    public boolean damage(int amount){
+        if (health <= 0) return false;
+
+        health -= amount;
+
+        return health <= 0;
     }
 
     @Override

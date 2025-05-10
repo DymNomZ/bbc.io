@@ -100,7 +100,7 @@ public class Lobby {
                 ArrayList<ServerEntity> chain = entity_data.get(playerData);
 
                 if (chain != null) {
-                    ProjectileEntity p = new ProjectileEntity(game_clock, playerData.id, playerData.getInputs().angle);
+                    ProjectileEntity p = new ProjectileEntity(game_clock, playerData.id, playerData.getInputs().angle, playerData.player_entity.damage);
                     p.x = chain.get(0).x;
                     p.y = chain.get(0).y;
                     entity_data.get(playerData).add(p);
@@ -132,16 +132,24 @@ public class Lobby {
     private QuadTree constructQTree(){
         QuadTree tree = new QuadTree(new QuadRectangle(0,0, DimensionConfig.MAP_WIDTH, DimensionConfig.MAP_HEIGHT),2, true,0);
 
-        for(ArrayList<ServerEntity> i : entity_data.values()) {
-            Iterator<ServerEntity> iterator = i.iterator();
-            while(iterator.hasNext()){
+        for(Iterator<PlayerData> keys = entity_data.keys().asIterator(); keys.hasNext();) {
+            PlayerData key = keys.next();
+            ArrayList<ServerEntity> i = entity_data.get(key);
+
+            PlayerEntity entity = null;
+            for(Iterator<ServerEntity> iterator = i.iterator(); iterator.hasNext();) {
                 ServerEntity s = iterator.next();
-                if(s instanceof ProjectileEntity && ((ProjectileEntity)s).has_collided){
+                if(s instanceof ProjectileEntity sProjectile && sProjectile.has_collided){
+                    entity.stat_upgradable += key.addScore(sProjectile.score);
+
                     iterator.remove();
                     continue;
-                }
-                if(s instanceof PlayerEntity && ((PlayerEntity)s).health <= 0){
+                } else if(s instanceof PlayerEntity && ((PlayerEntity)s).health <= 0){
                     handleDeath((PlayerEntity)s);
+                    key.resetScore();
+                    break;
+                } else if (s instanceof PlayerEntity) {
+                    entity = (PlayerEntity) s;
                 }
                 tree.insert(s);
             }
@@ -177,7 +185,8 @@ public class Lobby {
         while (!spawn_queue.isEmpty()) {
             PlayerData player = spawn_queue.remove();
             ArrayList<ServerEntity> entities = new ArrayList<>();
-            entities.add(new PlayerEntity(game_clock,player.id));
+            player.player_entity = new PlayerEntity(game_clock,player.id);
+            entities.add(player.player_entity);
             entity_data.put(player, entities);
         }
     }

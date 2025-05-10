@@ -11,12 +11,15 @@ import utils.Logging;
 public class ProjectileEntity extends ServerEntity implements Collidable<ServerEntity> {
     private final long spawn_time;
     public boolean has_collided;
+    public final int damage;
+    public int score = 0;
 
-    public ProjectileEntity(long game_clock, int owner_id, double angle) {
+    public ProjectileEntity(long game_clock, int owner_id, double angle, int damage) {
         super(game_clock, DimensionConfig.PROJECTILE_RADIUS, owner_id,angle);
         has_collided = false;
         this.angle = -angle;
         spawn_time = game_clock;
+        this.damage = damage;
 
         if (this.angle < 0) {
             this.angle = 360 - angle;
@@ -46,7 +49,11 @@ public class ProjectileEntity extends ServerEntity implements Collidable<ServerE
         if(other instanceof PlayerEntity && other.player_id != this.player_id && !has_collided) {
             has_collided = true;
             ((PlayerEntity)other).last_hit_player_id = player_id;
-            ((PlayerEntity)other).damage(StatsConfig.PROJECTILE_DAMAGE);
+            if (((PlayerEntity)other).damage(damage)) {
+                score = 50;
+            } else {
+                score = 1;
+            }
         }
     }
 
@@ -71,15 +78,15 @@ public class ProjectileEntity extends ServerEntity implements Collidable<ServerE
 
         // TODO: bounds collision
         if (x < 0) {
-            x = 0;
+            has_collided = true;
         } else if (x > x_map_offset) {
-            x = x_map_offset;
+            has_collided = true;
         }
 
         if (y < 0) {
-            y = 0;
+            has_collided = true;
         } else if (y > y_map_offset) {
-            y = y_map_offset;
+            has_collided = true;
         }
     }
 
