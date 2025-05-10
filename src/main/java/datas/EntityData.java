@@ -9,6 +9,7 @@ public class EntityData extends SerialData {
     static public final byte UPGRADE_HEALTH = 1;
     static public final byte UPGRADE_SPEED = 2;
     static public final byte UPGRADE_DAMAGE = 3;
+    static public final byte KILL_SELF = 4;
 
     public int id;
     public boolean is_projectile;

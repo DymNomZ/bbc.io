@@ -342,6 +342,20 @@ public class ServerHandler {
         }
     }
 
+    public void suicide() {
+        if (!is_connected) {
+            throw new BBCServerNotConnected();
+        }
+        try {
+            byte[] data = {EntityData.SERIAL_ID, EntityData.KILL_SELF};
+
+            server_stdin.write(data);
+            server_stdin.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public UserData getUser() {
         if (!is_connected) {
             throw new BBCServerNotConnected();

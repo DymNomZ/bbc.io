@@ -98,6 +98,10 @@ public class ClientHandler {
                                     case EntityData.UPGRADE_DAMAGE -> {
                                         player_entity.damage += 5;
                                     }
+
+                                    case EntityData.KILL_SELF -> {
+                                        player_entity.health = 0;
+                                    }
                                 }
 
                                 player_entity.stat_upgradable -= 1;
