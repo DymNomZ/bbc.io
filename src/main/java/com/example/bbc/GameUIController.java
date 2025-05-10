@@ -198,18 +198,13 @@ public class GameUIController {
     public void zoomDeathLogs(KeyEvent keyEvent) {
         if(keyEvent.getCode() == KeyCode.T){
             if(is_deathlog_zoomed){
-                scpDeathLogs.setPrefWidth(200);
                 lvDeathLogs.setPrefWidth(200);
                 is_deathlog_zoomed = false;
                 lvDeathLogs.setOpacity(0.65);
-                scpDeathLogs.setOpacity(0.65);
-
             } else{
-                scpDeathLogs.setPrefWidth(450);
                 lvDeathLogs.setPrefWidth(450);
                 is_deathlog_zoomed = true;
                 lvDeathLogs.setOpacity(1.0);
-                scpDeathLogs.setOpacity(1.0);
             }
         }
     }
