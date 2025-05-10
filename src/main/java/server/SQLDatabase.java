@@ -61,7 +61,7 @@ public abstract class SQLDatabase {
         }
 
         try (Connection conn = getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("UPDATE players SET lobby = ? WHERE id = ? AND name = ?");
+            PreparedStatement stmt = conn.prepareStatement("UPDATE player SET lobby = ? WHERE id = ? AND name = ?");
 
             stmt.setInt(1, lobby_id);
             stmt.setString(2, player.id);
@@ -83,7 +83,7 @@ public abstract class SQLDatabase {
         }
 
         try (Connection conn = getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("UPDATE players SET lobby = 0, highest_score = ? WHERE id = ? AND name = ?");
+            PreparedStatement stmt = conn.prepareStatement("UPDATE player SET lobby = 0, highest_score = ? WHERE id = ? AND name = ?");
 
             stmt.setInt(1, score);
             stmt.setString(2, player.id);
@@ -104,7 +104,7 @@ public abstract class SQLDatabase {
         }
 
         try (Connection conn = getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("UPDATE players SET name = ? WHERE id = ? AND name = ?");
+            PreparedStatement stmt = conn.prepareStatement("UPDATE player SET name = ? WHERE id = ? AND name = ?");
 
             stmt.setString(1, new_name);
             stmt.setString(2, player.id);
@@ -126,30 +126,13 @@ public abstract class SQLDatabase {
             return;
         }
 
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < 3; i++) {
-            sb.append((char) player.border_color[i]);
-        }
-        String border = sb.toString();
-
-        for (int i = 0; i < 3; i++) {
-            sb.setCharAt(i, (char) player.body_color[i]);
-        }
-        String body = sb.toString();
-
-        for (int i = 0; i < 3; i++) {
-            sb.setCharAt(i, (char) player.barrel_color[i]);
-        }
-        String barrel = sb.toString();
-
 
         try (Connection conn = getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("UPDATE players SET border = ?, body = ?, barrel = ? WHERE id = ? AND name = ?");
+            PreparedStatement stmt = conn.prepareStatement("UPDATE player SET border = ?, body = ?, barrel = ? WHERE id = ? AND name = ?");
 
-            stmt.setString(1, border);
-            stmt.setString(2, body);
-            stmt.setString(3, barrel);
+            stmt.setBytes(1, player.border_color);
+            stmt.setBytes(2, player.body_color);
+            stmt.setBytes(3, player.barrel_color);
             stmt.setString(4, player.id);
             stmt.setString(5, player.name);
 
@@ -166,7 +149,7 @@ public abstract class SQLDatabase {
     }
 
     private static void getPlayer(Connection conn, SQLPlayer player) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM players WHERE id = ? AND name = ?");
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM player WHERE id = ? AND name = ?");
 
         stmt.setString(1, player.id);
         stmt.setString(2, player.name);
@@ -176,12 +159,11 @@ public abstract class SQLDatabase {
         if (res.next()) {
             player.lobby_id = res.getInt("lobby");
             player.highest_score = res.getInt("highest_score");
-            player.body_color = res.getString("body").getBytes(StandardCharsets.UTF_8);
-            player.body_color[0] = 90;
-            player.barrel_color = res.getString("barrel").getBytes(StandardCharsets.UTF_8);
-            player.border_color = res.getString("border").getBytes(StandardCharsets.UTF_8);
+            player.body_color = res.getBytes("body");
+            player.barrel_color = res.getBytes("barrel");
+            player.border_color = res.getBytes("border");
         } else {
-            stmt = conn.prepareStatement("INSERT INTO players (id, name, body, barrel, border) VALUES (?, ?, ?, ?, ?)");
+            stmt = conn.prepareStatement("INSERT INTO player (id, name, body, barrel, border) VALUES (?, ?, ?, ?, ?)");
             stmt.setString(1, player.id);
             stmt.setString(2, player.name);
 
@@ -191,20 +173,9 @@ public abstract class SQLDatabase {
             player.body_color = DimensionConfig.DEFAULT_COLOR_BODY.clone();
             player.border_color = DimensionConfig.DEFAULT_COLOR_BORDER.clone();
 
-            for (int i = 0; i < 3; i++) {
-                sb.append((char) player.body_color[i]);
-            }
-            stmt.setString(3, sb.toString());
-
-            for (int i = 0; i < 3; i++) {
-                sb.setCharAt(i, (char) player.barrel_color[i]);
-            }
-            stmt.setString(4, sb.toString());
-
-            for (int i = 0; i < 3; i++) {
-                sb.setCharAt(i, (char) player.border_color[i]);
-            }
-            stmt.setString(5, sb.toString());
+            stmt.setBytes(3, player.body_color);
+            stmt.setBytes(4, player.barrel_color);
+            stmt.setBytes(5, player.border_color);
 
             stmt.executeUpdate();
         }
@@ -214,10 +185,10 @@ public abstract class SQLDatabase {
         try (Connection conn = getConnection()) {
             Statement stmt = conn.createStatement();
             try {
-                stmt.executeUpdate("UPDATE players SET lobby = 0");
+                stmt.executeUpdate("UPDATE player SET lobby = 0");
             } catch (SQLException ignored) {
-                stmt.execute("CREATE TABLE players (id VARCHAR(6) NOT NULL , name VARCHAR(255) NOT NULL , body VARCHAR(3) NOT NULL , barrel VARCHAR(3) NOT NULL , border VARCHAR(3) NOT NULL , lobby INT NOT NULL DEFAULT 0 , PRIMARY KEY (id(6), name(255)), highest_score INT NOT NULL DEFAULT 0)");
-                stmt.executeUpdate("UPDATE players SET lobby = 0");
+                stmt.execute("CREATE TABLE player (id VARCHAR(6) NOT NULL , name VARCHAR(255) NOT NULL , body BINARY(3) NOT NULL , barrel BINARY(3) NOT NULL , border BINARY(3) NOT NULL , lobby INT NOT NULL DEFAULT 0 , PRIMARY KEY (id(6), name(255)), highest_score INT NOT NULL DEFAULT 0)");
+                stmt.executeUpdate("UPDATE player SET lobby = 0");
             }
         } catch (SQLException e) {
             is_not_initialized = true;

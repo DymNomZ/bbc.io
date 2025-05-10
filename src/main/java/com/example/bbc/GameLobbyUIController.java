@@ -12,6 +12,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import utils.Helpers;
+import utils.Logging;
 import utils.Scenes;
 import javafx.event.ActionEvent;
 
@@ -168,10 +169,10 @@ public class GameLobbyUIController {
                 playerTank.getMain_body().setStroke(borderColor);
                 playerTank.getTurret().setStroke(borderColor);
             } else {
-                System.err.println("Player tank not available");
+                Logging.error(this, "Player tank not available");
             }
         } catch (Exception e) {
-            System.err.println("Error applying colors to tank: " + e.getMessage());
+            Logging.error(this, "Error applying colors to tank: " + e.getMessage());
             e.printStackTrace();
         }
     }

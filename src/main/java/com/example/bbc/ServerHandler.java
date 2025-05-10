@@ -24,11 +24,14 @@ public class ServerHandler {
     private ServerListener death_listener = null;
     private ServerDataListener<LobbyData> connect_listener = null;
     private ServerListener error_listener = null;
-    private final Thread tcp_thread;
+    private ServerListener has_upgrade_listener = null;
+    private ServerListener no_upgrade_listener = null;
+
+    private Thread tcp_thread;
     private DatagramSocket UDP_socket;
     private DatagramPacket input_packet = null;
     private OutputStream server_stdin = null;
-    private final String name;
+    private String name;
     private int lobby_id = 0;
     private boolean is_connected = false;
     private UserData current_user = null;
@@ -36,9 +39,13 @@ public class ServerHandler {
     public List<UserData> users_in_lobby = new LinkedList<>();
 
     private boolean player_dead = true;
+    private boolean no_stat_upgrades = true;
 
-    public ServerHandler(String name) {
+    public ServerHandler() {
+        this.name = "Garfield";
+    }
 
+    public void connect(String name) {
         this.name = name;
 
         try {
@@ -66,10 +73,21 @@ public class ServerHandler {
                     if (!player_dead) {
                         invokeListener(death_listener);
                         player_dead = true;
+                        no_stat_upgrades = true;
                     }
                 } else {
                     player_dead = false;
                     invokeDataListener(game_listener, data);
+
+                    int upgrades = data.entities.get(0).stat_upgradable;
+
+                    if (no_stat_upgrades && upgrades != 0) {
+                        no_stat_upgrades = false;
+                        invokeListener(has_upgrade_listener);
+                    } else if (!no_stat_upgrades && upgrades == 0) {
+                        no_stat_upgrades = true;
+                        invokeListener(no_upgrade_listener);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -251,6 +269,14 @@ public class ServerHandler {
     public void onPlayerDeath(ServerListener listener) {
         death_listener = listener;
     }
+
+    public void onContainsUpgrades(ServerListener listener) {
+        has_upgrade_listener = listener;
+    }
+
+    public void onNoUpgrades(ServerListener listener) {
+        no_upgrade_listener = listener;
+    }
     
     public void sendUserInput(InputData data) {
         if (input_packet != null) {
@@ -268,6 +294,48 @@ public class ServerHandler {
         }
         try {
             server_stdin.write(InputData.SERIAL_ID);
+            server_stdin.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void upgradeHealth() {
+        if (!is_connected) {
+            throw new BBCServerNotConnected();
+        }
+        try {
+            byte[] data = {EntityData.SERIAL_ID, EntityData.UPGRADE_HEALTH};
+
+            server_stdin.write(data);
+            server_stdin.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void upgradeSpeed() {
+        if (!is_connected) {
+            throw new BBCServerNotConnected();
+        }
+        try {
+            byte[] data = {EntityData.SERIAL_ID, EntityData.UPGRADE_SPEED};
+
+            server_stdin.write(data);
+            server_stdin.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void upgradeDamage() {
+        if (!is_connected) {
+            throw new BBCServerNotConnected();
+        }
+        try {
+            byte[] data = {EntityData.SERIAL_ID, EntityData.UPGRADE_DAMAGE};
+
+            server_stdin.write(data);
             server_stdin.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);

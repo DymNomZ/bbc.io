@@ -20,6 +20,8 @@ import utils.Logging;
 import java.io.IOException;
 import java.util.List;
 
+import static com.example.bbc.GameScene.HEIGHT_PROPERTY;
+import static com.example.bbc.GameScene.WIDTH_PROPERTY;
 import static com.example.bbc.IOGame.MAIN_STAGE;
 import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Scenes.*;
@@ -98,7 +100,7 @@ public class TitleScreenController {
             return;
         }
 
-        SERVER_API = new ServerHandler(playerNameTF.getText());
+        SERVER_API.connect(playerNameTF.getText());
 
         SERVER_API.onConnected(new ServerDataListener<LobbyData>() {
             @Override
@@ -110,7 +112,14 @@ public class TitleScreenController {
                 SERVER_API.users_in_lobby.addAll(data.users);
 
                 Platform.runLater(() -> {
-                    mainController.switchView("game-lobby-ui.fxml");
+                    double width = WIDTH_PROPERTY.get();
+                    double height = HEIGHT_PROPERTY.get();
+                    MAIN_STAGE.setScene(LOBBY_SCENE);
+                    MAIN_STAGE.setWidth(width);
+                    MAIN_STAGE.setHeight(height);
+                    MAIN_STAGE.getScene().getRoot().requestLayout();
+                    MAIN_STAGE.setFullScreen(IOGameSettings.getInstance().is_fullscreen);
+
                     GameScene.initializeOnGameUpdate();
                     GameLobbyUIController.initializeTank();
                 });

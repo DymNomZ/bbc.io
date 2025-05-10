@@ -19,9 +19,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import utils.Logging;
 
 import java.io.IOException;
 
+import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Scenes.GAME_SCENE;
 
 public class GameUIController {
@@ -57,7 +59,14 @@ public class GameUIController {
 
     public void initialize() {
         player = new Circle();
-        upgrade_buttons_enabled.set(xp.get() >= 10);  //sets condition for when buttons are enabled or disabled
+
+        SERVER_API.onContainsUpgrades(() -> {
+            upgrade_buttons_enabled.set(true);
+        });
+
+        SERVER_API.onNoUpgrades(() -> {
+            upgrade_buttons_enabled.set(false);
+        });
 
         btnUpgradeHealth.disableProperty().bind(upgrade_buttons_enabled.not());   //binds to changes to upgradeButtonsEnabled variable
         btnUpgradeSpeed.disableProperty().bind(upgrade_buttons_enabled.not());
@@ -99,52 +108,16 @@ public class GameUIController {
     }
 
     public void onUpgradeHealth(ActionEvent actionEvent) {
-        health.set(health.get() + 5);
-        xp.set(xp.get() - 10);
-        upgrade_buttons_enabled.set(xp.get() >= 10);
-        if(!upgrade_buttons_enabled.get()){
-            upgradesHealthBar.setProgress(0.84);
-            upgradesSpeedBar.setProgress(0.84);
-            upgradesDamageBar.setProgress(0.84);
-        } else{
-            upgradesHealthBar.setProgress(1);
-            upgradesSpeedBar.setProgress(1);
-            upgradesDamageBar.setProgress(1);
-        }
-        health_is_upgraded = true;
+        SERVER_API.upgradeHealth();
     }
 
 
     public void onUpgradeSpeed(ActionEvent actionEvent) {
-        speed.set(speed.get() + 3);
-        xp.set(xp.get() - 10);
-        upgrade_buttons_enabled.set(xp.get() >= 10);
-        if(!upgrade_buttons_enabled.get()){
-            upgradesHealthBar.setProgress(0.84);
-            upgradesSpeedBar.setProgress(0.84);
-            upgradesDamageBar.setProgress(0.84);
-        } else{
-            upgradesHealthBar.setProgress(1);
-            upgradesSpeedBar.setProgress(1);
-            upgradesDamageBar.setProgress(1);
-        }
-        speed_is_upgraded = true;
+        SERVER_API.upgradeSpeed();
     }
 
     public void onUpgradeDamage(ActionEvent actionEvent) {
-        damage.set(damage.get() + 5);
-        xp.set(xp.get() - 10);
-        upgrade_buttons_enabled.set(xp.get() >= 10);
-        if(!upgrade_buttons_enabled.get()){
-            upgradesHealthBar.setProgress(0.84);
-            upgradesSpeedBar.setProgress(0.84);
-            upgradesDamageBar.setProgress(0.84);
-        } else{
-            upgradesHealthBar.setProgress(1);
-            upgradesSpeedBar.setProgress(1);
-            upgradesDamageBar.setProgress(1);
-        }
-        damage_is_upgraded = true;
+        SERVER_API.upgradeDamage();
     }
 
     public void TEMP_manualAddXP(ActionEvent actionEvent) {

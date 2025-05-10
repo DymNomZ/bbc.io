@@ -80,9 +80,9 @@ public class GameScene extends Scene {
             MAIN_STAGE.setWidth(width);
             MAIN_STAGE.setHeight(height);
             MAIN_STAGE.getScene().getRoot().requestLayout();
-            MAIN_STAGE.setFullScreen(true);
             MAIN_STAGE.setFullScreen(IOGameSettings.getInstance().is_fullscreen);
 
+            Platform.runLater(GameLobbyUIController::initializeTank);
         });
     }
 
@@ -178,6 +178,7 @@ public class GameScene extends Scene {
                 }
             }
         });
+        SERVER_API.onPlayerDeath(GameScene::toLobbyRespawn);
         SERVER_API.onGameUpdate(new ServerDataListener<GameData>() {
             @Override
             public void run(GameData data) {
@@ -190,10 +191,6 @@ public class GameScene extends Scene {
                     received_entities.clear();
 
                     List<EntityData> entities = data.entities;
-                    if(entities.getFirst().health <= 0){
-                        toLobbyRespawn();
-                        return;
-                    }
                     double x = entities.get(0).x;
                     double y = entities.get(0).y;
 
@@ -201,19 +198,6 @@ public class GameScene extends Scene {
                         game_ui_controller.setProgressBar(StatsConfig.PLAYER_HEALTH, entities.getFirst().health);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
-                    }
-
-                    if(game_ui_controller.health_is_upgraded){
-                        game_ui_controller.health_is_upgraded = false;
-                        onHPUpgrade();
-                    }
-                    if(game_ui_controller.damage_is_upgraded){
-                        game_ui_controller.damage_is_upgraded = false;
-                        onDamageUpgrade();
-                    }
-                    if(game_ui_controller.speed_is_upgraded){
-                        game_ui_controller.speed_is_upgraded = false;
-                        onSpeedUpgrade();
                     }
 
                     main_player.pos_x = x;
@@ -463,16 +447,5 @@ public class GameScene extends Scene {
 
         }
     };
-
-    //TODO SEND DATA TO SERVER THAT THE STAT IS UPGRADED
-    public static void onSpeedUpgrade(){
-        System.out.println("UPGRADED SPEED");
-    }
-    public static void onHPUpgrade(){
-        System.out.println("UPGRADED HP");
-    }
-    public static void onDamageUpgrade(){
-        System.out.println("UPGRADED DAMAGE");
-    }
 
 }
