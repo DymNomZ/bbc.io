@@ -11,7 +11,7 @@
 
 <StackPane style="-fx-background-color: #111111;" stylesheets="@ui-styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.TitleScreenController">
    <children>
-      <AnchorPane fx:id="apTitleScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #111111;">
+      <AnchorPane fx:id="apTitleScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
          <children>
             <VBox alignment="CENTER" layoutX="590.0" layoutY="483.0" maxHeight="50.0" minHeight="50.0" prefHeight="50.0" prefWidth="100.0" AnchorPane.leftAnchor="530.0" AnchorPane.rightAnchor="530.0" AnchorPane.topAnchor="280.0">
                <children>

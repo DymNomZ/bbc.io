@@ -12,10 +12,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import utils.Logging;
 
 import java.io.IOException;
@@ -36,6 +35,20 @@ public class TitleScreenController {
     public Button settingsBtn;
     MainController mainController;
 
+    public void refreshGridBackground(){
+        Image backgroundImage = new Image("file:src/main/java/assets/static_grid_background.png");
+
+        BackgroundImage background = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true)
+        );
+
+        apTitleScreen.setBackground(new Background(background));
+    }
+
     public void initialize(){
 //        new PictureMaker(titleImageView, vTitle, "titles/title", apTitleScreen, false, 1400);
 
@@ -45,8 +58,7 @@ public class TitleScreenController {
 
         Platform.runLater(() -> mainController = IOGame.getMainController());
 
-
-
+        refreshGridBackground();
 
         playBtn.setGraphic(Sprites.Buttons.PLAY_BUTTON);
         playBtn.setFocusTraversable(false);
