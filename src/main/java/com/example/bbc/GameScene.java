@@ -448,13 +448,16 @@ public class GameScene extends Scene {
                         EnemyHPBar hpBar = new EnemyHPBar(((TankEntity)e).health,((TankEntity)e).max_health);
                         hpBar.setPosition(e.pos_x - 5, e.pos_y - 30);
 
-                        Text player_name = new Text(((TankEntity)e).player_name);
-                        player_name.setTranslateY(e.pos_y + 30);
-                        player_name.setTranslateX(e.pos_x - 10);
+                        if(IOGameSettings.getInstance().show_player_names) {
+                            Text player_name = new Text(((TankEntity) e).player_name);
+                            player_name.setTranslateY(e.pos_y + 30);
+                            player_name.setTranslateX(e.pos_x - 10);
+                            server_entities_container.getChildren().add(player_name);
+                        }
 
 
                         server_entities_container.getChildren().add((hpBar.group));
-                        server_entities_container.getChildren().add(player_name);
+
 
                     }
                 }

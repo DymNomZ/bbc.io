@@ -59,6 +59,7 @@ public class SettingsController {
                 instance.is_fullscreen = false;
                 break;
         }
+        instance.show_player_names = toggle_player_names.isSelected();
 
         IOGame.applySettings();
         try{
