@@ -47,7 +47,7 @@ public class Dialogues {
             {"<Player>, put these foolish ambitions to rest"},
             {"<Player> was not cool and normal"},
             {"si <Player> ay namatay"},
-            {"この文は実際には何ら重要な意味を持っておらず、また隠された秘密もありません。<Player> 翻訳に時間を割いていただき、申し訳ございません。"},
+            {"Kono bun wa jissai ni wa nanra juyona imi o motte orazu, mata kakusareta himitsu mo arimasen. <Player> hon'yaku ni jikan o saite itadaki, moshiwakegozaimasen."},
             {"<Player> got BSOD"},
             {"<Player> got banned by the admins for not being a discord kitten"},
             {"<Player> got admitted to an asylum"},

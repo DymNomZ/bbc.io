@@ -64,8 +64,8 @@ public class GameScene extends Scene {
 
 
     protected static void toLobbyRespawn(){
-        game_ui_controller.resetValues();
         Platform.runLater(() -> {
+            game_ui_controller.resetValues();
             double width = WIDTH_PROPERTY.get();
             double height = HEIGHT_PROPERTY.get();
             MAIN_STAGE.setScene(LOBBY_SCENE);
