@@ -1,0 +1,102 @@
+.settings-root {
+    -fx-background-color: #2C3E50; /* Dark background similar to game-lobby */
+}
+
+.settings-title-label {
+    -fx-text-fill: white;
+    -fx-font-family: "System Bold";
+    -fx-font-size: 30px; /* Prominent title */
+    -fx-padding: 10 0 20 0; /* Padding around title */
+}
+
+.settings-label {
+    -fx-text-fill: white;
+    -fx-font-family: "System";
+    -fx-font-size: 16px;
+}
+
+.settings-button {
+    -fx-text-fill: white;
+    -fx-font-family: "System Bold";
+    -fx-font-size: 14px;
+    -fx-background-radius: 8; /* Rounded corners for buttons */
+    -fx-padding: 10px 20px;
+    -fx-min-width: 120px;
+}
+
+.settings-button-apply {
+    -fx-background-color: #27ae60; /* Green for apply/confirm */
+}
+.settings-button-apply:hover {
+    -fx-background-color: #2ecc71;
+}
+
+.settings-button-back {
+    -fx-background-color: #e74c3c; /* Red for back/cancel */
+}
+.settings-button-back:hover {
+    -fx-background-color: #c0392b;
+}
+
+.settings-combobox {
+    -fx-background-color: #34495e;
+    -fx-border-color: #7f8c8d;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-family: "System";
+    -fx-text-fill: white; /* Color for prompt/selected text in box */
+    -fx-prompt-text-fill: #bdc3c7;
+    -fx-pref-width: 200px; /* Ensure consistent width */
+}
+
+.settings-combobox .arrow-button {
+    -fx-background-color: #34495e;
+    -fx-background-radius: 0 5 5 0;
+}
+
+.settings-combobox .arrow {
+    -fx-background-color: white;
+}
+
+.settings-combobox .list-view {
+    -fx-background-color: #34495e;
+    -fx-border-color: #7f8c8d;
+}
+
+.settings-combobox .list-cell {
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-padding: 8px 12px;
+    -fx-font-family: "System";
+}
+
+.settings-combobox .list-cell:filled:hover {
+    -fx-background-color: #4a6179;
+    -fx-text-fill: white;
+}
+
+.settings-combobox .list-cell:filled:selected {
+    -fx-background-color: #3498db; /* Blue for selected item in dropdown */
+    -fx-text-fill: white;
+}
+
+/* Style for the text of the selected item displayed in the ComboBox button part */
+.settings-combobox > .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+
+.settings-toggle-button {
+    -fx-font-family: "System Bold";
+    -fx-text-fill: white;
+    -fx-background-color: #7f8c8d; /* Default (OFF) state color */
+    -fx-background-radius: 5;
+    -fx-padding: 8px 15px;
+    -fx-pref-width: 200px; /* Ensure consistent width */
+}
+
+.settings-toggle-button:selected {
+    -fx-background-color: #27ae60; /* Green for ON state */
+    -fx-text-fill: white;
+}
