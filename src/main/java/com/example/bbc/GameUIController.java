@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 import static com.example.bbc.IOGame.SERVER_API;
@@ -112,7 +113,7 @@ public class GameUIController {
         if(player_reference == null){
             return ;
         }
-        player.setFill(player_reference.getMain_body().getFill());
+        player.setFill(Paint.valueOf("#000000"));
         player.setRadius(3);
 
         double minimap_x = (player_reference.pos_x / DimensionConfig.MAP_WIDTH) * minimapPane.getWidth();
