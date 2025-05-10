@@ -37,13 +37,30 @@ public class PlayerEntity extends ServerEntity{
 
     @Override
     public boolean isCollidingWith(ServerEntity other) {
+        double buffer = 5.0; //Adjust this value for leeway
+        Circle c1 = getHitbox();
+        Circle c2 = other.getHitbox();
 
-        return false;
+        double dx = c1.getCenterX() - c2.getCenterX();
+        double dy = c1.getCenterY() - c2.getCenterY();
+        double distance = Math.sqrt(dx * dx + dy * dy);
+
+        return distance <= (c1.getRadius() + c2.getRadius() + buffer);
     }
 
     @Override
-    public void handleCollision(ServerEntity other) {
+    public void handleCollision(ServerEntity other, long game_clock) {
+        if (other instanceof PlayerEntity playerEntity) {
+            if (time_damaged + 200 < game_clock) {
+                time_damaged = game_clock;
+                health -= 5;
+            }
 
+            if (playerEntity.time_damaged + 200 < game_clock) {
+                playerEntity.time_damaged = game_clock;
+                playerEntity.health -= 5;
+            }
+        }
     }
 
     @Override

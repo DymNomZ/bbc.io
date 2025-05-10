@@ -45,7 +45,7 @@ public class ProjectileEntity extends ServerEntity implements Collidable<ServerE
     }
 
     @Override
-    public void handleCollision(ServerEntity other) {
+    public void handleCollision(ServerEntity other, long game_clock) {
         if(other instanceof PlayerEntity && other.player_id != this.player_id && !has_collided) {
             has_collided = true;
             ((PlayerEntity)other).last_hit_player_id = player_id;
@@ -76,7 +76,6 @@ public class ProjectileEntity extends ServerEntity implements Collidable<ServerE
         x += delta_x;
         y -= delta_y;
 
-        // TODO: bounds collision
         if (x < 0) {
             has_collided = true;
         } else if (x > x_map_offset) {
