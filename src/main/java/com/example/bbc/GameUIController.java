@@ -24,8 +24,6 @@ import static com.example.bbc.IOGame.SERVER_API;
 
 public class GameUIController {
     public AnchorPane root;
-    public Button TEMPbtnDevPage;
-    public Button TEMPbtnLobbyPage;
     public ProgressBar upgradesHealthBar, upgradesSpeedBar, upgradesDamageBar;
     public Pane minimapPane;
     public ListView<String> lvDeathLogs;
@@ -39,9 +37,9 @@ public class GameUIController {
     public static IntegerProperty speed = new SimpleIntegerProperty(5);
     public static IntegerProperty damage = new SimpleIntegerProperty(10);
 
-    public Label TEMP_lbl_health;
-    public Label TEMP_lbl_speed;
-    public Label TEMP_lbl_damage;
+    public Label lblHealth;
+    public Label lblSpeed;
+    public Label lblDamage;
 
     BooleanProperty upgrade_buttons_enabled = new SimpleBooleanProperty(false);   //initial state for upgrade buttons
 
@@ -140,14 +138,14 @@ public class GameUIController {
     }
 
     public void resetValues(){
-        TEMP_lbl_health.setText("100");
-        TEMP_lbl_speed.setText("100");
-        TEMP_lbl_damage.setText("500");
+        lblHealth.setText("100");
+        lblSpeed.setText("100");
+        lblDamage.setText("500");
     }
 
     public void onUpgradeHealth(ActionEvent actionEvent) {
-        int hp = Integer.parseInt(TEMP_lbl_health.getText());
-        TEMP_lbl_health.setText("" + (hp + 50));
+        int hp = Integer.parseInt(lblHealth.getText());
+        lblHealth.setText("" + (hp + 50));
         upgradesHealthBar.setProgress(0.84);
         upgradesSpeedBar.setProgress(0.84);
         upgradesDamageBar.setProgress(0.84);
@@ -155,8 +153,8 @@ public class GameUIController {
     }
 
     public void onUpgradeSpeed(ActionEvent actionEvent) {
-        int speed = Integer.parseInt(TEMP_lbl_speed.getText());
-        TEMP_lbl_speed.setText("" + (speed + 50));
+        int speed = Integer.parseInt(lblSpeed.getText());
+        lblSpeed.setText("" + (speed + 50));
         upgradesHealthBar.setProgress(0.84);
         upgradesSpeedBar.setProgress(0.84);
         upgradesDamageBar.setProgress(0.84);
@@ -164,26 +162,12 @@ public class GameUIController {
     }
 
     public void onUpgradeDamage(ActionEvent actionEvent) {
-        int damage = Integer.parseInt(TEMP_lbl_damage.getText());
-        TEMP_lbl_damage.setText((damage + 100) + "");
+        int damage = Integer.parseInt(lblDamage.getText());
+        lblDamage.setText((damage + 100) + "");
         upgradesHealthBar.setProgress(0.84);
         upgradesSpeedBar.setProgress(0.84);
         upgradesDamageBar.setProgress(0.84);
         SERVER_API.upgradeDamage();
-    }
-
-    public void TEMP_manualAddXP(ActionEvent actionEvent) {
-        xp.set(xp.get() + 5);
-        upgrade_buttons_enabled.set(xp.get() >= 10);
-        if(!upgrade_buttons_enabled.get()){
-            upgradesHealthBar.setProgress(0.84);
-            upgradesSpeedBar.setProgress(0.84);
-            upgradesDamageBar.setProgress(0.84);
-        } else{
-            upgradesHealthBar.setProgress(1);
-            upgradesSpeedBar.setProgress(1);
-            upgradesDamageBar.setProgress(1);
-        }
     }
 
     public void handleKeyPressed(KeyEvent e) {

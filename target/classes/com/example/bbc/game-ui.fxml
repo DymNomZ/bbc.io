@@ -71,9 +71,9 @@
             <ProgressBar fx:id="upgradesHealthBar" prefHeight="20.0" prefWidth="180.0" progress="1.0" styleClass="upgrades-bar-health" GridPane.columnSpan="4" />
             <ProgressBar fx:id="upgradesSpeedBar" prefHeight="20.0" prefWidth="180.0" progress="1.0" styleClass="upgrades-bar-speed" GridPane.columnSpan="4" GridPane.rowIndex="1" />
             <ProgressBar fx:id="upgradesDamageBar" prefHeight="20.0" prefWidth="180.0" progress="1.0" styleClass="upgrades-bar-damage" GridPane.columnSpan="4" GridPane.rowIndex="2" />
-            <Button fx:id="btnUpgradeHealth" alignment="CENTER" contentDisplay="CENTER" ellipsisString="+" minHeight="20.0" mnemonicParsing="false" onAction="#onUpgradeHealth" prefHeight="30.0" prefWidth="25.0" style="-fx-background-color: 000000;" styleClass="upgrades-button" text="+" textAlignment="CENTER" GridPane.columnIndex="3" />
-            <Button fx:id="btnUpgradeBulletDamage" alignment="TOP_CENTER" contentDisplay="CENTER" ellipsisString="+" minHeight="20.0" mnemonicParsing="false" onAction="#onUpgradeDamage" prefHeight="27.0" prefWidth="25.0" styleClass="upgrades-button" text="+" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <Button fx:id="btnUpgradeSpeed" alignment="CENTER" ellipsisString="+" minHeight="20.0" mnemonicParsing="false" onAction="#onUpgradeSpeed" prefHeight="30.0" prefWidth="25.0" styleClass="upgrades-button" text="+" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Button fx:id="btnUpgradeHealth" alignment="CENTER" contentDisplay="CENTER" ellipsisString="+" minHeight="20.0" mnemonicParsing="false" onAction="#onUpgradeHealth" onKeyPressed="#onKeyUpgrade" prefHeight="30.0" prefWidth="25.0" style="-fx-background-color: 000000;" styleClass="upgrades-button" text="+" textAlignment="CENTER" GridPane.columnIndex="3" />
+            <Button fx:id="btnUpgradeBulletDamage" alignment="TOP_CENTER" contentDisplay="CENTER" ellipsisString="+" minHeight="20.0" mnemonicParsing="false" onAction="#onUpgradeDamage" onKeyPressed="#onKeyUpgrade" prefHeight="27.0" prefWidth="25.0" styleClass="upgrades-button" text="+" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Button fx:id="btnUpgradeSpeed" alignment="CENTER" ellipsisString="+" minHeight="20.0" mnemonicParsing="false" onAction="#onUpgradeSpeed" onKeyPressed="#onKeyUpgrade" prefHeight="30.0" prefWidth="25.0" styleClass="upgrades-button" text="+" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <Label prefHeight="20.0" prefWidth="77.0" styleClass="upgrades-label" text="Health:">
                 <padding>
                     <Insets left="15.0" />
@@ -89,17 +89,17 @@
                     <Insets left="15.0" />
                 </padding>
             </Label>
-            <Label fx:id="TEMP_lbl_health" prefHeight="20.0" prefWidth="77.0" styleClass="upgrades-label" text="100" GridPane.columnIndex="1">
+            <Label fx:id="lblHealth" prefHeight="20.0" prefWidth="77.0" styleClass="upgrades-label" text="100" GridPane.columnIndex="1">
                 <padding>
                     <Insets left="15.0" />
                 </padding>
             </Label>
-            <Label fx:id="TEMP_lbl_speed" prefHeight="20.0" prefWidth="77.0" styleClass="upgrades-label" text="100" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label fx:id="lblSpeed" prefHeight="20.0" prefWidth="77.0" styleClass="upgrades-label" text="100" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <padding>
                     <Insets left="15.0" />
                 </padding>
             </Label>
-            <Label fx:id="TEMP_lbl_damage" prefHeight="20.0" prefWidth="77.0" styleClass="upgrades-label" text="500" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Label fx:id="lblDamage" prefHeight="20.0" prefWidth="77.0" styleClass="upgrades-label" text="500" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <padding>
                     <Insets left="15.0" />
                 </padding>
