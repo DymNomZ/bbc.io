@@ -77,6 +77,23 @@ public class ClientHandler {
                 try {
                     int dataID = stdout.read();
                     switch (dataID) {
+                        case EntityData.SERIAL_ID -> {
+                            int upgradeID = stdout.read();
+
+                            switch (upgradeID) {
+                                // TODO: Upgrades
+
+                                case EntityData.UPGRADE_HEALTH -> {
+
+                                }
+                                case EntityData.UPGRADE_SPEED -> {
+
+                                }
+                                case EntityData.UPGRADE_DAMAGE -> {
+
+                                }
+                            }
+                        }
                         case InputData.SERIAL_ID -> {
                             if (player_dead) {
                                 lobby.spawn_queue.add(lobby.players_data.get(UDPAddr));
@@ -101,6 +118,9 @@ public class ClientHandler {
 
                             try {
                                 SQLDatabase.setColors(player.SQLPlayer);
+                                player.body_color = data.body_color;
+                                player.border_color = data.border_color;
+                                player.barrel_color = data.barrel_color;
                             } catch (BBCSQLError e) {
                                 player.SQLPlayer.barrel_color = player.barrel_color;
                                 player.SQLPlayer.body_color = player.body_color;
