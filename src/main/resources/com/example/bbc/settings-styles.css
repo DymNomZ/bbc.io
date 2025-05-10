@@ -5,7 +5,7 @@
 .settings-title-label {
     -fx-text-fill: white;
     -fx-font-family: "System Bold";
-    -fx-font-size: 30px; /* Prominent title */
+    -fx-font-size: 36px; /* Prominent title */
     -fx-padding: 10 0 20 0; /* Padding around title */
 }
 
@@ -18,7 +18,7 @@
 .settings-button {
     -fx-text-fill: white;
     -fx-font-family: "System Bold";
-    -fx-font-size: 14px;
+    -fx-font-size: 20px;
     -fx-background-radius: 8; /* Rounded corners for buttons */
     -fx-padding: 10px 20px;
     -fx-min-width: 120px;
@@ -99,4 +99,10 @@
 .settings-toggle-button:selected {
     -fx-background-color: #27ae60; /* Green for ON state */
     -fx-text-fill: white;
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
 }

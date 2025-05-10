@@ -10,35 +10,45 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane styleClass="settings-root"  stylesheets="@settings-styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.SettingsController">
-    <children>
-        <GridPane alignment="CENTER" hgap="15" vgap="15" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0">
-            <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
-                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" /> <!-- Title -->
-                <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" /> <!-- Screen Mode -->
-                <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" /> <!-- Player Names -->
-                <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" /> <!-- Apply Button -->
-                <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" /> <!-- Back Button -->
-            </rowConstraints>
-            <children>
-                <Label styleClass="settings-title-label" text="Settings" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
+<StackPane styleClass="settings-root" stylesheets="@settings-styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.SettingsController">
+   <children>
+      <GridPane alignment="CENTER" hgap="15" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" vgap="15">
+         <columnConstraints>
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="40.0" />
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="40.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" /> <!-- Title -->
+            <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" /> <!-- Screen Mode -->
+            <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" /> <!-- Player Names -->
+            <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" /> <!-- Apply Button -->
+            <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" /> <!-- Back Button -->
+         </rowConstraints>
+         <children>
+            <Label styleClass="settings-title-label" text="Settings" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
 
-                <Label styleClass="settings-label" text="Screen Mode:" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                <ComboBox fx:id="combobox_screen_mode" styleClass="settings-combobox" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            <Label styleClass="settings-label" text="Screen Mode:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets left="50.0" />
+               </GridPane.margin></Label>
+            <ComboBox fx:id="combobox_screen_mode" styleClass="settings-combobox" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
 
-                <Label styleClass="settings-label" text="Show Player Names:" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                <ToggleButton fx:id="toggle_player_names" mnemonicParsing="false" styleClass="settings-toggle-button" text="Show Names" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Label styleClass="settings-label" text="Show Player Names:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets left="50.0" />
+               </GridPane.margin></Label>
+            <ToggleButton fx:id="toggle_player_names" mnemonicParsing="false" styleClass="settings-toggle-button" text="Show Names" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
 
-                <Button fx:id="btn_apply" mnemonicParsing="false" onAction="#onApply" styleClass="settings-button, settings-button-apply" text="Apply" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-                <Button fx:id="btn_back" mnemonicParsing="false" styleClass="settings-button, settings-button-back" text="Back" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-            </children>
-        </GridPane>
-    </children>
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
+            <Button fx:id="btn_apply" mnemonicParsing="false" onAction="#onApply" styleClass="settings-button, settings-button-apply" text="Apply" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+            <Button fx:id="btn_back" mnemonicParsing="false" onAction="#onTitleClicked" styleClass="back-button" />
+         </children>
+      </GridPane>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
 </StackPane>
