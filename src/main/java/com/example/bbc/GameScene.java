@@ -138,29 +138,31 @@ public class GameScene extends Scene {
                     GameUIController.addMessage(data.deathMessage);
                 }
 
-                ListIterator<UserData> iter = SERVER_API.users_in_lobby.listIterator();
+                synchronized (SERVER_API.users_in_lobby) {
+                    ListIterator<UserData> iter = SERVER_API.users_in_lobby.listIterator();
 
-                for (UserData i : data.users) {
-                    if (iter.hasNext()) {
-                        UserData cur = iter.next();
+                    for (UserData i : data.users) {
+                        if (iter.hasNext()) {
+                            UserData cur = iter.next();
 
-                        while (cur != null && cur.id != i.id) {
-                            iter.remove();
-                            cur = iter.hasNext() ? iter.next() : null;
-                        }
-
-                        if (cur == null) {
-                            iter.add(i);
-                        } else {
-                            cur.score = i.score;
-                            if (i.type == UserData.USER_FULL) {
-                                cur.barrel_color = i.barrel_color;
-                                cur.border_color = i.border_color;
-                                cur.body_color = i.body_color;
+                            while (cur != null && cur.id != i.id) {
+                                iter.remove();
+                                cur = iter.hasNext() ? iter.next() : null;
                             }
+
+                            if (cur == null) {
+                                iter.add(i);
+                            } else {
+                                cur.score = i.score;
+                                if (i.type == UserData.USER_FULL) {
+                                    cur.barrel_color = i.barrel_color;
+                                    cur.border_color = i.border_color;
+                                    cur.body_color = i.body_color;
+                                }
+                            }
+                        } else {
+                            iter.add(i);
                         }
-                    } else {
-                        iter.add(i);
                     }
                 }
             }
@@ -215,38 +217,43 @@ public class GameScene extends Scene {
                         //skip player
                         if(!ed.is_projectile){
                             if(i == 0){
-                                for(UserData ud : SERVER_API.users_in_lobby){
-                                    if(ud.id == ed.id) {
-                                        Paint body_color = rgbBytesToColor(ud.body_color);
-                                        Paint barrel_color = rgbBytesToColor(ud.barrel_color);
-                                        Paint border_color = rgbBytesToColor(ud.border_color);
-                                        String name = ud.name;
-                                        TankEntity tank = new TankEntity(body_color, barrel_color, border_color, ed.health, StatsConfig.PLAYER_HEALTH, name);
-                                        tank.setPosition(ed.x, ed.y);
-                                        tank.pos_x = ed.x;
-                                        tank.pos_y = ed.y;
-                                        tank.setAngle(ed.angle);
+                                synchronized (SERVER_API.users_in_lobby) {
+                                    for(UserData ud : SERVER_API.users_in_lobby){
+                                        if(ud.id == ed.id) {
+                                            Paint body_color = rgbBytesToColor(ud.body_color);
+                                            Paint barrel_color = rgbBytesToColor(ud.barrel_color);
+                                            Paint border_color = rgbBytesToColor(ud.border_color);
+                                            String name = ud.name;
+                                            TankEntity tank = new TankEntity(body_color, barrel_color, border_color, ed.health, StatsConfig.PLAYER_HEALTH, name);
+                                            tank.setPosition(ed.x, ed.y);
+                                            tank.pos_x = ed.x;
+                                            tank.pos_y = ed.y;
+                                            tank.setAngle(ed.angle);
 
-                                        game_ui_controller.setPlayer(tank);
+                                            game_ui_controller.setPlayer(tank);
+                                        }
                                     }
                                 }
                                 i++;
                                 continue;
                             }
                             //find the user with the given id
-                            for(UserData ud : SERVER_API.users_in_lobby){
 
-                                if(ud.id == ed.id) {
-                                    Paint body_color = rgbBytesToColor(ud.body_color);
-                                    Paint barrel_color = rgbBytesToColor(ud.barrel_color);
-                                    Paint border_color = rgbBytesToColor(ud.border_color);
-                                    String name = ud.name;
-                                    TankEntity tank = new TankEntity(body_color, barrel_color, border_color, ed.health, StatsConfig.PLAYER_HEALTH, name);
-                                    tank.setPosition(ed.x - x, ed.y - y);
-                                    tank.pos_x = ed.x - x;
-                                    tank.pos_y = ed.y - y;
-                                    tank.setAngle(ed.angle);
-                                    received_entities.add(tank);
+                            synchronized (SERVER_API.users_in_lobby) {
+                                for(UserData ud : SERVER_API.users_in_lobby){
+
+                                    if(ud.id == ed.id) {
+                                        Paint body_color = rgbBytesToColor(ud.body_color);
+                                        Paint barrel_color = rgbBytesToColor(ud.barrel_color);
+                                        Paint border_color = rgbBytesToColor(ud.border_color);
+                                        String name = ud.name;
+                                        TankEntity tank = new TankEntity(body_color, barrel_color, border_color, ed.health, StatsConfig.PLAYER_HEALTH, name);
+                                        tank.setPosition(ed.x - x, ed.y - y);
+                                        tank.pos_x = ed.x - x;
+                                        tank.pos_y = ed.y - y;
+                                        tank.setAngle(ed.angle);
+                                        received_entities.add(tank);
+                                    }
                                 }
                             }
                         }
