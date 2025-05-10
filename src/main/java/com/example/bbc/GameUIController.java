@@ -94,6 +94,7 @@ public class GameUIController {
             statButtonsVisibility();
         }); //sets condition for when buttons are enabled or disabled
 
+        death_messages.addFirst("");
         lvDeathLogs.setItems(death_messages);
 
         statButtonsVisibility();
