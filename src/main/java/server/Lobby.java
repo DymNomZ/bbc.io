@@ -186,6 +186,13 @@ public class Lobby {
             );
         }
 
+        PlayerEntity killer_entity = getPlayerEntityWithId(s.last_hit_player_id);
+
+        if (killer_entity != null) {
+            killer_entity.health += killer_entity.maximum_health / 2;
+            killer_entity.health = Math.min(killer_entity.health, killer_entity.maximum_health);
+        }
+
         entity_data.remove(victim_data);
     }
 
@@ -193,6 +200,21 @@ public class Lobby {
         for(PlayerData p : players_data.values()) {
             if(p.id == id){
                 return p;
+            }
+        }
+        return null;
+    }
+
+    private PlayerEntity getPlayerEntityWithId(int id){
+        for(PlayerData p : players_data.values()) {
+            if(p.id == id){
+                ArrayList<ServerEntity> entities = entity_data.get(p);
+
+                if (entities != null) {
+                    return (PlayerEntity) entities.get(0);
+                } else {
+                    return null;
+                }
             }
         }
         return null;
