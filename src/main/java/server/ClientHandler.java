@@ -223,6 +223,7 @@ public class ClientHandler {
                 }
 
                 List<ServerEntity> in_range = tree.query(new RangeCircle(old_player_entity.x, old_player_entity.y, old_player_entity.radius + 1500));
+                
                 //Logging.write(this,in_range.size()+" " + old_player_entity);
                 player_found = false;
                 for (ServerEntity i : in_range) {

@@ -64,8 +64,8 @@ public class IOGame extends Application {
 
     public static void applySettings(){
         Platform.runLater(()->{
-        IOGameSettings instance = IOGameSettings.getInstance();
-        MAIN_STAGE.setFullScreen(instance.is_fullscreen);
+            IOGameSettings instance = IOGameSettings.getInstance();
+            MAIN_STAGE.setFullScreen(instance.is_fullscreen);
         });
     }
 

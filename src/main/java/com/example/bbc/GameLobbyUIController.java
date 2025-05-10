@@ -16,6 +16,7 @@ import utils.Scenes;
 import javafx.event.ActionEvent;
 
 import static com.example.bbc.IOGame.SERVER_API;
+import static utils.Scenes.GAME_SCENE;
 
 public class GameLobbyUIController {
     // Color Options
@@ -127,8 +128,31 @@ public class GameLobbyUIController {
         
         // Switch to game scene
         Stage stage = (Stage) btnReady.getScene().getWindow();
-        stage.setScene(Scenes.GAME_SCENE);
+
+        stage.setScene(GAME_SCENE);
         stage.setFullScreen(IOGameSettings.getInstance().is_fullscreen);
+        // Force a layout recalculation after changing the scene
+        GAME_SCENE.getRoot().requestLayout();  // Request layout on the new root of the scene
+
+        // Optionally, you can also force layout on the stage or parent container
+        stage.getScene().getRoot().requestLayout();  // Request layout on the root node of the new scene
+
+        if(!IOGameSettings.getInstance().is_fullscreen) {
+            stage.setFullScreen(true);
+            stage.setFullScreen(false);
+            System.out.println("I RESIZED");
+            // Force layout recalculation by "simulating" a resize
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+
+            // Temporarily resize the window
+            stage.setWidth(currentWidth + 1);
+            stage.setHeight(currentHeight + 1);
+
+            // Restore the original size
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
+        }
         stage.setTitle("Battle Game");
     }
     

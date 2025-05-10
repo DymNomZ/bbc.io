@@ -33,6 +33,7 @@ import java.util.List;
 import static com.example.bbc.IOGame.MAIN_STAGE;
 import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Helpers.rgbBytesToColor;
+import static utils.Scenes.LOBBY_SCENE;
 import static utils.Scenes.UI_OVERLAY;
 
 public class GameScene extends Scene {
@@ -66,22 +67,23 @@ public class GameScene extends Scene {
     public static GameUIController game_ui_controller;
 
 
+    public StackPane getRootPane(){
+        return root;
+    }
 
 
     protected static void toLobbyRespawn(){
-//        Platform.runLater(() -> {
-//            try {
-//                IOGame.changeScene(lobbySceneFXMLResource);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            Region root = (Region) IOGame.MAIN_STAGE.getScene().getRoot();
-//            root.applyCss();
-//            root.layout();
-//            MAIN_STAGE.centerOnScreen();
-//
-//            GameScene.initializeOnGameUpdate();
-//        });
+        Platform.runLater(() -> {
+            double width = WIDTH_PROPERTY.get();
+            double height = HEIGHT_PROPERTY.get();
+            MAIN_STAGE.setScene(LOBBY_SCENE);
+            MAIN_STAGE.setWidth(width);
+            MAIN_STAGE.setHeight(height);
+            MAIN_STAGE.getScene().getRoot().requestLayout();
+            MAIN_STAGE.setFullScreen(true);
+            MAIN_STAGE.setFullScreen(IOGameSettings.getInstance().is_fullscreen);
+
+        });
     }
 
 
@@ -138,11 +140,12 @@ public class GameScene extends Scene {
         this.setOnKeyPressed(key_handler::keyPressed);
         this.setOnKeyReleased(key_handler::keyReleased);
 
-        System.out.println(root.getChildren());
+        System.out.println("Game scene has "+root.getChildren());
 
         gameLoop.start();
 
     }
+
 
     public static void initializeOnGameUpdate(){
         SERVER_API.onLobbyUpdate(new ServerDataListener<LobbyData>() {
@@ -187,7 +190,7 @@ public class GameScene extends Scene {
                     received_entities.clear();
 
                     List<EntityData> entities = data.entities;
-                    if(entities.get(0).health <= 0){
+                    if(entities.getFirst().health <= 0){
                         toLobbyRespawn();
                         return;
                     }
@@ -292,10 +295,6 @@ public class GameScene extends Scene {
 
     }
 
-    public static void spawnEntity(Entity entity) {
-        entity_list.add(entity);
-        entity.render(root);
-    }
 
     public void clearBackground(){
         for(Line l : vertical_bg_lines){
@@ -412,7 +411,6 @@ public class GameScene extends Scene {
 
             synchronized (received_entities) {
                 update();
-                System.out.println(received_entities.size());
                 for (Entity e : received_entities) {
                     entity_list.add(e);
                     e.render(root);

@@ -21,4 +21,8 @@ public class MainController {
             e.printStackTrace();
         }
     }
+    public void switchView(Scene scene){
+        main_container.getChildren().setAll(scene.getRoot());
+        scene.getRoot().requestFocus();
+    }
 }
