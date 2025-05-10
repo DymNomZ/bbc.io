@@ -30,6 +30,8 @@ public class GameUIController {
     public Button TEMPbtnLobbyPage;
     public ProgressBar upgradesHealthBar, upgradesSpeedBar, upgradesDamageBar;
     public Pane minimapPane;
+    public ListView<String> chatlog_list;
+
     IntegerProperty xp = new SimpleIntegerProperty(0);      //using IntegerProperty allows labels to react to changes to the integer
     IntegerProperty health = new SimpleIntegerProperty(100);
     IntegerProperty speed = new SimpleIntegerProperty(5);
@@ -66,6 +68,7 @@ public class GameUIController {
             upgradesDamageBar.setProgress(1);
         }
     }
+
 
     public void setPlayer(TankEntity player_reference){
         if(player_reference == null){
