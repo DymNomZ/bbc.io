@@ -23,7 +23,7 @@ public class Lobby {
     public ConcurrentHashMap<UDPAddress, PlayerData> players_data = new ConcurrentHashMap<>();
 
     public ConcurrentHashMap<PlayerData, ArrayList<ServerEntity>> entity_data = new ConcurrentHashMap<>();
-    public ArrayList<String> death_messages = new ArrayList<>();
+    public final ArrayList<String> death_messages = new ArrayList<>();
 
     public LinkedList<PlayerData> spawn_queue = new LinkedList<>();
     static private int ID = 1;
@@ -180,12 +180,15 @@ public class Lobby {
         assert killer_data != null;
         assert victim_data != null;
 
-        String death_message = DeathMessageGenerator.getRandomDeathMessage(victim_data.name,killer_data.name);
+        synchronized (death_messages) {
+            death_messages.add(
+                    DeathMessageGenerator.getRandomDeathMessage(victim_data.name,killer_data.name)
+            );
+        }
 
         entity_data.remove(victim_data);
-
-
     }
+
     private PlayerData getPlayerDataWithId(int id){
         for(PlayerData p : players_data.values()) {
             if(p.id == id){

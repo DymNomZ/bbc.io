@@ -32,6 +32,7 @@ public class ClientHandler {
     private final UDPAddress UDPAddr;
     private boolean player_dead = true;
     private final int player_id;
+    private int death_messages_idx = 0;
 
     public ClientHandler(Socket socket, UDPAddress UDPAddr, Lobby lobby, int player_id) {
         lobby_context = lobby.initialLobbyData();
@@ -87,7 +88,9 @@ public class ClientHandler {
 
                                 switch (upgradeID) {
                                     case EntityData.UPGRADE_HEALTH -> {
-                                        player_entity.health += 10;
+                                        player_entity.maximum_health += 10;
+
+                                        // TODO: apply current health
                                     }
                                     case EntityData.UPGRADE_SPEED -> {
                                         player_entity.speed += 0.05;
@@ -138,6 +141,7 @@ public class ClientHandler {
                 } catch (SocketTimeoutException ignored) {}
 
                 ListIterator<UserData> context_iter = players_in_packet.listIterator(1);
+
 
                 // NOTE: Data sent here does not take to account those who reconnected
                 for (PlayerData player : lobby.players_data.values()) {
@@ -195,6 +199,12 @@ public class ClientHandler {
                 while (context_iter.hasNext()) {
                     context_iter.next();
                     context_iter.remove();
+                }
+
+                if (lobby.death_messages.size() > death_messages_idx) {
+                    lobby_context.deathMessage = lobby.death_messages.get(death_messages_idx++);
+                } else {
+                    lobby_context.deathMessage = "";
                 }
 
                 stdin.write(lobby_context.serialize());

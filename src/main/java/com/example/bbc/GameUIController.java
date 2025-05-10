@@ -28,7 +28,7 @@ public class GameUIController {
     public ProgressBar upgradesHealthBar, upgradesSpeedBar, upgradesDamageBar;
     public Pane minimapPane;
     public ListView<String> lvDeathLogs;
-    public ObservableList<String> death_messages = FXCollections.observableArrayList();
+    public static ObservableList<String> death_messages = FXCollections.observableArrayList();
     public Label playersLeftLabel;
     public Label scoreLabel;
     public ScrollPane scpDeathLogs;
@@ -65,7 +65,7 @@ public class GameUIController {
         });
     }
 
-    public void addMessage(String message) {
+    public static void addMessage(String message) {
         Platform.runLater(() -> {
             death_messages.add(message);
         });
