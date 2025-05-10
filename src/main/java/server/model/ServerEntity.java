@@ -11,7 +11,7 @@ import javafx.scene.shape.Circle;
 public abstract class ServerEntity implements Collidable<ServerEntity> {
     public double x, y, angle, radius;
     public final int player_id;
-    double speed;
+    public double speed;
     protected long last_moved_time;
 
     protected final double x_map_offset, y_map_offset;

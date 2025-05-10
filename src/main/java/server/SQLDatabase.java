@@ -77,7 +77,11 @@ public abstract class SQLDatabase {
         }
     }
 
-    public static void closePlayer(SQLPlayer player, int score) throws BBCSQLError {
+    public static void closePlayer(SQLPlayer player, int score, int highest_score) throws BBCSQLError {
+        if (highest_score < score) {
+            highest_score = score;
+        }
+
         if (is_not_initialized) {
             return;
         }
@@ -85,7 +89,7 @@ public abstract class SQLDatabase {
         try (Connection conn = getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("UPDATE player SET lobby = 0, highest_score = ? WHERE id = ? AND name = ?");
 
-            stmt.setInt(1, score);
+            stmt.setInt(1, highest_score);
             stmt.setString(2, player.id);
             stmt.setString(3, player.name);
 

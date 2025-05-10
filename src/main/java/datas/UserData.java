@@ -13,7 +13,8 @@ public class UserData extends SerialData {
 
     public int id;
     public String name;
-    public long score;
+    public int highest_score;
+    public int score;
     public byte type;
     public byte[] border_color;
     public byte[] body_color;
@@ -21,7 +22,8 @@ public class UserData extends SerialData {
 
     public UserData(InputStream stream) throws IOException {
         id = decodeInt(stream.readNBytes(4));
-        score = decodeLong(stream.readNBytes(8));
+        highest_score = decodeInt(stream.readNBytes(4));
+        score = decodeInt(stream.readNBytes(4));
         int size = decodeInt(stream.readNBytes(4));
         name = new String(stream.readNBytes(size), StandardCharsets.UTF_8);
         type = (byte) stream.read();
@@ -36,6 +38,7 @@ public class UserData extends SerialData {
     public UserData(PlayerData player) {
         id = player.id;
         name = player.name;
+        highest_score = player.highest_score;
         score = player.score;
 
         type = USER_FULL;
@@ -44,14 +47,16 @@ public class UserData extends SerialData {
         barrel_color = player.barrel_color.clone();
     }
 
-    public UserData(int id, String name, long score) {
+    @Deprecated
+    public UserData(int id, String name, int score) {
         this.id = id;
         this.name = name;
         this.score = score;
         type = USER_PARTIAL;
     }
 
-    public UserData(int id, String name, long score, byte[] border_color, byte[] body_color, byte[] barrel_color) {
+    @Deprecated
+    public UserData(int id, String name, int score, byte[] border_color, byte[] body_color, byte[] barrel_color) {
         this.id = id;
         this.name = name;
         this.score = score;
@@ -67,7 +72,8 @@ public class UserData extends SerialData {
 
         try {
             array.write(convertInt(id));
-            array.write(convertLong(score));
+            array.write(convertInt(highest_score));
+            array.write(convertInt(score));
             array.write(convertInt(name.length()));
             array.write(name.getBytes(StandardCharsets.UTF_8));
             array.write(type);
