@@ -38,6 +38,11 @@ public class GameUIController {
     public static IntegerProperty health = new SimpleIntegerProperty(100);
     public static IntegerProperty speed = new SimpleIntegerProperty(5);
     public static IntegerProperty damage = new SimpleIntegerProperty(10);
+
+    public Label TEMP_lbl_health;
+    public Label TEMP_lbl_speed;
+    public Label TEMP_lbl_damage;
+
     BooleanProperty upgrade_buttons_enabled = new SimpleBooleanProperty(false);   //initial state for upgrade buttons
 
     public Button btnUpgradeBulletDamage, btnUpgradeSpeed, btnUpgradeHealth;
@@ -86,12 +91,13 @@ public class GameUIController {
         player = new Circle();
         SERVER_API.onContainsUpgrades(() -> {
             upgrade_buttons_enabled.set(true);
-            statButtonsVisibility();
+            upgradesHealthBar.setProgress(1);
+            upgradesSpeedBar.setProgress(1);
+            upgradesDamageBar.setProgress(1);
         });
 
         SERVER_API.onNoUpgrades(() -> {
             upgrade_buttons_enabled.set(false);
-            statButtonsVisibility();
         }); //sets condition for when buttons are enabled or disabled
 
         death_messages.addFirst("");
@@ -133,15 +139,36 @@ public class GameUIController {
         debugPanel.setVisible(!debugPanel.isVisible());
     }
 
+    public void resetValues(){
+        TEMP_lbl_health.setText("100");
+        TEMP_lbl_speed.setText("100");
+        TEMP_lbl_damage.setText("500");
+    }
+
     public void onUpgradeHealth(ActionEvent actionEvent) {
+        int hp = Integer.parseInt(TEMP_lbl_health.getText());
+        TEMP_lbl_health.setText("" + (hp + 50));
+        upgradesHealthBar.setProgress(0.84);
+        upgradesSpeedBar.setProgress(0.84);
+        upgradesDamageBar.setProgress(0.84);
         SERVER_API.upgradeHealth();
     }
 
     public void onUpgradeSpeed(ActionEvent actionEvent) {
+        int speed = Integer.parseInt(TEMP_lbl_speed.getText());
+        TEMP_lbl_speed.setText("" + (speed + 50));
+        upgradesHealthBar.setProgress(0.84);
+        upgradesSpeedBar.setProgress(0.84);
+        upgradesDamageBar.setProgress(0.84);
         SERVER_API.upgradeSpeed();
     }
 
     public void onUpgradeDamage(ActionEvent actionEvent) {
+        int damage = Integer.parseInt(TEMP_lbl_damage.getText());
+        TEMP_lbl_damage.setText((damage + 100) + "");
+        upgradesHealthBar.setProgress(0.84);
+        upgradesSpeedBar.setProgress(0.84);
+        upgradesDamageBar.setProgress(0.84);
         SERVER_API.upgradeDamage();
     }
 
