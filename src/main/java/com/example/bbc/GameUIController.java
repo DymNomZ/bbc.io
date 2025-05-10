@@ -25,10 +25,11 @@ public class GameUIController {
     public Button TEMPbtnLobbyPage;
     public ProgressBar upgradesHealthBar, upgradesSpeedBar, upgradesDamageBar;
     public Pane minimapPane;
-    public ListView<String> death_messages_list;
+    public ListView<String> lvDeathLogs;
     public ObservableList<String> death_messages = FXCollections.observableArrayList();
     public Label playersLeftLabel;
     public Label scoreLabel;
+    public ScrollPane scpDeathLogs;
 
     IntegerProperty xp = new SimpleIntegerProperty(0);      //using IntegerProperty allows labels to react to changes to the integer
     IntegerProperty health = new SimpleIntegerProperty(100);
@@ -58,7 +59,7 @@ public class GameUIController {
 
     public void refreshDeathMessages(){
         Platform.runLater(() -> {
-            death_messages_list.setItems(death_messages);
+            lvDeathLogs.setItems(death_messages);
         });
     }
 
@@ -72,7 +73,7 @@ public class GameUIController {
         player = new Circle();
         upgrade_buttons_enabled.set(xp.get() >= 10);  //sets condition for when buttons are enabled or disabled
 
-        death_messages_list.setItems(death_messages);
+        lvDeathLogs.setItems(death_messages);
 
         btnUpgradeHealth.disableProperty().bind(upgrade_buttons_enabled.not());   //binds to changes to upgradeButtonsEnabled variable
         btnUpgradeSpeed.disableProperty().bind(upgrade_buttons_enabled.not());
@@ -215,4 +216,13 @@ public class GameUIController {
         }
     }
 
+    public void zoomInDeathLogs() {
+        scpDeathLogs.setPrefWidth(450);
+        lvDeathLogs.setPrefWidth(450);
+    }
+
+    public void zoomOutDeathLogs() {
+        scpDeathLogs.setPrefWidth(200);
+        lvDeathLogs.setPrefWidth(200);
+    }
 }
