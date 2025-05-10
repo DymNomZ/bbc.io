@@ -39,7 +39,7 @@
 .label-status {
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-font-size: 36px;
+    -fx-font-size: 28px;
 }
 
 .label-status .text {
