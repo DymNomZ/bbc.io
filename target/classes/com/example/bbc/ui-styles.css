@@ -48,6 +48,19 @@
     -fx-font-family: "Coolvetica";
 }
 
+/* EXP BAR */
+
+.xp-bar .bar {
+    -fx-background-color: #fff480;
+    -fx-background-radius: 30px;
+}
+
+.xp-bar .track {
+    -fx-background-color: #2e2b27;
+    -fx-background-radius: 30px;
+}
+
+
 .health-bar .bar {
     -fx-background-color: #F08278;
     -fx-background-radius: 30px;
@@ -154,3 +167,48 @@
     -fx-border-color: #444444;
     -fx-border-width: 1;
 }
+
+/* DEATH MESSAGES */
+
+.lv-death-logs {
+    -fx-background-color: rgba(0, 0, 0, 0.0);
+    /* -fx-border-color: #ffffff; */
+}
+
+.lv-death-logs .list-cell {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+    -fx-text-fill: #fceda2;
+}
+
+.sp-death-logs {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-background-radius: 5;
+    -fx-padding: 1;
+}
+
+.sp-death-logs .decrement-button, .increment-button {
+    -fx-opacity: 0;
+    -fx-pref-height: 0;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.sp-death-logs .scroll-bar:vertical .track  {
+    -fx-background-color: rgba(0, 0, 0, 0.3)
+}
+
+.sp-death-logs .scroll-bar:vertical .thumb  {
+    -fx-background-color: #fff480;
+}
+
+.sp-death-logs .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-pref-height: 0;
+}
+
+
+
+
+
+
+

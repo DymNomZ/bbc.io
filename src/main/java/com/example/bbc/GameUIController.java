@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 import static com.example.bbc.IOGame.SERVER_API;
@@ -52,6 +53,8 @@ public class GameUIController {
     boolean health_is_upgraded = false;
     boolean damage_is_upgraded = false;
 
+    boolean is_deathlog_zoomed = false;
+
     private Circle player;
 
     public void updatePlayersLeftCounter(int count){
@@ -72,7 +75,7 @@ public class GameUIController {
 
     public static void addMessage(String message) {
         Platform.runLater(() -> {
-            death_messages.add(message);
+            death_messages.addFirst(message);
         });
     }
 
@@ -116,7 +119,7 @@ public class GameUIController {
         if(player_reference == null){
             return ;
         }
-        player.setFill(player_reference.getMain_body().getFill());
+        player.setFill(Paint.valueOf("#000000"));
         player.setRadius(3);
 
         double minimap_x = (player_reference.pos_x / DimensionConfig.MAP_WIDTH) * minimapPane.getWidth();
@@ -223,13 +226,22 @@ public class GameUIController {
         }
     }
 
-    public void zoomInDeathLogs() {
-        scpDeathLogs.setPrefWidth(450);
-        lvDeathLogs.setPrefWidth(450);
-    }
+    public void zoomDeathLogs(KeyEvent keyEvent) {
+        if(keyEvent.getCode() == KeyCode.T){
+            if(is_deathlog_zoomed){
+                scpDeathLogs.setPrefWidth(200);
+                lvDeathLogs.setPrefWidth(200);
+                is_deathlog_zoomed = false;
+                lvDeathLogs.setOpacity(0.65);
+                scpDeathLogs.setOpacity(0.65);
 
-    public void zoomOutDeathLogs() {
-        scpDeathLogs.setPrefWidth(200);
-        lvDeathLogs.setPrefWidth(200);
+            } else{
+                scpDeathLogs.setPrefWidth(450);
+                lvDeathLogs.setPrefWidth(450);
+                is_deathlog_zoomed = true;
+                lvDeathLogs.setOpacity(1.0);
+                scpDeathLogs.setOpacity(1.0);
+            }
+        }
     }
 }
