@@ -23,7 +23,7 @@
         <padding>
             <Insets bottom="5" left="10" right="10" top="5" />
         </padding>
-        <Label fx:id="playerNameLabel" styleClass="label-status" text="Players Left: " />
+        <Label fx:id="playersLeftLabel" styleClass="label-status" text="Players Left: " />
         <Region HBox.hgrow="ALWAYS" />
         <Label styleClass="label-status" text="Score:" />
         <Label fx:id="scoreLabel" styleClass="score-value" text="0" />
@@ -113,7 +113,7 @@
      <content>
        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="182.0">
             <children>
-               <ListView fx:id="chatlog_list" prefHeight="200.0" prefWidth="200.0" />
+               <ListView fx:id="death_messages_list" prefHeight="200.0" prefWidth="200.0" />
             </children>
          </AnchorPane>
      </content>

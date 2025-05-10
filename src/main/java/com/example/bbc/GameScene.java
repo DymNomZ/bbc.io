@@ -1,5 +1,6 @@
 package com.example.bbc;
 
+import classes.Dialogues;
 import classes.EnemyHPBar;
 import configs.StatsConfig;
 import datas.*;
@@ -13,7 +14,6 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -23,18 +23,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import utils.Helpers;
-import utils.Logging;
-
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
-
 import static com.example.bbc.IOGame.MAIN_STAGE;
 import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Helpers.rgbBytesToColor;
 import static utils.Scenes.LOBBY_SCENE;
-import static utils.Scenes.UI_OVERLAY;
 
 public class GameScene extends Scene {
 
@@ -66,11 +60,9 @@ public class GameScene extends Scene {
     public static boolean can_be_damaged = true;
     public static GameUIController game_ui_controller;
 
-
     public StackPane getRootPane(){
         return root;
     }
-
 
     protected static void toLobbyRespawn(){
         Platform.runLater(() -> {
@@ -80,13 +72,11 @@ public class GameScene extends Scene {
             MAIN_STAGE.setWidth(width);
             MAIN_STAGE.setHeight(height);
             MAIN_STAGE.getScene().getRoot().requestLayout();
+            MAIN_STAGE.setFullScreen(true);
             MAIN_STAGE.setFullScreen(IOGameSettings.getInstance().is_fullscreen);
 
-            Platform.runLater(GameLobbyUIController::initializeTank);
         });
     }
-
-
 
     public GameScene() {
         super(root, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -98,8 +88,6 @@ public class GameScene extends Scene {
         horizontal_bg_lines = new ArrayList<>();
 
         //game_ui_controller = UI_OVERLAY.getController();
-
-
 
         HEIGHT_PROPERTY.addListener((observable, oldValue, newValue) -> {
             recalculate();
@@ -131,8 +119,6 @@ public class GameScene extends Scene {
         * */
         main_player.render(root);
 
-
-
         this.setOnMouseMoved(mouse_handler);
         this.setOnMouseReleased(mouse_handler::mouseReleased);
         this.setOnMousePressed(mouse_handler::mousePressed);
@@ -145,7 +131,6 @@ public class GameScene extends Scene {
         gameLoop.start();
 
     }
-
 
     public static void initializeOnGameUpdate(){
         SERVER_API.onLobbyUpdate(new ServerDataListener<LobbyData>() {
@@ -178,19 +163,40 @@ public class GameScene extends Scene {
                 }
             }
         });
-        SERVER_API.onPlayerDeath(GameScene::toLobbyRespawn);
         SERVER_API.onGameUpdate(new ServerDataListener<GameData>() {
             @Override
             public void run(GameData data) {
 
                 //Logging.write(this,"Rendering " + String.valueOf(data.entities.size()) + " entities");
 
-
                 synchronized (received_entities) {
 
                     received_entities.clear();
 
                     List<EntityData> entities = data.entities;
+                    if(entities.getFirst().health <= 0){
+                        Platform.runLater(() -> { // Wrap UI updates in Platform.runLater()
+                            int len = Dialogues.DEATH_MESSAGES.length;
+                            int idx = new Random().nextInt(0, len);
+                            String death_message = Dialogues.DEATH_MESSAGES[idx][0];
+                            game_ui_controller.addMessage(death_message);
+                            toLobbyRespawn();
+                        });
+                        return;
+                    }
+
+                    //get player count
+                    int ctr = 0;
+                    for(EntityData ed : entities){
+                        if(!ed.is_projectile) ctr++;
+                    }
+
+                    final int player_count = ctr;
+                    Platform.runLater(() -> {
+                        game_ui_controller.updatePlayersLeftCounter(player_count);
+                        game_ui_controller.refreshDeathMessages();
+                    });
+
                     double x = entities.get(0).x;
                     double y = entities.get(0).y;
 
@@ -198,6 +204,19 @@ public class GameScene extends Scene {
                         game_ui_controller.setProgressBar(StatsConfig.PLAYER_HEALTH, entities.getFirst().health);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
+                    }
+
+                    if(game_ui_controller.health_is_upgraded){
+                        game_ui_controller.health_is_upgraded = false;
+                        onHPUpgrade();
+                    }
+                    if(game_ui_controller.damage_is_upgraded){
+                        game_ui_controller.damage_is_upgraded = false;
+                        onDamageUpgrade();
+                    }
+                    if(game_ui_controller.speed_is_upgraded){
+                        game_ui_controller.speed_is_upgraded = false;
+                        onSpeedUpgrade();
                     }
 
                     main_player.pos_x = x;
@@ -447,5 +466,16 @@ public class GameScene extends Scene {
 
         }
     };
+
+    //TODO SEND DATA TO SERVER THAT THE STAT IS UPGRADED
+    public static void onSpeedUpgrade(){
+        System.out.println("UPGRADED SPEED");
+    }
+    public static void onHPUpgrade(){
+        System.out.println("UPGRADED HP");
+    }
+    public static void onDamageUpgrade(){
+        System.out.println("UPGRADED DAMAGE");
+    }
 
 }
