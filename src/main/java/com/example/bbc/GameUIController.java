@@ -47,9 +47,13 @@ public class GameUIController {
     private Circle player;
 
     public void updatePlayersLeftCounter(int count){
-        String text = "Players Left: ";
-        text += String.format("%d", count);
+        String text = "Players Left: " + count;
         playersLeftLabel.setText(text);
+    }
+
+    public void updateScore(long score){
+        String text = "Score: " + score;
+        scoreLabel.setText(text);
     }
 
     public void refreshDeathMessages(){

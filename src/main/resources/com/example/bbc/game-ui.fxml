@@ -25,8 +25,7 @@
         </padding>
         <Label fx:id="playersLeftLabel" styleClass="label-status" text="Players Left: " />
         <Region HBox.hgrow="ALWAYS" />
-        <Label styleClass="label-status" text="Score:" />
-        <Label fx:id="scoreLabel" styleClass="score-value" text="0" />
+        <Label fx:id="scoreLabel"  styleClass="label-status" text="Score:" />
     </HBox>
     <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
