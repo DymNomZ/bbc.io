@@ -69,7 +69,7 @@ public class GameUIController {
 
     public static void addMessage(String message) {
         Platform.runLater(() -> {
-            death_messages.add(message);
+            death_messages.addFirst(message);
         });
     }
 

@@ -109,12 +109,8 @@
         </children>
     </GridPane>
    <ScrollPane fx:id="scpDeathLogs" prefHeight="200.0" prefWidth="200.0" AnchorPane.leftAnchor="22.0" AnchorPane.topAnchor="60.0">
-     <content>
-       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="182.0">
-            <children>
-               <ListView fx:id="lvDeathLogs" onKeyPressed="#zoomDeathLogs" prefHeight="200.0" prefWidth="200.0" />
-            </children>
-         </AnchorPane>
-     </content>
+      <content>
+         <ListView fx:id="lvDeathLogs" onKeyPressed="#zoomDeathLogs" prefHeight="200.0" prefWidth="200.0" />
+      </content>
    </ScrollPane>
 </AnchorPane>
