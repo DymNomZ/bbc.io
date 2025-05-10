@@ -31,7 +31,7 @@ public class LobbyData extends SerialData {
         }
         size = decodeInt(stream.readNBytes(4));
         if (size != 0) {
-            deathMessage = new String(stream.readNBytes(size), StandardCharsets.UTF_8);
+            deathMessage = new String(stream.readNBytes(size), StandardCharsets.UTF_16);
         }
     }
 
@@ -45,8 +45,11 @@ public class LobbyData extends SerialData {
             for (UserData i : users) {
                 array.write(i.serialize());
             }
-            array.write(convertInt(deathMessage.length()));
-            array.write(deathMessage.getBytes(StandardCharsets.UTF_8));
+
+            byte[] deathBytes = deathMessage.getBytes(StandardCharsets.UTF_16);
+
+            array.write(convertInt(deathBytes.length));
+            array.write(deathBytes);
         } catch (IOException e) {
             Logging.write(this, "wtf");
             return new byte[1];

@@ -54,7 +54,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
             case DIGIT4 -> four_pressed = true;
             case DIGIT5 -> five_pressed = true;
             case F -> f_pressed = true;
-            case ESCAPE -> esc_pressed = false;
+            case ESCAPE -> esc_pressed = true;
         }
     }
 

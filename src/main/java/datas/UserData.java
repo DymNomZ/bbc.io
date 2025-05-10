@@ -25,7 +25,7 @@ public class UserData extends SerialData {
         highest_score = decodeInt(stream.readNBytes(4));
         score = decodeInt(stream.readNBytes(4));
         int size = decodeInt(stream.readNBytes(4));
-        name = new String(stream.readNBytes(size), StandardCharsets.UTF_8);
+        name = new String(stream.readNBytes(size), StandardCharsets.UTF_16);
         type = (byte) stream.read();
 
         if (type == USER_FULL) {
@@ -74,8 +74,11 @@ public class UserData extends SerialData {
             array.write(convertInt(id));
             array.write(convertInt(highest_score));
             array.write(convertInt(score));
-            array.write(convertInt(name.length()));
-            array.write(name.getBytes(StandardCharsets.UTF_8));
+
+            byte[] nameBytes = name.getBytes(StandardCharsets.UTF_16);
+
+            array.write(convertInt(nameBytes.length));
+            array.write(nameBytes);
             array.write(type);
 
             if (type == USER_FULL) {

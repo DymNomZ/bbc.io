@@ -21,19 +21,20 @@ public class AuthData extends SerialData{
         int size = decodeInt(stream.readNBytes(4)) - 10;
         id = stream.readNBytes(6);
         lobby_id = decodeInt(stream.readNBytes(4));
-        name = new String(stream.readNBytes(size), StandardCharsets.UTF_8);
+        name = new String(stream.readNBytes(size), StandardCharsets.UTF_16);
     }
 
     @Override
     public byte[] serialize() {
         try {
-            int size = 10 + name.length();
+            byte[] nameBytes = name.getBytes(StandardCharsets.UTF_16);
+            int size = 10 + nameBytes.length;
 
             ByteArrayOutputStream array = new ByteArrayOutputStream();
             array.write(convertInt(size));
             array.write(id);
             array.write(convertInt(lobby_id));
-            array.write(name.getBytes(StandardCharsets.UTF_8));
+            array.write(nameBytes);
 
             return array.toByteArray();
         } catch (IOException e) {
