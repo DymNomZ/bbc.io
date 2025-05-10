@@ -47,6 +47,8 @@ public class GameUIController {
     boolean health_is_upgraded = false;
     boolean damage_is_upgraded = false;
 
+    boolean is_deathlog_zoomed = false;
+
     private Circle player;
 
     public void updatePlayersLeftCounter(int count){
@@ -196,13 +198,17 @@ public class GameUIController {
         }
     }
 
-    public void zoomInDeathLogs() {
-        scpDeathLogs.setPrefWidth(450);
-        lvDeathLogs.setPrefWidth(450);
-    }
-
-    public void zoomOutDeathLogs() {
-        scpDeathLogs.setPrefWidth(200);
-        lvDeathLogs.setPrefWidth(200);
+    public void zoomDeathLogs(KeyEvent keyEvent) {
+        if(keyEvent.getCode() == KeyCode.T){
+            if(is_deathlog_zoomed){
+                scpDeathLogs.setPrefWidth(200);
+                lvDeathLogs.setPrefWidth(200);
+                is_deathlog_zoomed = false;
+            } else{
+                scpDeathLogs.setPrefWidth(450);
+                lvDeathLogs.setPrefWidth(450);
+                is_deathlog_zoomed = true;
+            }
+        }
     }
 }
