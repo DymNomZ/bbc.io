@@ -189,7 +189,7 @@ public class Lobby {
         PlayerEntity killer_entity = getPlayerEntityWithId(s.last_hit_player_id);
 
         if (killer_entity != null) {
-            killer_entity.health += killer_entity.maximum_health / 2;
+            killer_entity.health += (int) (killer_entity.maximum_health * StatsConfig.REGENERATION_MULTIPLIER);
             killer_entity.health = Math.min(killer_entity.health, killer_entity.maximum_health);
         }
 
@@ -251,8 +251,6 @@ public class Lobby {
 
         if (ServerMain.DEBUG_WINDOW) {
             DebugWindow.log(location_sb.toString());
-        } else {
-            Logging.write(this, location_sb.toString());
         }
     }
 

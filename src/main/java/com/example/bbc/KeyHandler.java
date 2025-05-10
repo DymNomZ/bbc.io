@@ -21,6 +21,8 @@ public class KeyHandler implements EventHandler<KeyEvent> {
     public boolean five_pressed = false;
     public boolean f_pressed = false;
 
+    public boolean esc_pressed = false;
+
     @Override
     public void handle(KeyEvent event) {
         if (event.getEventType() == KeyEvent.KEY_PRESSED) keyPressed(event);
@@ -52,6 +54,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
             case DIGIT4 -> four_pressed = true;
             case DIGIT5 -> five_pressed = true;
             case F -> f_pressed = true;
+            case ESCAPE -> esc_pressed = false;
         }
     }
 
@@ -75,6 +78,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                 lShift_pressed = false;
             }
             case F -> f_pressed = false;
+            case ESCAPE -> esc_pressed = false;
         }
     }
 
