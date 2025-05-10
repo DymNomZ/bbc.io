@@ -82,15 +82,4 @@ public class KeyHandler implements EventHandler<KeyEvent> {
         }
     }
 
-    public void refreshHotbarKeys(){
-        one_pressed = false;
-        two_pressed = false;
-        three_pressed = false;
-        four_pressed = false;
-        five_pressed = false;
-    }
-    public boolean movementKeysPressed(){
-        return up_pressed || down_pressed || left_pressed || right_pressed;
-    }
-
 }
