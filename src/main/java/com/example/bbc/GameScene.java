@@ -45,11 +45,9 @@ public class GameScene extends Scene {
     public static StackPane root = new StackPane();
     public static final StackPane server_entities_container = new StackPane();
 
-    private static final double player_speed = 1.5;
 
     //changed player from final to static for color change testing
     public static TankEntity main_player;
-    private double center_x, center_y;
     public static List<Entity> entity_list;
     public static List<Entity> received_entities;
 
@@ -62,11 +60,11 @@ public class GameScene extends Scene {
     public static boolean can_be_damaged = true;
     public static GameUIController game_ui_controller;
 
-    public StackPane getRootPane(){
-        return root;
-    }
+    public static int last_score;
+
 
     protected static void toLobbyRespawn(){
+        game_ui_controller.resetValues();
         Platform.runLater(() -> {
             double width = WIDTH_PROPERTY.get();
             double height = HEIGHT_PROPERTY.get();
@@ -108,8 +106,6 @@ public class GameScene extends Scene {
         entity_list = new LinkedList<>();
         received_entities = new ArrayList<>();
 
-        center_x = SCREEN_WIDTH / 2;
-        center_y = SCREEN_HEIGHT / 2;
 
         main_player.setPosition(0,0);
 
@@ -188,7 +184,13 @@ public class GameScene extends Scene {
                         if(!ed.is_projectile) ctr++;
                     }
 
+
                     final int player_count = ctr;
+
+                    if(last_score + 100 < SERVER_API.getUser().score){
+                        last_score = (SERVER_API.getUser().score / 100) * 100;
+                    }
+
                     Platform.runLater(() -> {
                         game_ui_controller.updateScore(SERVER_API.getUser().score);
                         game_ui_controller.updatePlayersLeftCounter(player_count);
@@ -202,19 +204,6 @@ public class GameScene extends Scene {
                         game_ui_controller.setProgressBar(StatsConfig.PLAYER_HEALTH, entities.getFirst().health);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
-                    }
-
-                    if(game_ui_controller.health_is_upgraded){
-                        game_ui_controller.health_is_upgraded = false;
-                        onHPUpgrade();
-                    }
-                    if(game_ui_controller.damage_is_upgraded){
-                        game_ui_controller.damage_is_upgraded = false;
-                        onDamageUpgrade();
-                    }
-                    if(game_ui_controller.speed_is_upgraded){
-                        game_ui_controller.speed_is_upgraded = false;
-                        onSpeedUpgrade();
                     }
 
                     main_player.pos_x = x;
@@ -464,16 +453,5 @@ public class GameScene extends Scene {
 
         }
     };
-
-    //TODO SEND DATA TO SERVER THAT THE STAT IS UPGRADED
-    public static void onSpeedUpgrade(){
-        System.out.println("UPGRADED SPEED");
-    }
-    public static void onHPUpgrade(){
-        System.out.println("UPGRADED HP");
-    }
-    public static void onDamageUpgrade(){
-        System.out.println("UPGRADED DAMAGE");
-    }
 
 }
