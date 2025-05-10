@@ -1,5 +1,8 @@
 package com.example.bbc;
 
+import configs.DimensionConfig;
+import entities.TankEntity;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,6 +29,7 @@ public class GameUIController {
     public Button TEMPbtnDevPage;
     public Button TEMPbtnLobbyPage;
     public ProgressBar upgradesHealthBar, upgradesSpeedBar, upgradesDamageBar;
+    public Pane minimapPane;
     IntegerProperty xp = new SimpleIntegerProperty(0);      //using IntegerProperty allows labels to react to changes to the integer
     IntegerProperty health = new SimpleIntegerProperty(100);
     IntegerProperty speed = new SimpleIntegerProperty(5);
@@ -40,8 +45,11 @@ public class GameUIController {
     boolean health_is_upgraded = false;
     boolean damage_is_upgraded = false;
 
+    private Circle player;
+
     
     public void initialize() {
+        player = new Circle();
         upgrade_buttons_enabled.set(xp.get() >= 10);  //sets condition for when buttons are enabled or disabled
 
         btnUpgradeHealth.disableProperty().bind(upgrade_buttons_enabled.not());   //binds to changes to upgradeButtonsEnabled variable
@@ -57,6 +65,25 @@ public class GameUIController {
             upgradesSpeedBar.setProgress(1);
             upgradesDamageBar.setProgress(1);
         }
+    }
+
+    public void setPlayer(TankEntity player_reference){
+        if(player_reference == null){
+            return ;
+        }
+        player.setFill(player_reference.getMain_body().getFill());
+        player.setRadius(3);
+
+        double minimap_x = (player_reference.pos_x / DimensionConfig.MAP_WIDTH) * minimapPane.getWidth();
+        double minimap_y = (player_reference.pos_y / DimensionConfig.MAP_HEIGHT) * minimapPane.getHeight();
+
+        player.setLayoutX(minimap_x);
+        player.setLayoutY(minimap_y);
+
+        Platform.runLater(()->{
+            minimapPane.getChildren().clear();
+            minimapPane.getChildren().add(player);
+        });
     }
     
     public void toggleDebugInfo() {

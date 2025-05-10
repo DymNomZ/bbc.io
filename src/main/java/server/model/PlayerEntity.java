@@ -70,14 +70,14 @@ public class PlayerEntity extends ServerEntity{
         }
 
 
-        if (x < 0) {
-            x = 0;
+        if (x < 0 + DimensionConfig.PLAYER_RADIUS) {
+            x = 0 + DimensionConfig.PLAYER_RADIUS;
         } else if (x > x_map_offset) {
             x = x_map_offset;
         }
 
-        if (y < 0) {
-            y = 0;
+        if (y < 0 + DimensionConfig.PLAYER_RADIUS) {
+            y = 0 + 0 + DimensionConfig.PLAYER_RADIUS;
         } else if (y > y_map_offset) {
             y = y_map_offset;
         }

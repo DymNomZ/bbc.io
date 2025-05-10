@@ -225,6 +225,21 @@ public class GameScene extends Scene {
                         //skip player
                         if(!ed.is_projectile){
                             if(i == 0){
+                                for(UserData ud : SERVER_API.users_in_lobby){
+                                    if(ud.id == ed.id) {
+                                        Paint body_color = rgbBytesToColor(ud.body_color);
+                                        Paint barrel_color = rgbBytesToColor(ud.barrel_color);
+                                        Paint border_color = rgbBytesToColor(ud.border_color);
+                                        String name = ud.name;
+                                        TankEntity tank = new TankEntity(body_color, barrel_color, border_color, ed.health, StatsConfig.PLAYER_HEALTH, name);
+                                        tank.setPosition(ed.x, ed.y);
+                                        tank.pos_x = ed.x;
+                                        tank.pos_y = ed.y;
+                                        tank.setAngle(ed.angle);
+
+                                        game_ui_controller.setPlayer(tank);
+                                    }
+                                }
                                 i++;
                                 continue;
                             }

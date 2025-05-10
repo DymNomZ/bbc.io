@@ -19,8 +19,8 @@ public abstract class ServerEntity implements Collidable<ServerEntity> {
     public ServerEntity(long game_clock, double radius, int player_id) {
         this.radius = radius;
         this.player_id = player_id;
-        x_map_offset = DimensionConfig.MAP_WIDTH - radius * 2;
-        y_map_offset = DimensionConfig.MAP_HEIGHT - radius * 2;
+        x_map_offset = DimensionConfig.MAP_WIDTH - radius;
+        y_map_offset = DimensionConfig.MAP_HEIGHT - radius;
 
         this.angle = 0;
         Random rand = new Random();
