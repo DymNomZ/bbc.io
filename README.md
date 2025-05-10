@@ -44,67 +44,66 @@ Our game implements the principles of Object-Oriented Programming (OOP) in creat
 - MySQL Database
 - Maven
 
-### How to Play
-1. Starting the Game:
+## How to Play
 
-Enter your player name on the title screen
-Click "Play" to join a game lobby
+### Starting the Game:
 
-2. Customize Your Tank:
+- Enter your player name on the title screen
+- Click "Play" to join a game lobby
 
-In the lobby, select colors for your tank's body, barrel, and border
-Click "Ready" to join the battle
+### Customize Your Tank:
 
-3. Controls:
-Move with WASD keys
-Aim with the mouse
-Left-click to shoot
-Press T to toggle death log visibility
+- In the lobby, select colors for your tank's body, barrel, and border
+- Click "Ready" to join the battle
 
-4. Upgrade System:
+### Controls:
+- Move with WASD keys
+- Aim with the mouse
+- Left-click to shoot
+- Press T to toggle death log visibility
 
-Earn points by eliminating other players
-Use points to upgrade health, speed, or damage
+### Upgrade System:
 
-5. Objective:
+- Earn points by eliminating other players
+- Use points to upgrade health, speed, or damage
 
-Survive as long as possible
-Eliminate other players
-Achieve the highest score
+### Objective:
 
+- Survive as long as possible
+- Eliminate other players
+- Achieve the highest score
 
-### Project Structure
+## Project Structure
 
-# Client-Side (com.example.bbc package):
+### Client-Side (com.example.bbc package):
 
-User interface and game rendering
-Client-server communication
-Game controllers
+- User interface and game rendering
+- Client-server communication
+- Game controllers
 
-# Server-Side (server package):
+### Server-Side (server package):
 
-Game logic processing
-Physics and collision detection
-Player management
+- Game logic processing
+- Physics and collision detection
+- Player management
 
-
-### Future Improvements
-Additional tank types with unique abilities
-Power-up system
-Team-based game modes
-Improved matchmaking system
+## Future Improvements
+- Additional tank types with unique abilities
+- Power-up system
+- Team-based game modes
+- Improved matchmaking system
 
 
 # Contributors
-Borgonia, John Dymier - Backend
-Emia, Seth Nathaniel - Backend
-Enario, Lance Joseph Lorenz - Frontend
-Reyes, John Zillion Reyes - Backend (Server)
-Tio, Raymond Gerard - Frontend
+- Borgonia, John Dymier - Backend
+- Emia, Seth Nathaniel - Backend
+- Enario, Lance Joseph Lorenz - Frontend
+- Reyes, John Zillion Reyes - Backend (Server)
+- Tio, Raymond Gerard - Frontend
 
 # Acknowledgments
-Inspiration from diep.io
-Special thanks to Mr. Jay Vince Serato
-All testers who provided valuable feedback
+- Inspiration from diep.io
+- Special thanks to Mr. Jay Vince Serato
+- All testers who provided valuable feedback
 
 ahoy o/
