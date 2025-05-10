@@ -150,7 +150,7 @@
 }
 
 .minimap {
-    -fx-background-color: #666666;
+    -fx-background-color: transparent;
     -fx-border-color: #444444;
     -fx-border-width: 1;
 }
