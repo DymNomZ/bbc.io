@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-
-<StackPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.GameLobbyUIController">
+<StackPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bbc.GameLobbyUIController">
    <children>
       <VBox fx:id="root" alignment="CENTER" style="-fx-background-color: #2C3E50;">
          <children>
@@ -106,24 +94,7 @@
                                     <Rectangle fx:id="btnColorPink" arcHeight="5.0" arcWidth="5.0" fill="#e095f5" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <Rectangle fx:id="btnColorCyan" arcHeight="5.0" arcWidth="5.0" fill="#95f5eb" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                     <Rectangle fx:id="btnColorEmerald" arcHeight="5.0" arcWidth="5.0" fill="#95f5ad" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                    <Rectangle fx:id="btnColorBlack" arcHeight="5.0" arcWidth="5.0" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
-                                       <fill>
-                                          <LinearGradient endX="1.0" endY="1.0">
-                                             <stops>
-                                                <Stop>
-                                                   <color>
-                                                      <Color />
-                                                   </color>
-                                                </Stop>
-                                                <Stop offset="1.0">
-                                                   <color>
-                                                      <Color />
-                                                   </color>
-                                                </Stop>
-                                             </stops>
-                                          </LinearGradient>
-                                       </fill>
-                                    </Rectangle>
+                                    <Rectangle fx:id="btnColorBlack" arcHeight="5.0" arcWidth="5.0" height="40.0" onMouseClicked="#onChangeColorClick" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" width="40.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                  </children>
                               </GridPane>
                            </children>
