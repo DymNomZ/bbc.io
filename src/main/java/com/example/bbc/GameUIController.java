@@ -4,9 +4,7 @@ import configs.DimensionConfig;
 import entities.TankEntity;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,28 +26,14 @@ public class GameUIController {
     public Pane minimapPane;
     public ListView<String> lvDeathLogs;
     public static ObservableList<String> death_messages = FXCollections.observableArrayList();
-    public Label playersLeftLabel;
-    public Label scoreLabel;
+    public Label playersLeftLabel, scoreLabel, lblHealth, lblSpeed, lblDamage;
     public ScrollPane scpDeathLogs;
-
-    public static IntegerProperty xp = new SimpleIntegerProperty(10);      //using IntegerProperty allows labels to react to changes to the integer
-    public static IntegerProperty health = new SimpleIntegerProperty(100);
-    public static IntegerProperty speed = new SimpleIntegerProperty(5);
-    public static IntegerProperty damage = new SimpleIntegerProperty(10);
-
-    public Label lblHealth;
-    public Label lblSpeed;
-    public Label lblDamage;
 
     BooleanProperty upgrade_buttons_enabled = new SimpleBooleanProperty(false);   //initial state for upgrade buttons
 
     public Button btnUpgradeBulletDamage, btnUpgradeSpeed, btnUpgradeHealth;
     @FXML private ProgressBar healthBar;
     @FXML private VBox debugPanel;
-
-    boolean speed_is_upgraded = false;
-    boolean health_is_upgraded = false;
-    boolean damage_is_upgraded = false;
 
     boolean is_deathlog_zoomed = false;
 
