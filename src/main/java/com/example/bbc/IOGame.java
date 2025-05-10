@@ -18,7 +18,7 @@ import java.io.IOException;
 public class IOGame extends Application {
 
     static Stage MAIN_STAGE;
-    static ServerHandler SERVER_API = null;
+    static ServerHandler SERVER_API = new ServerHandler();
     public Parent main_root;
 
     private static MainController mainController;

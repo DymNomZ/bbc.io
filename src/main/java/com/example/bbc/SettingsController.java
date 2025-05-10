@@ -1,6 +1,8 @@
 package com.example.bbc;
 
+import classes.Sprites;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -20,6 +22,9 @@ public class SettingsController {
     private boolean has_applied_changes = true;
 
     public void initialize() {
+        btn_back.setGraphic(Sprites.Buttons.BACK_TITLE_BUTTON);
+        btn_back.setFocusTraversable(false);
+
         IOGameSettings settings = IOGameSettings.getInstance();
 
         Platform.runLater(() -> {
@@ -36,9 +41,9 @@ public class SettingsController {
         combobox_screen_mode.setOnAction((event)->{
             has_applied_changes = false;
         });
-        btn_back.setOnAction((event)->{
-            getMainController().switchView("title-scene.fxml");
-        });
+//        btn_back.setOnAction((event)->{
+//            getMainController().switchView("title-scene.fxml");
+//        });
     }
 
 
@@ -64,5 +69,11 @@ public class SettingsController {
             ex.printStackTrace();
         }
 
+    }
+
+    public void onTitleClicked(ActionEvent actionEvent) {
+        Platform.runLater(()->{
+            getMainController().switchView("title-scene.fxml");
+        });
     }
 }

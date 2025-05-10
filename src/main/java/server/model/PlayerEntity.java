@@ -8,7 +8,10 @@ import javafx.scene.shape.Circle;
 import utils.Logging;
 
 public class PlayerEntity extends ServerEntity{
+    public int stat_upgradable;
+    public int maximum_health;
     public int health;
+    public int damage;
     public int last_hit_player_id;
 
     // Last player got damaged time in millisecond (Used to render damage animations in client)
@@ -17,12 +20,19 @@ public class PlayerEntity extends ServerEntity{
     public PlayerEntity(long game_clock, int player_id) {
         super(game_clock, DimensionConfig.PLAYER_RADIUS, player_id);
         health = StatsConfig.PLAYER_HEALTH;
+        maximum_health = health;
+        damage = (int) StatsConfig.PROJECTILE_DAMAGE;
         time_damaged = 0;
+        stat_upgradable = 0;
     }
 
-    public void damage(double amount){
-        Logging.write(this,"I GOT DAMAGED");
-        health -= (int) amount;
+    // if Killed, return true
+    public boolean damage(int amount){
+        if (health <= 0) return false;
+
+        health -= amount;
+
+        return health <= 0;
     }
 
     @Override
@@ -85,6 +95,6 @@ public class PlayerEntity extends ServerEntity{
 
     @Override
     public EntityData getEntityData() {
-        return new EntityData(player_id, x, y, angle, health, time_damaged);
+        return new EntityData(player_id, x, y, angle, stat_upgradable, maximum_health, health, speed, damage, time_damaged);
     }
 }

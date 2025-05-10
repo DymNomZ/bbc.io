@@ -12,15 +12,16 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import utils.Logging;
 
 import java.io.IOException;
 import java.util.List;
 
+import static com.example.bbc.GameScene.HEIGHT_PROPERTY;
+import static com.example.bbc.GameScene.WIDTH_PROPERTY;
 import static com.example.bbc.IOGame.MAIN_STAGE;
 import static com.example.bbc.IOGame.SERVER_API;
 import static utils.Scenes.*;
@@ -36,6 +37,20 @@ public class TitleScreenController {
     public Button settingsBtn;
     MainController mainController;
 
+    public void refreshGridBackground(){
+        Image backgroundImage = new Image("file:src/main/java/assets/static_grid_background.png");
+
+        BackgroundImage background = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true)
+        );
+
+        apTitleScreen.setBackground(new Background(background));
+    }
+
     public void initialize(){
 //        new PictureMaker(titleImageView, vTitle, "titles/title", apTitleScreen, false, 1400);
 
@@ -45,8 +60,7 @@ public class TitleScreenController {
 
         Platform.runLater(() -> mainController = IOGame.getMainController());
 
-
-
+        refreshGridBackground();
 
         playBtn.setGraphic(Sprites.Buttons.PLAY_BUTTON);
         playBtn.setFocusTraversable(false);
@@ -86,7 +100,7 @@ public class TitleScreenController {
             return;
         }
 
-        SERVER_API = new ServerHandler(playerNameTF.getText());
+        SERVER_API.connect(playerNameTF.getText());
 
         SERVER_API.onConnected(new ServerDataListener<LobbyData>() {
             @Override
@@ -98,7 +112,14 @@ public class TitleScreenController {
                 SERVER_API.users_in_lobby.addAll(data.users);
 
                 Platform.runLater(() -> {
-                    mainController.switchView("game-lobby-ui.fxml");
+                    double width = WIDTH_PROPERTY.get();
+                    double height = HEIGHT_PROPERTY.get();
+                    MAIN_STAGE.setScene(LOBBY_SCENE);
+                    MAIN_STAGE.setWidth(width);
+                    MAIN_STAGE.setHeight(height);
+                    MAIN_STAGE.getScene().getRoot().requestLayout();
+                    MAIN_STAGE.setFullScreen(IOGameSettings.getInstance().is_fullscreen);
+
                     GameScene.initializeOnGameUpdate();
                     GameLobbyUIController.initializeTank();
                 });

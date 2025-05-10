@@ -7,10 +7,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -18,11 +18,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 
-import java.io.IOException;
-
-import static utils.Scenes.GAME_SCENE;
+import static com.example.bbc.IOGame.SERVER_API;
 
 public class GameUIController {
     public AnchorPane root;
@@ -30,18 +27,20 @@ public class GameUIController {
     public Button TEMPbtnLobbyPage;
     public ProgressBar upgradesHealthBar, upgradesSpeedBar, upgradesDamageBar;
     public Pane minimapPane;
-    public ListView<String> chatlog_list;
+    public ListView<String> death_messages_list;
+    public static ObservableList<String> death_messages = FXCollections.observableArrayList();
+    public Label playersLeftLabel;
+    public Label scoreLabel;
 
-    IntegerProperty xp = new SimpleIntegerProperty(0);      //using IntegerProperty allows labels to react to changes to the integer
-    IntegerProperty health = new SimpleIntegerProperty(100);
-    IntegerProperty speed = new SimpleIntegerProperty(5);
-    IntegerProperty damage = new SimpleIntegerProperty(10);
+    public static IntegerProperty xp = new SimpleIntegerProperty(10);      //using IntegerProperty allows labels to react to changes to the integer
+    public static IntegerProperty health = new SimpleIntegerProperty(100);
+    public static IntegerProperty speed = new SimpleIntegerProperty(5);
+    public static IntegerProperty damage = new SimpleIntegerProperty(10);
     BooleanProperty upgrade_buttons_enabled = new SimpleBooleanProperty(false);   //initial state for upgrade buttons
 
     public Button btnUpgradeBulletDamage, btnUpgradeSpeed, btnUpgradeHealth;
     @FXML private ProgressBar healthBar;
     @FXML private VBox debugPanel;
-
 
     boolean speed_is_upgraded = false;
     boolean health_is_upgraded = false;
@@ -49,19 +48,51 @@ public class GameUIController {
 
     private Circle player;
 
+    public void updatePlayersLeftCounter(int count){
+        String text = "Players Left: " + count;
+        playersLeftLabel.setText(text);
+    }
 
+    public void updateScore(long score){
+        String text = "Score: " + score;
+        scoreLabel.setText(text);
+    }
+
+    public void refreshDeathMessages(){
+        Platform.runLater(() -> {
+            death_messages_list.setItems(death_messages);
+        });
+    }
 
     public void addMessage(String message) {
-        chatlog_list.getItems().add(message);
+        Platform.runLater(() -> {
+            death_messages.add(message);
+        });
+    }
+
+    private void statButtonsVisibility() {
+        Platform.runLater(() -> {
+            btnUpgradeHealth.disableProperty().bind(upgrade_buttons_enabled.not());   //binds to changes to upgradeButtonsEnabled variable
+            btnUpgradeSpeed.disableProperty().bind(upgrade_buttons_enabled.not());
+            btnUpgradeBulletDamage.disableProperty().bind(upgrade_buttons_enabled.not());
+        });
     }
 
     public void initialize() {
         player = new Circle();
-        upgrade_buttons_enabled.set(xp.get() >= 10);  //sets condition for when buttons are enabled or disabled
+        SERVER_API.onContainsUpgrades(() -> {
+            upgrade_buttons_enabled.set(true);
+            statButtonsVisibility();
+        });
 
-        btnUpgradeHealth.disableProperty().bind(upgrade_buttons_enabled.not());   //binds to changes to upgradeButtonsEnabled variable
-        btnUpgradeSpeed.disableProperty().bind(upgrade_buttons_enabled.not());
-        btnUpgradeBulletDamage.disableProperty().bind(upgrade_buttons_enabled.not());
+        SERVER_API.onNoUpgrades(() -> {
+            upgrade_buttons_enabled.set(false);
+            statButtonsVisibility();
+        }); //sets condition for when buttons are enabled or disabled
+
+        death_messages_list.setItems(death_messages);
+
+        statButtonsVisibility();
 
         if(!upgrade_buttons_enabled.get()){
             upgradesHealthBar.setProgress(0.84);
@@ -73,7 +104,6 @@ public class GameUIController {
             upgradesDamageBar.setProgress(1);
         }
     }
-
 
     public void setPlayer(TankEntity player_reference){
         if(player_reference == null){
@@ -99,52 +129,15 @@ public class GameUIController {
     }
 
     public void onUpgradeHealth(ActionEvent actionEvent) {
-        health.set(health.get() + 5);
-        xp.set(xp.get() - 10);
-        upgrade_buttons_enabled.set(xp.get() >= 10);
-        if(!upgrade_buttons_enabled.get()){
-            upgradesHealthBar.setProgress(0.84);
-            upgradesSpeedBar.setProgress(0.84);
-            upgradesDamageBar.setProgress(0.84);
-        } else{
-            upgradesHealthBar.setProgress(1);
-            upgradesSpeedBar.setProgress(1);
-            upgradesDamageBar.setProgress(1);
-        }
-        health_is_upgraded = true;
+        SERVER_API.upgradeHealth();
     }
 
-
     public void onUpgradeSpeed(ActionEvent actionEvent) {
-        speed.set(speed.get() + 3);
-        xp.set(xp.get() - 10);
-        upgrade_buttons_enabled.set(xp.get() >= 10);
-        if(!upgrade_buttons_enabled.get()){
-            upgradesHealthBar.setProgress(0.84);
-            upgradesSpeedBar.setProgress(0.84);
-            upgradesDamageBar.setProgress(0.84);
-        } else{
-            upgradesHealthBar.setProgress(1);
-            upgradesSpeedBar.setProgress(1);
-            upgradesDamageBar.setProgress(1);
-        }
-        speed_is_upgraded = true;
+        SERVER_API.upgradeSpeed();
     }
 
     public void onUpgradeDamage(ActionEvent actionEvent) {
-        damage.set(damage.get() + 5);
-        xp.set(xp.get() - 10);
-        upgrade_buttons_enabled.set(xp.get() >= 10);
-        if(!upgrade_buttons_enabled.get()){
-            upgradesHealthBar.setProgress(0.84);
-            upgradesSpeedBar.setProgress(0.84);
-            upgradesDamageBar.setProgress(0.84);
-        } else{
-            upgradesHealthBar.setProgress(1);
-            upgradesSpeedBar.setProgress(1);
-            upgradesDamageBar.setProgress(1);
-        }
-        damage_is_upgraded = true;
+        SERVER_API.upgradeDamage();
     }
 
     public void TEMP_manualAddXP(ActionEvent actionEvent) {
@@ -202,23 +195,4 @@ public class GameUIController {
         }
     }
 
-//    public void TEMP_devPage(ActionEvent actionEvent) throws IOException {
-////        IOGame.MAIN_STAGE.setScene(Scenes.DEVS_SCENE);
-//        FXMLLoader fxmlLoader = new FXMLLoader(IOGame.class.getResource("dev-page.fxml"));
-//        Stage stage = (Stage) TEMPbtnDevPage.getScene().getWindow();
-//        stage.setScene(new Scene(fxmlLoader.load(), 1280, 720));
-//        stage.setTitle("Dev Screen");
-//        stage.setScene(stage.getScene());
-//        stage.show();
-//    }
-//
-//    public void TEMP_lobbyPage(ActionEvent actionEvent) throws IOException {
-////        IOGame.MAIN_STAGE.setScene(Scenes.DEVS_SCENE);
-//        FXMLLoader fxmlLoader = new FXMLLoader(IOGame.class.getResource("game-lobby-ui.fxml"));
-//        Stage stage = (Stage) TEMPbtnLobbyPage.getScene().getWindow();
-//        stage.setScene(new Scene(fxmlLoader.load(), 1280, 720));
-//        stage.setTitle("Lobby Screen");
-//        stage.setScene(stage.getScene());
-//        stage.show();
-//    }
 }

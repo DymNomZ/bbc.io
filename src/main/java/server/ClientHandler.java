@@ -77,6 +77,29 @@ public class ClientHandler {
                 try {
                     int dataID = stdout.read();
                     switch (dataID) {
+                        case EntityData.SERIAL_ID -> {
+                            int upgradeID = stdout.read();
+                            PlayerData player = lobby.players_data.get(UDPAddr);
+                            ArrayList<ServerEntity> entities = lobby.entity_data.get(player);
+
+                            if (entities != null) {
+                                PlayerEntity player_entity = (PlayerEntity) entities.get(0);
+
+                                switch (upgradeID) {
+                                    case EntityData.UPGRADE_HEALTH -> {
+                                        player_entity.health += 10;
+                                    }
+                                    case EntityData.UPGRADE_SPEED -> {
+                                        player_entity.speed += 0.05;
+                                    }
+                                    case EntityData.UPGRADE_DAMAGE -> {
+                                        player_entity.damage += 5;
+                                    }
+                                }
+
+                                player_entity.stat_upgradable -= 1;
+                            }
+                        }
                         case InputData.SERIAL_ID -> {
                             if (player_dead) {
                                 lobby.spawn_queue.add(lobby.players_data.get(UDPAddr));
@@ -101,6 +124,9 @@ public class ClientHandler {
 
                             try {
                                 SQLDatabase.setColors(player.SQLPlayer);
+                                player.body_color = data.body_color;
+                                player.border_color = data.border_color;
+                                player.barrel_color = data.barrel_color;
                             } catch (BBCSQLError e) {
                                 player.SQLPlayer.barrel_color = player.barrel_color;
                                 player.SQLPlayer.body_color = player.body_color;
@@ -118,6 +144,7 @@ public class ClientHandler {
                     if (player.id == player_id) {
                         UserData current = players_in_packet.get(0);
                         current.score = player.score;
+                        current.highest_score = player.highest_score;
                         // add name if name is changed when player is in lobby (currently we dont)
 
                         current.type = UserData.USER_PARTIAL;
@@ -146,6 +173,7 @@ public class ClientHandler {
                             context_iter.add(new UserData(player));
                         } else {
                             cur.score = player.score;
+                            cur.highest_score = player.highest_score;
                             cur.type = UserData.USER_PARTIAL;
 
                             if (!Arrays.equals(cur.barrel_color, player.barrel_color)) {
@@ -192,7 +220,7 @@ public class ClientHandler {
         }
 
         try {
-            SQLDatabase.closePlayer(player.SQLPlayer, player.score);
+            SQLDatabase.closePlayer(player.SQLPlayer, player.score, player.highest_score);
         } catch (BBCSQLError ignored) {}
     }
 

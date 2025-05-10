@@ -9,15 +9,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+import static com.example.bbc.IOGame.getMainController;
+
 public class DevPageController {
     public ImageView ivDymSprite, ivSethSprite, ivLanceSprite, ivZillionSprite, ivRaymondSprite, ivDevTitle;
     public AnchorPane apDevScreen;
     public VBox vDym, vSeth, vLance, vZillion, vRaymond, vDevTitle;
     public Button backBtn;
-    MainController mainController;
 
     public void initialize(){
-        Platform.runLater(() -> mainController = IOGame.getMainController());
         backBtn.setGraphic(Sprites.Buttons.BACK_TITLE_BUTTON);
         backBtn.setFocusTraversable(false);
         new PictureMaker(ivDymSprite, vDym, "dymier", apDevScreen, true, 1264);
@@ -30,7 +30,7 @@ public class DevPageController {
 
     public void onTitleClicked(ActionEvent actionEvent) {
         Platform.runLater(()->{
-            mainController.switchView("title-scene.fxml");
+            getMainController().switchView("title-scene.fxml");
         });
     }
 }

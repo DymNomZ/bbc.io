@@ -12,7 +12,7 @@
 }
 
 .dev-names {
-    -fx-text-fill: #000000;
+    -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 16px;
     -fx-font-family: "LEMON MILK";
@@ -150,7 +150,7 @@
 }
 
 .minimap {
-    -fx-background-color: #111111;
+    -fx-background-color: transparent;
     -fx-border-color: #444444;
     -fx-border-width: 1;
 }
