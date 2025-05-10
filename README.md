@@ -38,8 +38,6 @@ BBC.IO is built with a powerful combination of technologies:
 
 ## ▶️ Getting Started & How to Play
 
-Ready to roll out and dominate? Here’s how:
-
 ### Prerequisites (For Developers or Running Locally):
 
 * Java 17 or higher
@@ -52,7 +50,7 @@ Ready to roll out and dominate? Here’s how:
 1.  **Launch the Game**:
     * Enter your chosen player name on the title screen.
     * Click "**Play**" to jump into a game lobby.
-2.  **Customize Your War Machine**:
+2.  **Customize Your Tank**:
     * In the lobby, pick your unique colors for the tank body, barrel, and border.
     * When you're looking sharp, click "**Ready**" to enter the arena!
 
@@ -88,16 +86,12 @@ Curious about how the code is organized?
 
 ## 🔮 What's Next? Future Improvements
 
-We're always thinking of ways to make BBC.IO even better! Here are some ideas for the future:
-
 * 🆕 **More Tank Types**: Introducing tanks with unique abilities and playstyles.
 * ⚡ **Power-Up System**: Collect temporary boosts and advantages in the arena.
 * 🤝 **Team-Based Game Modes**: Battle alongside friends or new allies.
 * 🎯 **Improved Matchmaking System**: To ensure fairer and more competitive games.
 
 ## 🧑‍💻 The Team Behind the Tanks
-
-Meet the brilliant minds who brought BBC.IO to life:
 
 * **Borgonia, John Dymier** - Backend & Quality Assurance
 * **Emia, Seth Nathaniel** - Backend Engineering
