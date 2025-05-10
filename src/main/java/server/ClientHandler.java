@@ -86,25 +86,24 @@ public class ClientHandler {
                             if (entities != null) {
                                 PlayerEntity player_entity = (PlayerEntity) entities.get(0);
 
-                                switch (upgradeID) {
-                                    case EntityData.UPGRADE_HEALTH -> {
-                                        player_entity.maximum_health += 10;
+                                if (upgradeID == EntityData.KILL_SELF) {
+                                    player_entity.health = 0;
+                                } else if (player_entity.stat_upgradable != 0) {
+                                    switch (upgradeID) {
+                                        case EntityData.UPGRADE_HEALTH -> {
+                                            player_entity.maximum_health += 10;
+                                            player_entity.health += 10;
+                                        }
+                                        case EntityData.UPGRADE_SPEED -> {
+                                            player_entity.speed += 0.05;
+                                        }
+                                        case EntityData.UPGRADE_DAMAGE -> {
+                                            player_entity.damage += 5;
+                                        }
+                                    }
 
-                                        // TODO: apply current health
-                                    }
-                                    case EntityData.UPGRADE_SPEED -> {
-                                        player_entity.speed += 0.05;
-                                    }
-                                    case EntityData.UPGRADE_DAMAGE -> {
-                                        player_entity.damage += 5;
-                                    }
-
-                                    case EntityData.KILL_SELF -> {
-                                        player_entity.health = 0;
-                                    }
+                                    player_entity.stat_upgradable -= 1;
                                 }
-
-                                player_entity.stat_upgradable -= 1;
                             }
                         }
                         case InputData.SERIAL_ID -> {
