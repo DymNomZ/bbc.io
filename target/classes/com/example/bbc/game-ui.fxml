@@ -25,7 +25,7 @@
         </padding>
         <Label fx:id="playersLeftLabel" styleClass="label-status" text="Players Left: " />
         <Region HBox.hgrow="ALWAYS" />
-        <Label fx:id="scoreLabel"  styleClass="label-status" text="Score:" />
+        <Label fx:id="scoreLabel" styleClass="label-status" text="Score:" />
     </HBox>
     <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <children>
@@ -108,11 +108,11 @@
             <Line endX="-100.0" endY="-30.0" startX="-100.0" startY="-15.0" strokeWidth="3.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
         </children>
     </GridPane>
-   <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.leftAnchor="22.0" AnchorPane.topAnchor="60.0">
+   <ScrollPane fx:id="scpDeathLogs" onMouseEntered="#zoomInDeathLogs" onMouseExited="#zoomOutDeathLogs" prefHeight="200.0" prefWidth="200.0" AnchorPane.leftAnchor="22.0" AnchorPane.topAnchor="60.0">
      <content>
        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="182.0">
             <children>
-               <ListView fx:id="death_messages_list" prefHeight="200.0" prefWidth="200.0" />
+               <ListView fx:id="lvDeathLogs" onMouseEntered="#zoomInDeathLogs" onMouseExited="#zoomOutDeathLogs" prefHeight="200.0" prefWidth="200.0" />
             </children>
          </AnchorPane>
      </content>

@@ -76,7 +76,7 @@ public class GameScene extends Scene {
             MAIN_STAGE.getScene().getRoot().requestLayout();
             MAIN_STAGE.setFullScreen(true);
             MAIN_STAGE.setFullScreen(IOGameSettings.getInstance().is_fullscreen);
-
+            GameLobbyUIController.initializeTank();
         });
     }
 
@@ -138,6 +138,10 @@ public class GameScene extends Scene {
         SERVER_API.onLobbyUpdate(new ServerDataListener<LobbyData>() {
             @Override
             public void run(LobbyData data) {
+                if (!data.deathMessage.isEmpty()) {
+                    GameUIController.addMessage(data.deathMessage);
+                }
+
                 ListIterator<UserData> iter = SERVER_API.users_in_lobby.listIterator();
 
                 for (UserData i : data.users) {
@@ -165,6 +169,7 @@ public class GameScene extends Scene {
                 }
             }
         });
+        SERVER_API.onPlayerDeath(GameScene::toLobbyRespawn);
         SERVER_API.onGameUpdate(new ServerDataListener<GameData>() {
             @Override
             public void run(GameData data) {
@@ -176,10 +181,6 @@ public class GameScene extends Scene {
                     received_entities.clear();
 
                     List<EntityData> entities = data.entities;
-                    if(entities.getFirst().health <= 0){
-                        toLobbyRespawn();
-                        return;
-                    }
 
                     //get player count
                     int ctr = 0;

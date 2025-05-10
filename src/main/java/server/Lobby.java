@@ -22,8 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Lobby {
     public ConcurrentHashMap<UDPAddress, PlayerData> players_data = new ConcurrentHashMap<>();
 
-    // TODO: May be replaced for quad trees data struct
     public ConcurrentHashMap<PlayerData, ArrayList<ServerEntity>> entity_data = new ConcurrentHashMap<>();
+    public final ArrayList<String> death_messages = new ArrayList<>();
 
     public LinkedList<PlayerData> spawn_queue = new LinkedList<>();
     static private int ID = 1;
@@ -72,7 +72,7 @@ public class Lobby {
 
             QuadTree current_tree =  constructQTree();
 
-            quadCollisionCheck(current_tree);
+            quadCollisionCheck(current_tree, game_clock);
 
             qtree = current_tree;
 
@@ -109,23 +109,37 @@ public class Lobby {
             }
     }
 
-    private void quadCollisionCheck(QuadTree tree){
+    private void quadCollisionCheck(QuadTree tree, long game_clock){
             for (ArrayList<ServerEntity> i : entity_data.values()) {
                 for (ServerEntity entity : i) {
                     RangeCircle circle = new RangeCircle(entity.x, entity.y, entity.radius + 1);
                     List<ServerEntity> collision = tree.query(circle);
                     for (ServerEntity other : collision) {
                         if (entity != other) {
-                            handleCollision(entity, other);
+                            handleCollision(entity, other, game_clock);
                         }
                     }
                 }
             }
     }
 
-    private void handleCollision(ServerEntity entity, ServerEntity other_entity){
+    private void handleCollision(ServerEntity entity, ServerEntity other_entity, long game_clock){
         if(entity.isCollidingWith(other_entity)){
-            entity.handleCollision(other_entity);
+            entity.handleCollision(other_entity, game_clock);
+
+            if (entity instanceof PlayerEntity && other_entity instanceof PlayerEntity) {
+                PlayerEntity player_entity = (PlayerEntity) entity;
+
+                if (player_entity.health <= 0) {
+                    player_entity.last_hit_player_id = other_entity.player_id;
+                }
+
+                player_entity = (PlayerEntity) other_entity;
+
+                if (player_entity.health <= 0) {
+                    player_entity.last_hit_player_id = entity.player_id;
+                }
+            }
         }
     }
 
@@ -166,12 +180,15 @@ public class Lobby {
         assert killer_data != null;
         assert victim_data != null;
 
-        String death_message = DeathMessageGenerator.getRandomDeathMessage(victim_data.name,killer_data.name);
+        synchronized (death_messages) {
+            death_messages.add(
+                    DeathMessageGenerator.getRandomDeathMessage(victim_data.name,killer_data.name)
+            );
+        }
 
         entity_data.remove(victim_data);
-
-
     }
+
     private PlayerData getPlayerDataWithId(int id){
         for(PlayerData p : players_data.values()) {
             if(p.id == id){
