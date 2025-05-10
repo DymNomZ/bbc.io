@@ -23,6 +23,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import server.DeathMessageGenerator;
+
 import java.util.*;
 import java.util.List;
 import static com.example.bbc.IOGame.MAIN_STAGE;
@@ -175,13 +177,7 @@ public class GameScene extends Scene {
 
                     List<EntityData> entities = data.entities;
                     if(entities.getFirst().health <= 0){
-                        Platform.runLater(() -> { // Wrap UI updates in Platform.runLater()
-                            int len = Dialogues.DEATH_MESSAGES.length;
-                            int idx = new Random().nextInt(0, len);
-                            String death_message = Dialogues.DEATH_MESSAGES[idx][0];
-                            game_ui_controller.addMessage(death_message);
-                            toLobbyRespawn();
-                        });
+                        toLobbyRespawn();
                         return;
                     }
 
@@ -193,6 +189,7 @@ public class GameScene extends Scene {
 
                     final int player_count = ctr;
                     Platform.runLater(() -> {
+                        game_ui_controller.updateScore(SERVER_API.getUser().score);
                         game_ui_controller.updatePlayersLeftCounter(player_count);
                         game_ui_controller.refreshDeathMessages();
                     });
