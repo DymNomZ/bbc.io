@@ -159,8 +159,8 @@ public class Lobby {
         assert victim_data != null;
 
         String death_message = DeathMessageGenerator.getRandomDeathMessage(victim_data.name,killer_data.name);
-        //TODO DEATH HANDLING
-            entity_data.remove(victim_data);
+
+        entity_data.remove(victim_data);
 
 
     }

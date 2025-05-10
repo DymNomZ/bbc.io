@@ -203,6 +203,19 @@ public class GameScene extends Scene {
                         System.out.println(e.getMessage());
                     }
 
+                    if(game_ui_controller.health_is_upgraded){
+                        game_ui_controller.health_is_upgraded = false;
+                        onHPUpgrade();
+                    }
+                    if(game_ui_controller.damage_is_upgraded){
+                        game_ui_controller.damage_is_upgraded = false;
+                        onDamageUpgrade();
+                    }
+                    if(game_ui_controller.speed_is_upgraded){
+                        game_ui_controller.speed_is_upgraded = false;
+                        onSpeedUpgrade();
+                    }
+
                     main_player.pos_x = x;
                     main_player.pos_y = y;
                     main_player.setAngle(entities.get(0).angle);
@@ -435,5 +448,16 @@ public class GameScene extends Scene {
 
         }
     };
+
+    //TODO SEND DATA TO SERVER THAT THE STAT IS UPGRADED
+    public static void onSpeedUpgrade(){
+        System.out.println("UPGRADED SPEED");
+    }
+    public static void onHPUpgrade(){
+        System.out.println("UPGRADED HP");
+    }
+    public static void onDamageUpgrade(){
+        System.out.println("UPGRADED DAMAGE");
+    }
 
 }

@@ -18,6 +18,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import static utils.Scenes.GAME_SCENE;
+
 public class GameUIController {
     public Button TEMP_manual_add_xp;  //for visuals only, to be deleted
     public Label TEMP_lbl_health, TEMP_lbl_speed, TEMP_lbl_damage, TEMP_lbl_xp;  //for visuals only, to be deleted
@@ -40,6 +42,10 @@ public class GameUIController {
     @FXML private Label coordsLabel;
     @FXML private Label fpsLabel;
     @FXML private Label entityCountLabel;
+
+    boolean speed_is_upgraded = false;
+    boolean health_is_upgraded = false;
+    boolean damage_is_upgraded = false;
 
     
     public void initialize() {
@@ -82,6 +88,7 @@ public class GameUIController {
             upgradesSpeedBar.setProgress(1);
             upgradesDamageBar.setProgress(1);
         }
+        health_is_upgraded = true;
     }
 
 
@@ -98,6 +105,7 @@ public class GameUIController {
             upgradesSpeedBar.setProgress(1);
             upgradesDamageBar.setProgress(1);
         }
+        speed_is_upgraded = true;
     }
 
     public void onUpgradeDamage(ActionEvent actionEvent) {
@@ -113,6 +121,7 @@ public class GameUIController {
             upgradesSpeedBar.setProgress(1);
             upgradesDamageBar.setProgress(1);
         }
+        damage_is_upgraded = true;
     }
 
     public void TEMP_manualAddXP(ActionEvent actionEvent) {
