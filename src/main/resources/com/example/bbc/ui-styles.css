@@ -183,7 +183,7 @@
 .sp-death-logs {
     -fx-background-color: rgba(0, 0, 0, 0.3);
     -fx-background-radius: 5;
-    -fx-padding: 5;
+    -fx-padding: 1;
 }
 
 .sp-death-logs .decrement-button, .increment-button {

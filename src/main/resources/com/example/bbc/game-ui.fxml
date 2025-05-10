@@ -109,7 +109,7 @@
             <Line endX="-100.0" endY="-30.0" startX="-100.0" startY="-15.0" strokeWidth="3.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
         </children>
     </GridPane>
-   <ScrollPane fx:id="scpDeathLogs" opacity="0.65" prefHeight="200.0" prefWidth="200.0" styleClass="sp-death-logs" AnchorPane.leftAnchor="22.0" AnchorPane.topAnchor="60.0">
+   <ScrollPane fx:id="scpDeathLogs" opacity="0.65" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" styleClass="sp-death-logs" AnchorPane.leftAnchor="22.0" AnchorPane.topAnchor="60.0">
        <content>
          <ListView fx:id="lvDeathLogs" onKeyPressed="#zoomDeathLogs" opacity="0.65" prefHeight="200.0" prefWidth="200.0" styleClass="lv-death-logs" />
       </content>
